@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Info } from 'lucide-react'
-import { Label, ToggleGroup, Tooltip } from '@/components/ui/index'
+import { Label, Tooltip } from '@/components/ui/index'
 import { formatCurrency, formatIndianInput, toIndianWords } from '@/lib/formatters'
 import { clamp } from '@/lib/utils'
 import { computeFIFO, weightedStrikePrice, formatGrantDate } from '@/lib/grantUtils'
@@ -135,7 +135,32 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
         )}
       </Field>
 
-      {/* 3. Date of Exercise */}
+      {/* 3. Tax Regime — right after salary, affects slab calculation */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <span className="text-xs font-medium text-[#6B7280]">Tax Regime</span>
+          <Tooltip text="New regime (Budget 2025 slabs) vs Old regime. We'll show both anyway.">
+            <Info size={11} className="text-[#9CA3AF] cursor-help" />
+          </Tooltip>
+        </div>
+        <div className="flex items-center bg-[#F3F4F6] rounded-full p-[3px] gap-[2px]">
+          {(['NEW', 'OLD'] as const).map((regime) => (
+            <button
+              key={regime}
+              onClick={() => set('regime', regime)}
+              className={`px-4 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 ${
+                inputs.regime === regime
+                  ? 'bg-white text-[#111827] shadow-sm'
+                  : 'text-[#9CA3AF] hover:text-[#6B7280]'
+              }`}
+            >
+              {regime === 'NEW' ? 'New' : 'Old'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Date of Exercise */}
       <Field label="Date of Exercise" tooltip="Planned exercise date. Options vested on or before this date are available to exercise.">
         <input
           type="date"
@@ -149,7 +174,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
         />
       </Field>
 
-      {/* 4. Options to Exercise */}
+      {/* 6. Options to Exercise */}
       <Field label="Options to Exercise" tooltip={`How many vested options you want to exercise. Max: ${totalVested.toLocaleString('en-IN')} (total net vested)`}>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -273,27 +298,6 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
           </div>
         </div>
       )}
-
-      {/* 6. Tax Regime — compact footer toggle */}
-      <div className="pt-1 border-t border-[#F3F4F6]">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-1">
-            <span className="text-xs font-medium text-[#6B7280]">Tax Regime</span>
-            <Tooltip text="New regime (Budget 2025 slabs) vs Old regime. We'll show both anyway.">
-              <Info size={11} className="text-[#9CA3AF] cursor-help" />
-            </Tooltip>
-          </div>
-          <ToggleGroup
-            options={[
-              { value: 'NEW', label: 'New Regime' },
-              { value: 'OLD', label: 'Old Regime' },
-            ]}
-            value={inputs.regime}
-            onChange={(v) => set('regime', v)}
-            className="w-auto"
-          />
-        </div>
-      </div>
 
       {/* Reset */}
       <button
