@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "esop-calc",
+      "runtimeExecutable": "/opt/homebrew/opt/node/bin/node",
+      "runtimeArgs": ["node_modules/.bin/vite", "--port", "5175"],
+      "port": 5175
+    }
+  ]
+}
