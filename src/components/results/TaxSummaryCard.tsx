@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { TrendingDown, TrendingUp, DollarSign } from 'lucide-react'
+import { TrendingDown, TrendingUp, IndianRupee } from 'lucide-react'
 import { formatCompact, formatPercent } from '@/lib/formatters'
 import type { PerquisiteResult } from '@/types/tax.types'
 
@@ -55,7 +55,7 @@ export function TaxSummaryCard({ result }: Props) {
       <div className="p-5">
         <div className="flex items-start gap-4 flex-wrap">
           <Metric
-            icon={<DollarSign size={14} />}
+            icon={<IndianRupee size={14} />}
             label="Perquisite Income"
             value={perquisite}
             format={formatCompact}

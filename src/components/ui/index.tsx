@@ -143,8 +143,10 @@ export function Tooltip({ text, children }: { text: string; children: React.Reac
   return (
     <span className="relative group inline-flex items-center">
       {children}
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-50 bg-[#111827] text-white text-xs rounded-lg px-2.5 py-1.5 whitespace-nowrap max-w-xs text-center shadow-lg">
+      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover:block z-50 w-56 bg-[#1C1C1E] text-white text-[11px] leading-relaxed rounded-lg px-3 py-2 shadow-xl whitespace-normal">
         {text}
+        {/* Arrow */}
+        <span className="absolute top-full left-4 -translate-y-px border-4 border-transparent border-t-[#1C1C1E]" />
       </span>
     </span>
   )

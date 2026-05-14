@@ -23,16 +23,50 @@ export function PerquisiteScenario({ inputs, totalVested, optionsSelected, total
   const comparison = useRegimeComparison(inputs)
   const scenarios = useScenarios(inputs)
 
-  const hasValues = inputs.fmvAtExercise > 0 && inputs.numberOfOptions > 0
+  const hasValues = inputs.fmvAtExercise > 0 && inputs.numberOfOptions > 0 && inputs.annualSalaryIncome > 0
 
   if (!hasValues) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-12 h-12 rounded-full bg-[#FFF3F0] flex items-center justify-center mb-3">
-          <span className="text-2xl">📊</span>
+      <div className="flex flex-col items-center justify-center py-12 px-6">
+        {/* Icon stack */}
+        <div className="relative mb-6">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] flex items-center justify-center shadow-lg">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect x="4" y="18" width="6" height="14" rx="1.5" fill="#E85936" opacity="0.9"/>
+              <rect x="13" y="10" width="6" height="22" rx="1.5" fill="#E85936" opacity="0.6"/>
+              <rect x="22" y="4" width="6" height="28" rx="1.5" fill="#E85936" opacity="0.35"/>
+              <path d="M28 6 L32 2" stroke="#E85936" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="32" cy="2" r="2" fill="#E85936"/>
+            </svg>
+          </div>
+          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-[#E85936] flex items-center justify-center shadow">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 3v8M3 7h8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
+            </svg>
+          </div>
         </div>
-        <p className="text-sm font-medium text-[#374151]">Enter your grant details to see the tax breakdown</p>
-        <p className="text-xs text-[#9CA3AF] mt-1">Fill in strike price, FMV, and number of options on the left</p>
+
+        <h3 className="text-base font-bold text-[#111827] mb-1">Enter FMV & Salary to see your tax</h3>
+        <p className="text-sm text-[#6B7280] text-center mb-6 max-w-xs">
+          Fill in the Fair Market Value and your Annual Salary — both are needed to determine your tax slab.
+        </p>
+
+        {/* What you'll see */}
+        <div className="w-full max-w-sm space-y-2">
+          {[
+            { icon: '₹', label: 'Perquisite income & total tax' },
+            { icon: '⚖', label: 'New vs Old regime comparison' },
+            { icon: '📈', label: 'FMV sensitivity scenarios' },
+            { icon: '🏷', label: 'Marginal slab & surcharge breakdown' },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-[#F3F4F6]">
+              <span className="w-7 h-7 rounded-lg bg-[#F9FAFB] flex items-center justify-center text-sm shrink-0">{item.icon}</span>
+              <span className="text-xs text-[#6B7280]">{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-[11px] text-[#C4C4C4] mt-6">FY 2025-26 · Indian Tax Rules · All calculations are client-side</p>
       </div>
     )
   }

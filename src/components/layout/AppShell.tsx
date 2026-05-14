@@ -21,7 +21,7 @@ const DEFAULT_INPUTS: PerquisiteInputs = {
   strikePrice: 0,
   fmvAtExercise: 0,
   numberOfOptions: 0,
-  annualSalaryIncome: 2_000_000,
+  annualSalaryIncome: 0,
   regime: 'NEW',
   residentialStatus: 'RESIDENT',
   companyType: 'UNLISTED_OTHER',
