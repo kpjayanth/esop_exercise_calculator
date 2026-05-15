@@ -108,7 +108,7 @@ function DraggableRow({
         </div>
         {/* Shares — only when at least one grant has conversion; ratio shown below only if ≠ 1 */}
         {hasConversion && (
-          <div className="text-right hidden sm:block min-w-[36px]">
+          <div className="text-right min-w-[36px]">
             <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Shares</p>
             <p className="text-xs font-medium text-[#374151] tabular-nums leading-tight">
               {row.sharesAllocated.toLocaleString('en-IN')}
