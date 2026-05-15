@@ -64,17 +64,19 @@ function DraggableRow({
       {/* Color swatch */}
       <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: row.color }} />
 
-      {/* Identity: Date + Strike are primary; Grant ID is secondary label */}
-      <div className="flex items-center gap-1.5 flex-1 min-w-0 overflow-hidden">
-        <span className="text-xs font-semibold text-[#374151] shrink-0">{formatGrantDate(row.dateOfGrant)}</span>
-        <span className="text-[#D1D5DB] text-[10px] shrink-0">·</span>
-        <span className="text-xs font-semibold text-[#374151] shrink-0">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
-        <span className="text-[10px] text-[#C4C4C4] shrink-0 hidden sm:inline">·</span>
-        <span className="text-[10px] text-[#B0B0B0] shrink-0 hidden sm:inline">{row.grantId}</span>
-        {/* Full indicator — small orange dot when all options selected */}
-        {isFull && (
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E85936] shrink-0 ml-0.5" title="Fully exercising this grant" />
-        )}
+      {/* Identity: Date primary; Strike + Grant ID secondary below */}
+      <div className="flex flex-col justify-center flex-1 min-w-0 overflow-hidden">
+        <div className="flex items-center gap-1">
+          <span className="text-xs font-semibold text-[#374151] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
+          {isFull && (
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E85936] shrink-0" title="Fully exercising this grant" />
+          )}
+        </div>
+        <div className="flex items-center gap-1 mt-0.5">
+          <span className="text-[10px] text-[#9CA3AF] leading-tight">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
+          <span className="text-[10px] text-[#D1D5DB]">·</span>
+          <span className="text-[10px] text-[#B0B0B0] leading-tight">{row.grantId}</span>
+        </div>
       </div>
 
       {/* Stats — desktop shows all columns; mobile shows only Selected + Perquisite */}
@@ -216,7 +218,7 @@ export function GrantAllocationBlock({
           <span className="w-5 shrink-0" />
           <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
           <span className="w-2 shrink-0" />
-          <span className="flex-1">Date · Strike · Grant</span>
+          <span className="flex-1">Grant</span>
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-right">
             <span>Avail</span>
             <span className="min-w-[44px]">Selected</span>
