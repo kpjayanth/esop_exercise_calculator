@@ -1,4 +1,3 @@
-import { TrendingUp } from 'lucide-react'
 import { formatCompact, formatCurrency } from '@/lib/formatters'
 import type { PerquisiteInputs, PerquisiteResult } from '@/types/tax.types'
 
@@ -35,12 +34,12 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
 
   return (
     <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#1C1C1E] to-[#2C2C2E] px-5 py-3 flex items-center">
-        <div className="flex items-center gap-2">
-          <TrendingUp size={14} className="text-[#E85936]" />
-          <span className="text-xs font-semibold text-white tracking-wide uppercase">Exercise Summary</span>
-        </div>
+      {/* Thin accent stripe — matches TaxSummaryCard family */}
+      <div className="h-0.5 bg-[#E5E7EB]" />
+
+      {/* Section label — light, internal */}
+      <div className="bg-white px-5 pt-3 pb-0">
+        <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest">Exercise Summary</span>
       </div>
 
       {/* Stats grid — 3 standard cells + 1 rich salary cell */}
