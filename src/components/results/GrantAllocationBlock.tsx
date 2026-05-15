@@ -29,6 +29,30 @@ interface Props {
   fmvAtExercise: number
 }
 
+// ── Circular progress ring ────────────────────────────────────────────────────
+function ExerciseRing({ fraction, color }: { fraction: number; color: string }) {
+  const size = 18
+  const stroke = 2.8
+  const r = (size - stroke) / 2
+  const circ = 2 * Math.PI * r
+  const dash = circ * Math.min(fraction, 1)
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="shrink-0 -rotate-90">
+      {/* Track */}
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#E5E7EB" strokeWidth={stroke} />
+      {/* Arc */}
+      <circle
+        cx={size / 2} cy={size / 2} r={r}
+        fill="none"
+        stroke={color}
+        strokeWidth={stroke}
+        strokeLinecap="round"
+        strokeDasharray={`${dash} ${circ}`}
+      />
+    </svg>
+  )
+}
+
 // ── Draggable row (table layout, 3+ grants) ───────────────────────────────────
 function DraggableRow({
   row, idx, fmvAtExercise, hasConversion, canReorder,
@@ -61,17 +85,12 @@ function DraggableRow({
         </div>
       )}
 
-      {/* Color swatch */}
-      <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: row.color }} />
+      {/* Exercise ring — shows fraction of grant being exercised */}
+      <ExerciseRing fraction={row.optionsAllocated / row.available} color={row.color} />
 
       {/* Identity: Date primary; Strike + Grant ID secondary below */}
       <div className="flex flex-col justify-center flex-1 min-w-0 overflow-hidden">
-        <div className="flex items-center gap-1">
-          <span className="text-xs font-semibold text-[#374151] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
-          {isFull && (
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E85936] shrink-0" title="Fully exercising this grant" />
-          )}
-        </div>
+        <span className="text-xs font-semibold text-[#374151] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
         <div className="flex items-center gap-1 mt-0.5">
           <span className="text-[10px] text-[#9CA3AF] leading-tight">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
           <span className="text-[10px] text-[#D1D5DB]">·</span>
@@ -217,7 +236,7 @@ export function GrantAllocationBlock({
         <div className="hidden sm:flex items-center gap-2 px-3 pb-1 text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide">
           <span className="w-5 shrink-0" />
           <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
-          <span className="w-2 shrink-0" />
+          <span className="w-[18px] shrink-0" />
           <span className="flex-1">Grant</span>
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-right">
             <span>Avail</span>
