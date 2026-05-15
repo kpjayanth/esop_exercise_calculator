@@ -70,7 +70,7 @@ function DraggableRow({
       style={{ userSelect: 'none' }}
     >
       {/* Order number — minimal, no background */}
-      <span className="text-[9px] text-[#D1D5DB] w-3 text-center shrink-0 tabular-nums">{idx + 1}</span>
+      <span className="text-[9px] text-[#9CA3AF] w-3 text-center shrink-0 tabular-nums font-medium">{idx + 1}</span>
 
       {/* Drag handle — hidden for single grant */}
       {canReorder && (
