@@ -31,15 +31,15 @@ interface MetricProps {
 
 function Metric({ icon, label, value, format, accent = 'text-[#111827]', sub }: MetricProps) {
   return (
-    <div className="flex-1 min-w-0">
-      <div className="flex items-center gap-1.5 mb-1">
-        <span className="text-[#9CA3AF]">{icon}</span>
-        <span className="text-xs text-[#6B7280] font-medium">{label}</span>
+    <div className="min-w-0">
+      <div className="flex items-center gap-1 mb-1">
+        <span className="text-[#9CA3AF] shrink-0">{icon}</span>
+        <span className="text-[10px] sm:text-xs text-[#6B7280] font-medium leading-tight">{label}</span>
       </div>
-      <div className={`text-2xl font-bold leading-none ${accent}`}>
+      <div className={`text-xl sm:text-2xl font-bold leading-none ${accent}`}>
         <AnimatedNumber value={value} format={format} />
       </div>
-      {sub && <p className="text-xs text-[#9CA3AF] mt-1">{sub}</p>}
+      {sub && <p className="text-[10px] sm:text-xs text-[#9CA3AF] mt-1 leading-snug">{sub}</p>}
     </div>
   )
 }
@@ -53,33 +53,35 @@ export function TaxSummaryCard({ result }: Props) {
       <div className="h-1 bg-gradient-to-r from-[#E85936] via-[#f97316] to-[#E85936]" />
 
       <div className="p-5">
-        <div className="flex items-start gap-4 flex-wrap">
+        <div className="grid grid-cols-3 gap-2">
           <Metric
-            icon={<IndianRupee size={14} />}
+            icon={<IndianRupee size={13} />}
             label="Perquisite Income"
             value={perquisite}
             format={formatCompact}
             accent="text-[#111827]"
-            sub={`Gross value: ${formatCompact(grossValue)} · Cost: ${formatCompact(exerciseCost)}`}
+            sub={`${formatCompact(grossValue)} − ${formatCompact(exerciseCost)}`}
           />
-          <div className="w-px h-12 bg-[#F3F4F6] hidden sm:block" />
-          <Metric
-            icon={<TrendingDown size={14} />}
-            label="Total Tax"
-            value={totalTax}
-            format={formatCompact}
-            accent="text-[#E85936]"
-            sub={`Effective rate: ${formatPercent(effectiveTaxRate)}`}
-          />
-          <div className="w-px h-12 bg-[#F3F4F6] hidden sm:block" />
-          <Metric
-            icon={<TrendingUp size={14} />}
-            label="Net Gain"
-            value={netGain}
-            format={formatCompact}
-            accent={netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}
-            sub="After all taxes"
-          />
+          <div className="border-l border-[#F3F4F6] pl-2 sm:pl-4">
+            <Metric
+              icon={<TrendingDown size={13} />}
+              label="Total Tax"
+              value={totalTax}
+              format={formatCompact}
+              accent="text-[#E85936]"
+              sub={`Rate: ${formatPercent(effectiveTaxRate)}`}
+            />
+          </div>
+          <div className="border-l border-[#F3F4F6] pl-2 sm:pl-4">
+            <Metric
+              icon={<TrendingUp size={13} />}
+              label="Net Gain"
+              value={netGain}
+              format={formatCompact}
+              accent={netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}
+              sub="After all taxes"
+            />
+          </div>
         </div>
 
         {/* Progress bar: net vs tax */}
