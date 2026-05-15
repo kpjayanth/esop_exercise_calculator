@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, CalendarDays } from 'lucide-react'
 import { Card } from '@/components/ui/index'
 import { TaxSummaryCard } from '@/components/results/TaxSummaryCard'
 import { TaxBreakdownRows } from '@/components/results/TaxBreakdownRows'
@@ -32,8 +32,29 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
 
   const hasValues = inputs.fmvAtExercise > 0 && inputs.numberOfOptions > 0 && inputs.annualSalaryIncome > 0
 
+  const formattedDate = exerciseDate.toLocaleDateString('en-IN', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  })
+
+  // Determine FY from exercise date (Indian FY: Apr–Mar)
+  const fy = exerciseDate.getMonth() >= 3
+    ? `FY ${exerciseDate.getFullYear()}–${String(exerciseDate.getFullYear() + 1).slice(2)}`
+    : `FY ${exerciseDate.getFullYear() - 1}–${String(exerciseDate.getFullYear()).slice(2)}`
+
   return (
     <div className="space-y-4">
+      {/* Shared exercise date context — visible above all cards */}
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-2 text-sm">
+          <CalendarDays size={14} className="text-[#9CA3AF]" />
+          <span className="text-[#9CA3AF] text-xs">Exercise Date</span>
+          <span className="font-semibold text-[#374151] text-xs">{formattedDate}</span>
+        </div>
+        <span className="text-[11px] font-medium text-[#6B7280] bg-[#F3F4F6] border border-[#E5E7EB] rounded-full px-2.5 py-0.5">
+          {fy}
+        </span>
+      </div>
+
       {/* 0. Grant allocation — always visible, FIFO breakdown in output area */}
       <GrantAllocationBlock
         grants={grants}
@@ -69,7 +90,7 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
       ) : (
         <>
           {/* 1. Exercise summary + bracket */}
-          <InputSummaryCard inputs={inputs} result={result} totalVested={totalVested} optionsSelected={optionsSelected} totalShares={totalShares} exerciseDate={exerciseDate} />
+          <InputSummaryCard inputs={inputs} result={result} totalVested={totalVested} optionsSelected={optionsSelected} totalShares={totalShares} />
 
           {/* 2. Hero tax summary */}
           <TaxSummaryCard result={result} />

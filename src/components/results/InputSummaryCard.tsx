@@ -8,11 +8,6 @@ interface Props {
   totalVested: number
   optionsSelected: number
   totalShares: number
-  exerciseDate: Date
-}
-
-function formatExerciseDate(d: Date) {
-  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 function slabColor(rate: number) {
@@ -25,7 +20,7 @@ function slabColor(rate: number) {
   return               { bg: 'bg-[#F8F1F0]', text: 'text-[#854840]', pill: 'bg-[#A86058]' }
 }
 
-export function InputSummaryCard({ inputs, result, totalVested, optionsSelected, totalShares, exerciseDate }: Props) {
+export function InputSummaryCard({ inputs, result, totalVested, optionsSelected, totalShares }: Props) {
   // Find the highest slab the perquisite falls into
   const topSlab = result.marginalSlabBreakdown.length > 0
     ? result.marginalSlabBreakdown.reduce((max, s) => s.rate > max.rate ? s : max)
@@ -41,12 +36,11 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
   return (
     <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#1C1C1E] to-[#2C2C2E] px-5 py-3 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-[#1C1C1E] to-[#2C2C2E] px-5 py-3 flex items-center">
         <div className="flex items-center gap-2">
           <TrendingUp size={14} className="text-[#E85936]" />
           <span className="text-xs font-semibold text-white tracking-wide uppercase">Exercise Summary</span>
         </div>
-        <span className="text-[11px] text-[#9CA3AF] font-medium">as of {formatExerciseDate(exerciseDate)}</span>
       </div>
 
       {/* Stats grid — 3 standard cells + 1 rich salary cell */}
