@@ -60,7 +60,6 @@ export function TaxSummaryCard({ result }: Props) {
             value={perquisite}
             format={formatCompact}
             accent="text-[#111827]"
-            sub={`${formatCompact(grossValue)} − ${formatCompact(exerciseCost)}`}
           />
           <div className="border-l border-[#F3F4F6] pl-2 sm:pl-4">
             <Metric

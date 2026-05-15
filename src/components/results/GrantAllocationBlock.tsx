@@ -69,10 +69,8 @@ function DraggableRow({
       className="flex items-center gap-2 px-3 py-2.5 bg-white hover:bg-[#FAFAFA] transition-colors border-b border-[#F3F4F6] last:border-0 group cursor-default"
       style={{ userSelect: 'none' }}
     >
-      {/* Order badge */}
-      <span className="w-5 h-5 rounded-full bg-[#F3F4F6] text-[10px] font-bold text-[#9CA3AF] flex items-center justify-center shrink-0">
-        {idx + 1}
-      </span>
+      {/* Order number — minimal, no background */}
+      <span className="text-[9px] text-[#D1D5DB] w-3 text-center shrink-0 tabular-nums">{idx + 1}</span>
 
       {/* Drag handle — hidden for single grant */}
       {canReorder && (
@@ -98,25 +96,26 @@ function DraggableRow({
         </div>
       </div>
 
-      {/* Stats — desktop shows all columns; mobile shows only Selected + Perquisite */}
+      {/* Stats */}
       <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-        <div className="text-right hidden sm:block">
-          <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Avail</p>
-          <p className="text-xs font-medium text-[#374151] tabular-nums">{row.available.toLocaleString('en-IN')}</p>
-        </div>
-        <div className="text-right min-w-[36px] sm:min-w-[44px]">
-          <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Sel.</p>
-          <p className={`text-xs font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#374151]'}`}>
+        {/* Sel / Avail combined: "13/30" */}
+        <div className="text-right min-w-[44px]">
+          <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Options</p>
+          <p className={`text-xs font-bold tabular-nums leading-tight ${isFull ? 'text-[#E85936]' : 'text-[#374151]'}`}>
             {row.optionsAllocated.toLocaleString('en-IN')}
+            <span className="text-[10px] font-normal text-[#C4C4C4]">/{row.available.toLocaleString('en-IN')}</span>
           </p>
         </div>
+        {/* Shares — only when at least one grant has conversion; ratio shown below only if ≠ 1 */}
         {hasConversion && (
-          <div className="text-right hidden sm:block">
+          <div className="text-right hidden sm:block min-w-[36px]">
             <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Shares</p>
-            <p className="text-xs font-medium text-[#374151] tabular-nums">
+            <p className="text-xs font-medium text-[#374151] tabular-nums leading-tight">
               {row.sharesAllocated.toLocaleString('en-IN')}
-              <span className="text-[10px] text-[#9CA3AF] ml-0.5">×{row.conversionRatio}</span>
             </p>
+            {row.conversionRatio !== 1 && (
+              <p className="text-[9px] text-[#9CA3AF] tabular-nums leading-tight">×{row.conversionRatio}</p>
+            )}
           </div>
         )}
         {fmvAtExercise > 0 && (
@@ -234,14 +233,13 @@ export function GrantAllocationBlock({
 
         {/* Column headers — desktop only (mobile rows are self-labelled) */}
         <div className="hidden sm:flex items-center gap-2 px-3 pb-1 text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide">
-          <span className="w-5 shrink-0" />
+          <span className="w-3 shrink-0" />
           <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
           <span className="w-[18px] shrink-0" />
           <span className="flex-1">Grant</span>
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-right">
-            <span>Avail</span>
-            <span className="min-w-[44px]">Selected</span>
-            {hasConversion && <span>Shares</span>}
+            <span className="min-w-[44px]">Options</span>
+            {hasConversion && <span className="min-w-[36px]">Shares</span>}
             {fmvAtExercise > 0 && <span className="min-w-[64px]">Perquisite</span>}
           </div>
         </div>
