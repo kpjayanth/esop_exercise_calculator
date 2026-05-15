@@ -45,7 +45,7 @@ function Metric({ icon, label, value, format, accent = 'text-[#111827]', sub }: 
 }
 
 export function TaxSummaryCard({ result }: Props) {
-  const { perquisite, totalTax, netGain, effectiveTaxRate, exerciseCost, grossValue } = result
+  const { perquisite, totalTax, netGain, effectiveTaxRate } = result
 
   return (
     <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm overflow-hidden">

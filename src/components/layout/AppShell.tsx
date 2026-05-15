@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Calculator, Globe } from 'lucide-react'
+import { Calculator } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { InputPanel } from '@/components/inputs/InputPanel'
 import { GrantUpload } from '@/components/inputs/GrantUpload'
