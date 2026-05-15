@@ -100,10 +100,6 @@ export function AppShell() {
               <p className="text-xs text-[#9CA3AF] leading-none mt-0.5">FY 2025-26 · Indian Tax Rules</p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-[#6B7280] bg-[#F3F4F6] border border-[#E5E7EB] rounded-full px-3 py-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3F7D5A] shrink-0" />
-            All calculations are client-side · Private &amp; Secure
-          </div>
         </div>
       </header>
 
