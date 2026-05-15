@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ESOP Tax Calculator — V2 Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ── Reset & Base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #F9FAFB;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  min-width: 1100px;
+}
+
+/* ── Design Tokens ────────────────────────────────────────────────── */
+:root {
+  --accent:        #E85936;
+  --accent-hover:  #d44d2e;
+  --accent-faint:  #FFF7F5;
+  --gain:          #3F7D5A;
+  --gain-bar:      #5A8A72;
+  --loss:          #A05C45;
+  --page-bg:       #F9FAFB;
+  --card-bg:       #FFFFFF;
+  --border:        #E5E7EB;
+  --border-subtle: #F3F4F6;
+  --text-primary:  #111827;
+  --text-secondary:#374151;
+  --text-muted:    #6B7280;
+  --text-placeholder:#9CA3AF;
+  --radius:        14px;
+  --shadow-sm:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:     0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F1F5F9; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+/* ── Sticky Header ────────────────────────────────────────────────── */
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  display: flex; align-items: center;
+  padding: 0 24px;
+}
+.header-inner {
+  max-width: 1400px; width: 100%; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header-brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: linear-gradient(135deg, #E85936, #f97316);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.brand-icon svg { color: #fff; }
+.brand-name { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.brand-sub  { font-size: 11px; font-weight: 400; color: var(--text-placeholder); margin-top: 2px; }
+.header-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text-muted);
+  background: var(--border-subtle);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+.header-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: #3F7D5A;
+  flex-shrink: 0;
+}
+
+/* ── App Shell ────────────────────────────────────────────────────── */
+.app-shell {
+  max-width: 1400px; margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── LEFT PANEL ───────────────────────────────────────────────────── */
+.left-panel {
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+}
+.input-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.input-card-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.input-card-header-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--accent-faint);
+  display: flex; align-items: center; justify-content: center;
+}
+.input-card-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.input-card-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Field */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; color: var(--text-muted);
+  letter-spacing: 0.02em; text-transform: uppercase;
+}
+.field-label .info-icon {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--border-subtle);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 8px; color: var(--text-placeholder); cursor: help;
+  font-style: normal; font-weight: 600;
+}
+.currency-input-wrap {
+  position: relative;
+}
+.currency-prefix {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 15px; font-weight: 500; color: var(--text-muted);
+  pointer-events: none;
+}
+.currency-input {
+  width: 100%;
+  padding: 11px 12px 11px 28px;
+  font-size: 20px; font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 150ms, box-shadow 150ms;
+  font-feature-settings: 'tnum';
+}
+.currency-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232,89,54,0.12);
+}
+.field-hint { font-size: 11px; color: var(--text-placeholder); padding-left: 2px; }
+
+/* Regime toggle */
+.regime-row {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.regime-label-group { display: flex; flex-direction: column; gap: 2px; }
+.regime-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.02em; }
+.regime-sublabel { font-size: 10px; color: var(--text-placeholder); }
+.regime-pill {
+  display: flex; background: #F3F4F6; border-radius: 40px;
+  padding: 3px; gap: 2px;
+}
+.regime-btn {
+  padding: 5px 16px; border-radius: 40px;
+  font-size: 12px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: all 150ms;
+  font-family: 'Inter', sans-serif;
+}
+.regime-btn.active {
+  background: #fff; color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05);
+}
+.regime-btn.inactive { background: transparent; color: var(--text-placeholder); }
+
+/* Date field */
+.date-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.date-input {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 13px; font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-secondary);
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px; outline: none;
+}
+.fy-badge {
+  padding: 4px 10px;
+  background: var(--border-subtle);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 10px; font-weight: 600;
+  color: var(--text-muted); white-space: nowrap;
+}
+
+/* Options slider */
+.options-header { display: flex; align-items: center; justify-content: space-between; }
+.options-count { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.options-count strong { color: var(--text-primary); font-size: 13px; }
+.options-input-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.options-input {
+  flex: 1; padding: 9px 12px;
+  font-size: 15px; font-weight: 700;
+  font-family: 'Inter', sans-serif; color: var(--text-primary);
+  background: var(--card-bg); border: 1.5px solid var(--border);
+  border-radius: 10px; outline: none;
+  font-feature-settings: 'tnum';
+}
+.options-max { font-size: 11px; color: var(--text-placeholder); white-space: nowrap; }
+
+/* Custom range slider */
+.slider-wrap { position: relative; padding: 4px 0; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%;
+  height: 4px; border-radius: 2px; outline: none; cursor: pointer;
+  background: linear-gradient(to right, var(--accent) 100%, #E5E7EB 100%);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  background: #fff;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: box-shadow 150ms;
+}
+input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 4px rgba(232,89,54,0.15); }
+.slider-labels { display: flex; justify-content: space-between; margin-top: 5px; }
+.slider-label { font-size: 10px; color: var(--text-placeholder); }
+
+/* Reset link */
+.reset-link {
+  text-align: center;
+  font-size: 11px; color: var(--text-placeholder);
+  cursor: pointer; padding: 6px;
+  transition: color 150ms;
+  text-decoration: none; display: block;
+}
+.reset-link:hover { color: var(--accent); }
+
+/* ── RIGHT PANEL ──────────────────────────────────────────────────── */
+.right-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* Generic card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 150ms;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card.elevated { box-shadow: var(--shadow-md); }
+
+/* Dark card header (shared by Grant Allocation & Exercise Summary) */
+.dark-header {
+  background: linear-gradient(90deg, #1C1C1E, #2C2C2E);
+  padding: 12px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dark-header-left { display: flex; align-items: center; gap: 8px; }
+.dark-header-icon { color: var(--accent); display: flex; }
+.dark-header-title { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; }
+.dark-header-chip {
+  font-size: 10px; font-weight: 500; color: #9CA3AF;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px; padding: 2px 8px;
+}
+.dark-header-pill {
+  font-size: 11px; font-weight: 600; color: #fff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px; padding: 3px 10px;
+}
+
+/* ── ZONE 1: Grant Allocation ─────────────────────────────────────── */
+.grant-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.grant-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grant-card {
+  border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.grant-card-header {
+  background: #F9FAFB;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 9px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.grant-card-header-left { display: flex; align-items: center; gap: 6px; }
+.grant-id { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.grant-date { font-size: 11px; color: var(--text-placeholder); }
+.grant-full-badge {
+  font-size: 9px; font-weight: 700;
+  background: var(--accent-faint);
+  color: var(--accent);
+  border-radius: 5px; padding: 2px 6px;
+  letter-spacing: 0.04em;
+}
+.grant-strike { font-size: 11px; color: var(--text-muted); }
+.grant-strike strong { font-weight: 600; color: var(--text-secondary); }
+
+.grant-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.grant-stat {
+  padding: 10px 12px;
+  border-right: 1px solid var(--border-subtle);
+}
+.grant-stat:last-child { border-right: none; }
+.grant-stat-label { font-size: 9px; font-weight: 600; color: var(--text-placeholder); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.grant-stat-value { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1; font-feature-settings: 'tnum'; }
+.grant-stat-value.accent { color: var(--accent); }
+.grant-stat-sub { font-size: 10px; color: var(--text-placeholder); margin-top: 3px; }
+
+.grant-perquisite {
+  background: #FAFAF9;
+  border-top: 1px solid var(--border-subtle);
+  padding: 8px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.grant-perquisite-formula { font-size: 10px; color: var(--text-placeholder); }
+.grant-perquisite-amount { font-size: 14px; font-weight: 700; color: var(--gain); font-feature-settings: 'tnum'; }
+
+/* Allocation bar */
+.alloc-bar-section { display: flex; flex-direction: column; gap: 6px; }
+.alloc-bar-labels { display: flex; justify-content: space-between; }
+.alloc-bar-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+.alloc-bar {
+  display: flex; height: 8px; border-radius: 4px; overflow: hidden;
+  gap: 2px;
+}
+.alloc-seg-g1 { background: #A87060; border-radius: 4px 0 0 4px; }
+.alloc-seg-g2 { background: #7A9070; flex: 1; border-radius: 0 4px 4px 0; }
+
+/* Grant total footer */
+.grant-total {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px;
+  background: #F9FAFB;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+}
+.grant-total-left { display: flex; flex-direction: column; gap: 2px; }
+.grant-total-label { font-size: 10px; font-weight: 600; color: var(--text-placeholder); text-transform: uppercase; letter-spacing: 0.06em; }
+.grant-total-sub { font-size: 11px; color: var(--text-muted); }
+.grant-total-amount { font-size: 18px; font-weight: 800; color: var(--gain); font-feature-settings: 'tnum'; }
+
+/* ── ZONE 2: Exercise Summary ─────────────────────────────────────── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--card-bg);
+}
+.stat-cell {
+  padding: 14px 16px;
+  border-right: 1px solid var(--border-subtle);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-label { font-size: 9px; font-weight: 600; color: var(--text-placeholder); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.stat-value { font-size: 22px; font-weight: 800; color: var(--text-primary); line-height: 1; font-feature-settings: 'tnum'; }
+.stat-sub { font-size: 10px; color: var(--text-placeholder); margin-top: 4px; }
+.stat-sub-derivation { font-size: 10px; color: var(--text-placeholder); margin-top: 4px; display: flex; flex-direction: column; gap: 1px; }
+.stat-sub-derivation span { display: flex; justify-content: space-between; }
+.stat-sub-derivation .loss-text { color: var(--loss); }
+
+/* Bracket strip */
+.bracket-strip {
+  background: #F8F5F0;
+  border-top: 1px solid #EDE8E2;
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.bracket-label { font-size: 10px; font-weight: 700; color: #805040; text-transform: uppercase; letter-spacing: 0.06em; }
+.bracket-pill {
+  background: #A08060; color: #fff;
+  font-size: 13px; font-weight: 800;
+  padding: 3px 12px; border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(160,128,96,0.3);
+}
+.bracket-slab { font-size: 12px; font-weight: 600; color: #7A6040; }
+.bracket-dot { color: #D1C5B8; }
+.bracket-regime { font-size: 11px; color: #9A8070; }
+.bracket-income { font-size: 11px; color: #9A8070; margin-left: auto; }
+.bracket-income strong { font-weight: 600; color: #7A6040; }
+
+/* ── ZONE 3a: Tax Summary ─────────────────────────────────────────── */
+.tax-stripe { height: 3px; background: linear-gradient(90deg, #E85936, #f97316, #E85936); }
+.tax-metrics {
+  display: flex; padding: 18px 20px;
+  gap: 0;
+}
+.tax-metric { flex: 1; min-width: 0; }
+.tax-metric-divider {
+  width: 1px; background: var(--border-subtle);
+  margin: 0 20px; flex-shrink: 0;
+}
+.tax-metric-label { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+.tax-metric-label-icon { color: var(--text-placeholder); display: flex; }
+.tax-metric-label-text { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+.tax-metric-value { font-size: 28px; font-weight: 800; line-height: 1; font-feature-settings: 'tnum'; }
+.tax-metric-value.primary { color: var(--text-primary); }
+.tax-metric-value.loss { color: var(--loss); }
+.tax-metric-value.gain { color: var(--gain); }
+.tax-metric-sub { font-size: 11px; color: var(--text-placeholder); margin-top: 5px; }
+
+.tax-progress-wrap { padding: 0 20px 18px; }
+.tax-progress-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.tax-progress-lbl { font-size: 11px; color: var(--text-placeholder); }
+.tax-progress-bar { height: 8px; border-radius: 20px; background: var(--border-subtle); overflow: hidden; }
+.tax-progress-fill { height: 100%; border-radius: 20px; background: var(--gain-bar); }
+.tax-progress-footer { display: flex; justify-content: space-between; margin-top: 5px; }
+.keep-pct { font-size: 12px; font-weight: 600; color: var(--gain); }
+.tax-pct  { font-size: 12px; font-weight: 600; color: var(--loss); }
+
+/* ── ZONE 3b: Breakdown ───────────────────────────────────────────── */
+.breakdown-body { padding: 16px 18px; }
+.breakdown-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+.breakdown-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 13px;
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-row-label { color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.breakdown-row-label.bold { color: var(--text-primary); font-weight: 600; }
+.breakdown-indent { padding-left: 16px; }
+.breakdown-row-label .indent-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.breakdown-row-value { font-weight: 600; font-feature-settings: 'tnum'; }
+.breakdown-row-value.neutral { color: var(--text-primary); }
+.breakdown-row-value.loss { color: var(--loss); }
+.breakdown-row-value.gain { color: var(--gain); }
+
+/* ── ZONE 3c: Slab Accordion ──────────────────────────────────────── */
+.accordion-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; cursor: pointer; background: none; border: none;
+  text-align: left; font-family: 'Inter', sans-serif;
+}
+.accordion-btn-left { display: flex; flex-direction: column; gap: 2px; }
+.accordion-btn-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.accordion-btn-sub { font-size: 11px; color: var(--text-placeholder); }
+.accordion-chevron {
+  color: var(--accent); flex-shrink: 0;
+  transform: rotate(180deg); /* open state */
+  transition: transform 200ms;
+}
+.accordion-body {
+  border-top: 1px solid var(--border-subtle);
+  padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+/* Income build-up box */
+.income-buildup {
+  background: #F9FAFB;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.buildup-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.buildup-header-icon { color: var(--text-muted); }
+.buildup-header-text { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+.buildup-row { display: flex; justify-content: space-between; font-size: 12px; }
+.buildup-row-label { color: var(--text-muted); }
+.buildup-row-value { font-weight: 500; color: var(--text-primary); font-feature-settings: 'tnum'; }
+.buildup-row-value.loss { color: var(--loss); }
+.buildup-row-value.gain { color: var(--gain); }
+.buildup-divider { border: none; border-top: 1px solid var(--border-subtle); margin: 2px 0; }
+.buildup-row.total .buildup-row-label { font-weight: 600; color: var(--text-secondary); }
+.buildup-row.total .buildup-row-value { font-weight: 700; }
+.buildup-footer { font-size: 11px; color: var(--text-placeholder); margin-top: 4px; }
+.buildup-footer strong { color: var(--accent); font-weight: 600; }
+
+/* Slab table */
+.slab-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-size: 12px; }
+.slab-table thead tr { background: #F9FAFB; border-bottom: 1px solid var(--border); }
+.slab-table th { padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 600; color: var(--text-placeholder); text-transform: uppercase; letter-spacing: 0.05em; }
+.slab-table th:not(:first-child) { text-align: right; }
+.slab-table tbody tr { border-bottom: 1px solid var(--border-subtle); }
+.slab-table tbody tr:last-child { border-bottom: none; }
+.slab-table td { padding: 10px 12px; }
+.slab-table td:not(:first-child) { text-align: right; font-feature-settings: 'tnum'; }
+.slab-cell-left { display: flex; align-items: center; gap: 8px; }
+.slab-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.slab-label { font-weight: 500; color: var(--text-secondary); }
+.slab-partial { font-size: 10px; color: var(--text-placeholder); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+.slab-rate-pill {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px;
+}
+.slab-tax { font-weight: 600; color: var(--loss); }
+.slab-bar-cell { width: 80px; }
+.slab-bar-wrap { height: 5px; background: var(--border-subtle); border-radius: 3px; overflow: hidden; }
+.slab-bar-fill { height: 100%; border-radius: 3px; }
+
+/* Rate build-up */
+.rate-buildup-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.rate-buildup-header { background: #F9FAFB; padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+.rate-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-bottom: 1px solid var(--border-subtle); font-size: 12px; }
+.rate-row:last-child { border-bottom: none; }
+.rate-row-main { display: flex; justify-content: space-between; align-items: center; padding: 11px 12px; background: #FFF7F5; }
+.rate-row-label { color: var(--text-muted); }
+.rate-row-label .rate-note { font-size: 10px; color: var(--text-placeholder); margin-left: 8px; }
+.rate-row-value { color: var(--loss); font-weight: 600; font-feature-settings: 'tnum'; }
+.rate-row-main-label { font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.rate-row-main-right { display: flex; align-items: center; gap: 10px; }
+.rate-row-main-amount { font-size: 13px; font-weight: 700; color: var(--loss); font-feature-settings: 'tnum'; }
+.eff-rate-badge { background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
+
+/* ── ZONE 3d: Sensitivity Table ───────────────────────────────────── */
+.scenario-body { padding: 16px 18px; }
+.scenario-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+.scenario-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-size: 12px; }
+.scenario-table thead tr { background: #F9FAFB; border-bottom: 1px solid var(--border); }
+.scenario-table th { padding: 9px 14px; text-align: left; font-size: 10px; font-weight: 600; color: var(--text-placeholder); text-transform: uppercase; letter-spacing: 0.05em; }
+.scenario-table th:not(:first-child) { text-align: right; }
+.scenario-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); font-feature-settings: 'tnum'; }
+.scenario-table tbody tr:last-child td { border-bottom: none; }
+.scenario-table td:not(:first-child) { text-align: right; }
+.scenario-table tr.current { background: var(--accent-faint); }
+.scenario-tag { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: var(--text-secondary); }
+.scenario-tag .current-pill {
+  font-size: 9px; font-weight: 700; background: var(--accent); color: #fff;
+  padding: 1px 7px; border-radius: 20px; vertical-align: middle; margin-left: 4px;
+}
+.col-fmv { color: var(--text-secondary); font-weight: 500; }
+.col-perq { color: var(--text-secondary); }
+.col-tax { color: var(--loss); font-weight: 500; }
+.col-gain { color: var(--gain); font-weight: 600; }
+.col-rate { color: var(--text-muted); }
+
+/* Footer */
+.page-footer { text-align: center; font-size: 11px; color: var(--text-placeholder); padding: 8px 0 16px; }
+
+/* ── Helpers ──────────────────────────────────────────────────────── */
+.flex-center { display: flex; align-items: center; }
+.gap-6 { gap: 6px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">ESOP Tax Calculator</div>
+        <div class="brand-sub">FY 2025-26 · Indian Tax Rules</div>
+      </div>
+    </div>
+    <div class="header-badge">All calculations are client-side · Private &amp; Secure</div>
+  </div>
+</header>
+
+<!-- ════════════════════════════ APP SHELL ═══════════════════════════════ -->
+<div class="app-shell">
+
+  <!-- ══════════════════════ LEFT: INPUT PANEL ══════════════════════════ -->
+  <aside class="left-panel">
+    <div class="input-card">
+      <div class="input-card-header">
+        <div class="input-card-header-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E85936" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <span class="input-card-title">Exercise Inputs</span>
+      </div>
+
+      <div class="input-card-body">
+
+        <!-- FMV -->
+        <div class="field">
+          <div class="field-label">
+            FMV at Exercise
+            <i class="info-icon">?</i>
+          </div>
+          <div class="currency-input-wrap">
+            <span class="currency-prefix">₹</span>
+            <input class="currency-input" type="text" value="500" readonly />
+          </div>
+          <div class="field-hint">Five Hundred</div>
+        </div>
+
+        <!-- Salary -->
+        <div class="field">
+          <div class="field-label">
+            Annual Gross Salary
+            <i class="info-icon">?</i>
+          </div>
+          <div class="currency-input-wrap">
+            <span class="currency-prefix">₹</span>
+            <input class="currency-input" type="text" value="20,00,000" readonly />
+          </div>
+          <div class="field-hint">Twenty Lakh · ₹75K std. deduction applied automatically</div>
+        </div>
+
+        <!-- Tax Regime -->
+        <div class="field">
+          <div class="regime-row">
+            <div class="regime-label-group">
+              <div class="regime-label">Tax Regime</div>
+              <div class="regime-sublabel">Budget 2025 slabs</div>
+            </div>
+            <div class="regime-pill">
+              <button class="regime-btn active">New</button>
+              <button class="regime-btn inactive">Old</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="field">
+          <div class="field-label">
+            Date of Exercise
+            <i class="info-icon">?</i>
+          </div>
+          <div class="date-row">
+            <input class="date-input" type="text" value="15 May 2026" readonly />
+            <span class="fy-badge">FY 2025-26</span>
+          </div>
+        </div>
+
+        <!-- Options Slider -->
+        <div class="field">
+          <div class="options-header">
+            <div class="field-label" style="margin-bottom:0">
+              Options to Exercise
+              <i class="info-icon">?</i>
+            </div>
+            <div class="options-count"><strong>55</strong> / 55 available</div>
+          </div>
+          <div class="options-input-wrap" style="margin-top:8px">
+            <input class="options-input" type="text" value="55" readonly />
+            <span class="options-max">max 55</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" min="1" max="55" value="55" />
+            <div class="slider-labels">
+              <span class="slider-label">1</span>
+              <span class="slider-label">55</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reset -->
+        <a class="reset-link" href="#">↺ Load different grants</a>
+
+      </div><!-- /input-card-body -->
+    </div><!-- /input-card -->
+  </aside>
+
+  <!-- ══════════════════════ RIGHT: OUTPUT PANEL ═════════════════════════ -->
+  <main class="right-panel">
+
+    <!-- ── ZONE 1: Grant Allocation ─────────────────────────────────── -->
+    <div class="card elevated">
+      <div class="dark-header">
+        <div class="dark-header-left">
+          <div class="dark-header-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E85936" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
+          </div>
+          <span class="dark-header-title">Grant Allocation</span>
+          <span class="dark-header-chip">FIFO · Oldest First</span>
+        </div>
+        <span class="dark-header-pill">55 opts → 40 shares</span>
+      </div>
+
+      <div class="grant-body">
+
+        <!-- Grant Cards Side by Side -->
+        <div class="grant-cards-grid">
+
+          <!-- G1 -->
+          <div class="grant-card">
+            <div class="grant-card-header">
+              <div class="grant-card-header-left">
+                <span class="grant-id">G1</span>
+                <span class="grant-date">May 2020</span>
+                <span class="grant-full-badge">FULL</span>
+              </div>
+              <span class="grant-strike">Strike <strong>₹10</strong>/share</span>
+            </div>
+            <div class="grant-stats">
+              <div class="grant-stat">
+                <div class="grant-stat-label">Available</div>
+                <div class="grant-stat-value">30</div>
+                <div class="grant-stat-sub">options</div>
+              </div>
+              <div class="grant-stat">
+                <div class="grant-stat-label">Selected</div>
+                <div class="grant-stat-value accent">30</div>
+                <div class="grant-stat-sub">options</div>
+              </div>
+              <div class="grant-stat">
+                <div class="grant-stat-label">Shares</div>
+                <div class="grant-stat-value">15</div>
+                <div class="grant-stat-sub">×0.5 ratio</div>
+              </div>
+            </div>
+            <div class="grant-perquisite">
+              <span class="grant-perquisite-formula">(₹500 − ₹10) × 15 shares</span>
+              <span class="grant-perquisite-amount">₹7,350</span>
+            </div>
+          </div>
+
+          <!-- G2 -->
+          <div class="grant-card">
+            <div class="grant-card-header">
+              <div class="grant-card-header-left">
+                <span class="grant-id">G2</span>
+                <span class="grant-date">Jun 2023</span>
+                <span class="grant-full-badge">FULL</span>
+              </div>
+              <span class="grant-strike">Strike <strong>₹100</strong>/share</span>
+            </div>
+            <div class="grant-stats">
+              <div class="grant-stat">
+                <div class="grant-stat-label">Available</div>
+                <div class="grant-stat-value">25</div>
+                <div class="grant-stat-sub">options</div>
+              </div>
+              <div class="grant-stat">
+                <div class="grant-stat-label">Selected</div>
+                <div class="grant-stat-value accent">25</div>
+                <div class="grant-stat-sub">options</div>
+              </div>
+              <div class="grant-stat">
+                <div class="grant-stat-label">Shares</div>
+                <div class="grant-stat-value">25</div>
+                <div class="grant-stat-sub">×1 ratio</div>
+              </div>
+            </div>
+            <div class="grant-perquisite">
+              <span class="grant-perquisite-formula">(₹500 − ₹100) × 25 shares</span>
+              <span class="grant-perquisite-amount">₹10,000</span>
+            </div>
+          </div>
+
+        </div><!-- /grant-cards-grid -->
+
+        <!-- Proportional Allocation Bar -->
+        <div class="alloc-bar-section">
+          <div class="alloc-bar-labels">
+            <span class="alloc-bar-label" style="color:#A87060">G1 · ₹7,350 (42.3%)</span>
+            <span class="alloc-bar-label" style="color:#5A7A60">G2 · ₹10,000 (57.7%)</span>
+          </div>
+          <div class="alloc-bar">
+            <div class="alloc-seg-g1" style="width:42.3%"></div>
+            <div class="alloc-seg-g2"></div>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="grant-total">
+          <div class="grant-total-left">
+            <div class="grant-total-label">Total Perquisite</div>
+            <div class="grant-total-sub">55 options → 40 shares</div>
+          </div>
+          <div class="grant-total-amount">₹17,350</div>
+        </div>
+
+      </div><!-- /grant-body -->
+    </div>
+
+    <!-- ── ZONE 2: Exercise Summary ──────────────────────────────────── -->
+    <div class="card">
+      <div class="dark-header">
+        <div class="dark-header-left">
+          <div class="dark-header-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E85936" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <span class="dark-header-title">Exercise Summary</span>
+        </div>
+        <span style="font-size:11px;color:#9CA3AF">as of 15 May 2026</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-cell">
+          <div class="stat-label">FMV at Exercise</div>
+          <div class="stat-value">₹500</div>
+          <div class="stat-sub">per share</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Available to Exercise</div>
+          <div class="stat-value">55</div>
+          <div class="stat-sub">vested options</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Options → Shares</div>
+          <div class="stat-value">55 → 40</div>
+          <div class="stat-sub">40 shares to receive</div>
+        </div>
+        <div class="stat-cell" style="background:#FAFAFA">
+          <div class="stat-label">Net Taxable Salary</div>
+          <div class="stat-value" style="font-size:20px">₹19.25L</div>
+          <div class="stat-sub">₹20L − ₹75K std. deduction</div>
+        </div>
+      </div>
+
+      <div class="bracket-strip">
+        <span class="bracket-label">Marginal Tax Bracket</span>
+        <span class="bracket-pill">20%</span>
+        <span class="bracket-slab">₹16L – ₹20L slab</span>
+        <span class="bracket-dot">·</span>
+        <span class="bracket-regime">New Regime</span>
+        <span class="bracket-income">
+          ₹19.25L net salary + ₹17,350 perquisite = <strong>₹19.42L total income</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- ── ZONE 3a: Tax Summary ──────────────────────────────────────── -->
+    <div class="card">
+      <div class="tax-stripe"></div>
+      <div class="tax-metrics">
+        <div class="tax-metric">
+          <div class="tax-metric-label">
+            <div class="tax-metric-label-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <span class="tax-metric-label-text">Perquisite Income</span>
+          </div>
+          <div class="tax-metric-value primary">₹17,350</div>
+          <div class="tax-metric-sub">Gross ₹20,000 · Cost ₹2,650</div>
+        </div>
+        <div class="tax-metric-divider"></div>
+        <div class="tax-metric">
+          <div class="tax-metric-label">
+            <div class="tax-metric-label-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            </div>
+            <span class="tax-metric-label-text">Total Tax</span>
+          </div>
+          <div class="tax-metric-value loss">₹3,609</div>
+          <div class="tax-metric-sub">Effective rate: 20.8%</div>
+        </div>
+        <div class="tax-metric-divider"></div>
+        <div class="tax-metric">
+          <div class="tax-metric-label">
+            <div class="tax-metric-label-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <span class="tax-metric-label-text">Net Gain</span>
+          </div>
+          <div class="tax-metric-value gain">₹13,741</div>
+          <div class="tax-metric-sub">After all taxes</div>
+        </div>
+      </div>
+      <div class="tax-progress-wrap">
+        <div class="tax-progress-header">
+          <span class="tax-progress-lbl">Net keep</span>
+          <span class="tax-progress-lbl">Tax</span>
+        </div>
+        <div class="tax-progress-bar">
+          <div class="tax-progress-fill" style="width:79.2%"></div>
+        </div>
+        <div class="tax-progress-footer">
+          <span class="keep-pct">79.2%</span>
+          <span class="tax-pct">20.8%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ZONE 3b: Perquisite Calculation ──────────────────────────── -->
+    <div class="card">
+      <div class="breakdown-body">
+        <div class="breakdown-title">Perquisite Calculation</div>
+        <div class="breakdown-row">
+          <span class="breakdown-row-label">Gross Value (₹500 × 40 shares)</span>
+          <span class="breakdown-row-value neutral">₹20,000</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-row-label">Less: Exercise Cost (₹66.25 × 40)</span>
+          <span class="breakdown-row-value loss">−₹2,650</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-row-label bold">Perquisite Income</span>
+          <span class="breakdown-row-value neutral" style="font-size:14px;font-weight:700">₹17,350</span>
+        </div>
+        <div class="breakdown-row breakdown-indent">
+          <span class="breakdown-row-label"><span class="indent-dot"></span>Income Tax on ESOP (marginal slab rate)</span>
+          <span class="breakdown-row-value loss">−₹3,470</span>
+        </div>
+        <div class="breakdown-row breakdown-indent">
+          <span class="breakdown-row-label"><span class="indent-dot"></span>Health &amp; Education Cess (4%)</span>
+          <span class="breakdown-row-value loss">−₹139</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-row-label bold">Total Tax</span>
+          <span class="breakdown-row-value loss" style="font-size:14px;font-weight:700">−₹3,609</span>
+        </div>
+        <div class="breakdown-row" style="padding-bottom:0;border-bottom:none">
+          <span class="breakdown-row-label bold" style="color:#3F7D5A">Net Gain (after tax)</span>
+          <span class="breakdown-row-value gain" style="font-size:15px;font-weight:800">₹13,741</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ZONE 3c: Slab Explainer Accordion (shown OPEN) ───────────── -->
+    <div class="card">
+      <button class="accordion-btn">
+        <div class="accordion-btn-left">
+          <span class="accordion-btn-title">How your New Regime rate is derived</span>
+          <span class="accordion-btn-sub">Your perquisite is taxed at your marginal (topmost) slab rate — not a flat rate</span>
+        </div>
+        <div class="accordion-chevron">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+
+      <div class="accordion-body">
+
+        <!-- Income build-up -->
+        <div class="income-buildup">
+          <div class="buildup-header">
+            <div class="buildup-header-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <span class="buildup-header-text">New Regime — how your taxable income is built up</span>
+          </div>
+          <div class="buildup-row">
+            <span class="buildup-row-label">Gross Salary</span>
+            <span class="buildup-row-value">₹20,00,000</span>
+          </div>
+          <div class="buildup-row">
+            <span class="buildup-row-label">Less: Standard Deduction <span style="font-size:10px;background:#F3F4F6;color:#6B7280;padding:1px 6px;border-radius:10px;margin-left:4px">₹75,000 · New Regime</span></span>
+            <span class="buildup-row-value loss">−₹75,000</span>
+          </div>
+          <hr class="buildup-divider" />
+          <div class="buildup-row total">
+            <span class="buildup-row-label">Net Taxable Salary</span>
+            <span class="buildup-row-value">₹19,25,000</span>
+          </div>
+          <div class="buildup-row">
+            <span class="buildup-row-label">+ ESOP Perquisite</span>
+            <span class="buildup-row-value gain">+₹17,350</span>
+          </div>
+          <hr class="buildup-divider" />
+          <div class="buildup-row total">
+            <span class="buildup-row-label">Total Income for Slab</span>
+            <span class="buildup-row-value">₹19,42,350</span>
+          </div>
+          <div class="buildup-footer">
+            Your net salary already fills the lower slabs — the perquisite is taxed at your <strong>marginal (topmost) rate</strong>, not a flat rate.
+          </div>
+        </div>
+
+        <!-- Slab table -->
+        <table class="slab-table">
+          <thead>
+            <tr>
+              <th>Slab</th>
+              <th>Income in Slab</th>
+              <th class="slab-bar-cell"></th>
+              <th>Rate</th>
+              <th>Tax</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="slab-cell-left"><div class="slab-dot" style="background:#5A8A6E"></div><span class="slab-label">₹0 – ₹4L</span></div></td>
+              <td>₹4,00,000</td>
+              <td class="slab-bar-cell"><div class="slab-bar-wrap"><div class="slab-bar-fill" style="width:100%;background:#5A8A6E"></div></div></td>
+              <td><span class="slab-rate-pill" style="background:#F1F5F2;color:#3F6B52">0%</span></td>
+              <td class="slab-tax">—</td>
+            </tr>
+            <tr>
+              <td><div class="slab-cell-left"><div class="slab-dot" style="background:#6A8FAD"></div><span class="slab-label">₹4L – ₹8L</span></div></td>
+              <td>₹4,00,000</td>
+              <td class="slab-bar-cell"><div class="slab-bar-wrap"><div class="slab-bar-fill" style="width:100%;background:#6A8FAD"></div></div></td>
+              <td><span class="slab-rate-pill" style="background:#F1F4F8;color:#4A6580">5%</span></td>
+              <td class="slab-tax">−₹20,000</td>
+            </tr>
+            <tr>
+              <td><div class="slab-cell-left"><div class="slab-dot" style="background:#7A749E"></div><span class="slab-label">₹8L – ₹12L</span></div></td>
+              <td>₹4,00,000</td>
+              <td class="slab-bar-cell"><div class="slab-bar-wrap"><div class="slab-bar-fill" style="width:100%;background:#7A749E"></div></div></td>
+              <td><span class="slab-rate-pill" style="background:#F3F2F8;color:#58537A">10%</span></td>
+              <td class="slab-tax">−₹40,000</td>
+            </tr>
+            <tr>
+              <td><div class="slab-cell-left"><div class="slab-dot" style="background:#8A7AA0"></div><span class="slab-label">₹12L – ₹16L</span></div></td>
+              <td>₹4,00,000</td>
+              <td class="slab-bar-cell"><div class="slab-bar-wrap"><div class="slab-bar-fill" style="width:100%;background:#8A7AA0"></div></div></td>
+              <td><span class="slab-rate-pill" style="background:#F5F3F8;color:#5E5278">15%</span></td>
+              <td class="slab-tax">−₹60,000</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slab-cell-left">
+                  <div class="slab-dot" style="background:#A08060"></div>
+                  <span class="slab-label">₹16L – ₹20L</span>
+                  <span class="slab-partial">partial</span>
+                </div>
+              </td>
+              <td>₹3,42,350</td>
+              <td class="slab-bar-cell"><div class="slab-bar-wrap"><div class="slab-bar-fill" style="width:85%;background:#A08060"></div></div></td>
+              <td><span class="slab-rate-pill" style="background:#F8F5F0;color:#7A6040">20%</span></td>
+              <td class="slab-tax">−₹68,470</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Effective rate build-up -->
+        <div class="rate-buildup-card">
+          <div class="rate-buildup-header">From slab tax → effective rate on perquisite</div>
+          <div class="rate-row">
+            <span class="rate-row-label">Slab income tax <span class="rate-note">marginal 20% on perquisite</span></span>
+            <span class="rate-row-value">−₹3,470</span>
+          </div>
+          <div class="rate-row">
+            <span class="rate-row-label">Health &amp; Education Cess (4%) <span class="rate-note">on tax + surcharge</span></span>
+            <span class="rate-row-value">−₹139</span>
+          </div>
+          <div class="rate-row-main">
+            <span class="rate-row-main-label">
+              Total tax on perquisite
+              <span style="font-size:10px;color:#9CA3AF;font-weight:400">= effective rate</span>
+            </span>
+            <div class="rate-row-main-right">
+              <span class="rate-row-main-amount">−₹3,609</span>
+              <span class="eff-rate-badge">20.8%</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /accordion-body -->
+    </div>
+
+    <!-- ── ZONE 3d: FMV Sensitivity Table ───────────────────────────── -->
+    <div class="card">
+      <div class="scenario-body">
+        <div class="scenario-title">FMV Sensitivity Analysis</div>
+        <table class="scenario-table">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>FMV</th>
+              <th>Perquisite</th>
+              <th>Tax</th>
+              <th>Net Gain</th>
+              <th>Eff. Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="scenario-tag">FMV −40%</span></td>
+              <td class="col-fmv">₹300</td>
+              <td class="col-perq">₹5,350</td>
+              <td class="col-tax">₹1,113</td>
+              <td class="col-gain">₹4,237</td>
+              <td class="col-rate">20.8%</td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag">FMV −20%</span></td>
+              <td class="col-fmv">₹400</td>
+              <td class="col-perq">₹11,350</td>
+              <td class="col-tax">₹2,361</td>
+              <td class="col-gain">₹8,989</td>
+              <td class="col-rate">20.8%</td>
+            </tr>
+            <tr class="current">
+              <td><span class="scenario-tag">Current <span class="current-pill">★ now</span></span></td>
+              <td class="col-fmv">₹500</td>
+              <td class="col-perq">₹17,350</td>
+              <td class="col-tax">₹3,609</td>
+              <td class="col-gain">₹13,741</td>
+              <td class="col-rate">20.8%</td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag">FMV +20%</span></td>
+              <td class="col-fmv">₹600</td>
+              <td class="col-perq">₹23,350</td>
+              <td class="col-tax">₹4,857</td>
+              <td class="col-gain">₹18,493</td>
+              <td class="col-rate">20.8%</td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag">FMV +40%</span></td>
+              <td class="col-fmv">₹700</td>
+              <td class="col-perq">₹29,350</td>
+              <td class="col-tax">₹6,105</td>
+              <td class="col-gain">₹23,245</td>
+              <td class="col-rate">20.8%</td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag">FMV +60%</span></td>
+              <td class="col-fmv">₹800</td>
+              <td class="col-perq">₹35,350</td>
+              <td class="col-tax">₹7,353</td>
+              <td class="col-gain">₹27,997</td>
+              <td class="col-rate">20.8%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="page-footer">Estimates for FY 2025-26. Consult a tax advisor before exercising.</p>
+
+  </main><!-- /right-panel -->
+</div><!-- /app-shell -->
+
+</body>
+</html>

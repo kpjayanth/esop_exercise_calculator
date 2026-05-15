@@ -79,13 +79,19 @@ export function AppShell() {
     <div className="min-h-screen bg-[#F9FAFB]">
       {/* Header */}
       <header className="bg-white border-b border-[#E5E7EB] sticky top-0 z-30">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#E85936] to-[#f97316] flex items-center justify-center">
-            <Calculator size={16} className="text-white" />
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#E85936] to-[#f97316] flex items-center justify-center">
+              <Calculator size={16} className="text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#111827] leading-none">ESOP Tax Calculator</p>
+              <p className="text-xs text-[#9CA3AF] leading-none mt-0.5">FY 2025-26 · Indian Tax Rules</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-[#111827] leading-none">ESOP Tax Calculator</p>
-            <p className="text-xs text-[#9CA3AF] leading-none mt-0.5">FY 2025-26 · Indian Tax Rules</p>
+          <div className="flex items-center gap-1.5 text-[11px] text-[#6B7280] bg-[#F3F4F6] border border-[#E5E7EB] rounded-full px-3 py-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3F7D5A] shrink-0" />
+            All calculations are client-side · Private &amp; Secure
           </div>
         </div>
       </header>
@@ -95,7 +101,10 @@ export function AppShell() {
 
           {/* Left: Input Panel */}
           <div>
-            <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+            <div
+              className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
+              style={{ borderLeft: '4px solid #E85936' }}
+            >
               <div className="flex items-center gap-2 mb-5 pb-4 border-b border-[#F3F4F6]">
                 <Calculator size={14} className="text-[#E85936]" />
                 <p className="text-sm font-semibold text-[#111827]">Grant Details</p>
@@ -143,6 +152,7 @@ export function AppShell() {
               {activeTab === 'perquisite' && (
                 <PerquisiteScenario
                   inputs={effectiveInputs}
+                  grants={grants}
                   totalVested={grantsTotalVested}
                   optionsSelected={inputs.numberOfOptions}
                   totalShares={totalShares}

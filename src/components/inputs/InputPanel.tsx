@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Info } from 'lucide-react'
 import { Label, Tooltip } from '@/components/ui/index'
-import { formatCurrency, formatIndianInput, toIndianWords } from '@/lib/formatters'
+import { formatIndianInput, toIndianWords } from '@/lib/formatters'
 import { clamp } from '@/lib/utils'
-import { computeFIFO, weightedStrikePrice, formatGrantDate } from '@/lib/grantUtils'
+import { computeFIFO, weightedStrikePrice } from '@/lib/grantUtils'
 import type { PerquisiteInputs } from '@/types/tax.types'
 import type { Grant } from '@/types/grant.types'
 
@@ -39,6 +39,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
   const totalVested = grants.reduce((s, g) => s + g.vestedOptions, 0)
 
   // Local display states — comma-formatted, lets user type freely
+  // (FIFO grant allocation cards are shown in the output panel, not here)
   const [optionsDisplay, setOptionsDisplay] = useState(
     inputs.numberOfOptions ? inputs.numberOfOptions.toLocaleString('en-IN') : ''
   )
@@ -59,23 +60,6 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
   useEffect(() => {
     setSalaryDisplay(inputs.annualSalaryIncome ? formatIndianInput(String(inputs.annualSalaryIncome)) : '')
   }, [inputs.annualSalaryIncome])
-
-  // FIFO allocation derived from committed numberOfOptions
-  const allocations = computeFIFO(grants, inputs.numberOfOptions)
-  const totalAllocated = allocations.reduce((s, a) => s + a.optionsAllocated, 0)
-  const totalSharesAllocated = allocations.reduce((s, a) => s + a.sharesAllocated, 0)
-  const hasConversion = allocations.some((a) => a.conversionRatio !== 1)
-
-  // Per-grant perquisite: (FMV − exercisePrice) × sharesAllocated (price is per share)
-  const allocationRows = allocations.map((a) => {
-    const grant = grants.find((g) => g.grantId === a.grantId)!
-    return {
-      ...a,
-      available: grant.vestedOptions,
-      perquisite: Math.max(0, inputs.fmvAtExercise - a.exercisePrice) * a.sharesAllocated,
-    }
-  })
-  const totalPerquisite = allocationRows.reduce((s, a) => s + a.perquisite, 0)
 
   function commitOptions(v: number) {
     const clamped = Math.min(Math.max(1, v), totalVested)
@@ -221,83 +205,6 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
           </div>
         </div>
       </Field>
-
-      {/* 5. FIFO Grant Cards */}
-      {allocationRows.length > 0 && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wide">Grants Selected (FIFO)</p>
-            <span className="text-[10px] text-[#9CA3AF]">
-              {totalAllocated.toLocaleString('en-IN')} opts
-              {hasConversion && <> → {totalSharesAllocated.toLocaleString('en-IN')} sh</>}
-              {' '}/ {totalVested.toLocaleString('en-IN')}
-            </span>
-          </div>
-
-          {allocationRows.map((a) => (
-            <div key={a.grantId} className="rounded-xl border border-[#E5E7EB] bg-white overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-2 bg-[#F9FAFB] border-b border-[#E5E7EB]">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#111827]">{a.grantId}</span>
-                  <span className="text-[11px] text-[#9CA3AF]">{formatGrantDate(a.dateOfGrant)}</span>
-                  {a.optionsAllocated === a.available && (
-                    <span className="text-[10px] bg-[#FFF3F0] text-[#E85936] px-1.5 py-0.5 rounded-md font-semibold">Full</span>
-                  )}
-                </div>
-                <span className="text-[11px] text-[#6B7280]">
-                  Strike <span className="font-semibold">₹{a.exercisePrice.toLocaleString('en-IN')}</span>/share
-                </span>
-              </div>
-
-              <div className={`grid divide-x divide-[#F3F4F6] ${hasConversion ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                <div className="px-3 py-2.5">
-                  <p className="text-[10px] text-[#9CA3AF] uppercase tracking-wide mb-1">Available</p>
-                  <p className="text-sm font-bold text-[#374151]">{a.available.toLocaleString('en-IN')}</p>
-                  <p className="text-[10px] text-[#9CA3AF] mt-0.5">options</p>
-                </div>
-                <div className="px-3 py-2.5">
-                  <p className="text-[10px] text-[#9CA3AF] uppercase tracking-wide mb-1">Selected</p>
-                  <p className={`text-sm font-bold ${a.optionsAllocated === a.available ? 'text-[#E85936]' : 'text-[#374151]'}`}>
-                    {a.optionsAllocated.toLocaleString('en-IN')}
-                  </p>
-                  <p className="text-[10px] text-[#9CA3AF] mt-0.5">options</p>
-                </div>
-                {hasConversion && (
-                  <div className="px-3 py-2.5">
-                    <p className="text-[10px] text-[#9CA3AF] uppercase tracking-wide mb-1">Shares</p>
-                    <p className="text-sm font-bold text-[#111827]">{a.sharesAllocated.toLocaleString('en-IN')}</p>
-                    <p className="text-[10px] text-[#9CA3AF] mt-0.5">×{a.conversionRatio} ratio</p>
-                  </div>
-                )}
-              </div>
-
-              {inputs.fmvAtExercise > 0 && (
-                <div className="flex items-center justify-between px-3 py-2 bg-[#F9FAF8] border-t border-[#F3F4F6]">
-                  <span className="text-[10px] text-[#9CA3AF]">
-                    (FMV − ₹{a.exercisePrice}) × {a.sharesAllocated} shares
-                  </span>
-                  <span className={`text-sm font-bold ${a.perquisite > 0 ? 'text-[#3F7D5A]' : 'text-[#9CA3AF]'}`}>
-                    {a.perquisite > 0 ? formatCurrency(a.perquisite) : '—'}
-                  </span>
-                </div>
-              )}
-            </div>
-          ))}
-
-          <div className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]">
-            <div>
-              <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wide">Total Perquisite</p>
-              <p className="text-[11px] text-[#6B7280] mt-0.5">
-                {totalAllocated.toLocaleString('en-IN')} options
-                {hasConversion && <> → <span className="font-medium text-[#374151]">{totalSharesAllocated.toLocaleString('en-IN')} shares</span></>}
-              </p>
-            </div>
-            <span className="text-base font-bold text-[#3F7D5A]">
-              {inputs.fmvAtExercise > 0 ? formatCurrency(totalPerquisite) : '—'}
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Reset */}
       <button
