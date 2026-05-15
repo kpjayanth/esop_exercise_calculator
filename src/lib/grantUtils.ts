@@ -10,9 +10,16 @@ export function applyRounding(n: number, rule: RoundingRule): number {
   }
 }
 
-/** Sort grants by date (oldest first) and allocate options FIFO. */
-export function computeFIFO(grants: Grant[], totalToExercise: number): GrantAllocation[] {
-  const sorted = [...grants].sort((a, b) => a.dateOfGrant.getTime() - b.dateOfGrant.getTime())
+/** Sort grants by date (oldest first) and allocate options FIFO.
+ *  If customOrder (array of grantIds) is provided, use that ordering instead. */
+export function computeFIFO(grants: Grant[], totalToExercise: number, customOrder?: string[]): GrantAllocation[] {
+  let sorted: Grant[]
+  if (customOrder && customOrder.length > 0) {
+    const posMap = new Map(customOrder.map((id, i) => [id, i]))
+    sorted = [...grants].sort((a, b) => (posMap.get(a.grantId) ?? 999) - (posMap.get(b.grantId) ?? 999))
+  } else {
+    sorted = [...grants].sort((a, b) => a.dateOfGrant.getTime() - b.dateOfGrant.getTime())
+  }
   const allocations: GrantAllocation[] = []
   let remaining = Math.min(totalToExercise, totalVested(grants))
 

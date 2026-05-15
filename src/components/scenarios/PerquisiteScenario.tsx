@@ -15,13 +15,17 @@ import type { Grant } from '@/types/grant.types'
 interface Props {
   inputs: PerquisiteInputs
   grants: Grant[]
+  grantOrder: string[]
+  onReorder: (newOrder: string[]) => void
+  onResetOrder: () => void
+  defaultOrder: string[]
   totalVested: number
   optionsSelected: number
   totalShares: number
   exerciseDate: Date
 }
 
-export function PerquisiteScenario({ inputs, grants, totalVested, optionsSelected, totalShares, exerciseDate }: Props) {
+export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onResetOrder, defaultOrder, totalVested, optionsSelected, totalShares, exerciseDate }: Props) {
   const result = usePerquisiteTax(inputs)
   const scenarios = useScenarios(inputs)
   const [slabOpen, setSlabOpen] = useState(false)
@@ -33,6 +37,10 @@ export function PerquisiteScenario({ inputs, grants, totalVested, optionsSelecte
       {/* 0. Grant allocation — always visible, FIFO breakdown in output area */}
       <GrantAllocationBlock
         grants={grants}
+        grantOrder={grantOrder}
+        onReorder={onReorder}
+        onResetOrder={onResetOrder}
+        defaultOrder={defaultOrder}
         numberOfOptions={optionsSelected}
         fmvAtExercise={inputs.fmvAtExercise}
       />

@@ -28,20 +28,31 @@ const DEFAULT_INPUTS: PerquisiteInputs = {
   isDPIITRecognized: false,
 }
 
+/** Sort grant IDs oldest-first (the default FIFO order). */
+function defaultGrantOrder(grants: Grant[]): string[] {
+  return [...grants]
+    .sort((a, b) => a.dateOfGrant.getTime() - b.dateOfGrant.getTime())
+    .map((g) => g.grantId)
+}
+
 export function AppShell() {
   const [grants, setGrants] = useState<Grant[] | null>(null)
   const [inputs, setInputs] = useState<PerquisiteInputs>(DEFAULT_INPUTS)
   const [activeTab, setActiveTab] = useState<TabId>('perquisite')
   const [exerciseDate, setExerciseDate] = useState<Date>(() => new Date())
   const [totalShares, setTotalShares] = useState(0)
+  // User-controllable exercise order (array of grant IDs, first = exercised first)
+  const [grantOrder, setGrantOrder] = useState<string[]>([])
 
   const grantsTotalVested = grants ? getTotalVested(grants) : 0
 
-  // When grants are loaded, seed initial options (all vested) and strike
+  // When grants are loaded, seed initial options (all vested), strike, and default order
   function handleGrantsLoaded(loadedGrants: Grant[]) {
+    const order = defaultGrantOrder(loadedGrants)
     setGrants(loadedGrants)
+    setGrantOrder(order)
     const maxVested = getTotalVested(loadedGrants)
-    const allocations = computeFIFO(loadedGrants, maxVested)
+    const allocations = computeFIFO(loadedGrants, maxVested, order)
     const strike = weightedStrikePrice(allocations)
     const shares = totalSharesFromAllocations(allocations)
     setTotalShares(shares)
@@ -52,17 +63,17 @@ export function AppShell() {
     }))
   }
 
-  // Keep strikePrice and totalShares in sync with FIFO whenever numberOfOptions changes
+  // Keep strikePrice and totalShares in sync with order/numberOfOptions changes
   useEffect(() => {
     if (!grants) return
-    const allocations = computeFIFO(grants, inputs.numberOfOptions)
+    const allocations = computeFIFO(grants, inputs.numberOfOptions, grantOrder)
     const strike = weightedStrikePrice(allocations)
     const shares = totalSharesFromAllocations(allocations)
     setTotalShares(shares)
     if (strike !== inputs.strikePrice) {
       setInputs((prev) => ({ ...prev, strikePrice: strike }))
     }
-  }, [inputs.numberOfOptions, grants])
+  }, [inputs.numberOfOptions, grants, grantOrder])
 
   // Tax engine sees shares (not options) as the unit; strike is per share
   const effectiveInputs: PerquisiteInputs = {
@@ -113,7 +124,7 @@ export function AppShell() {
                 inputs={inputs}
                 onChange={setInputs}
                 grants={grants}
-                onResetGrants={() => { setGrants(null); setInputs(DEFAULT_INPUTS) }}
+                onResetGrants={() => { setGrants(null); setInputs(DEFAULT_INPUTS); setGrantOrder([]) }}
                 exerciseDate={exerciseDate}
                 onExerciseDateChange={setExerciseDate}
               />
@@ -153,6 +164,10 @@ export function AppShell() {
                 <PerquisiteScenario
                   inputs={effectiveInputs}
                   grants={grants}
+                  grantOrder={grantOrder}
+                  onReorder={(newOrder) => setGrantOrder(newOrder)}
+                  onResetOrder={() => setGrantOrder(defaultGrantOrder(grants))}
+                  defaultOrder={defaultGrantOrder(grants)}
                   totalVested={grantsTotalVested}
                   optionsSelected={inputs.numberOfOptions}
                   totalShares={totalShares}
