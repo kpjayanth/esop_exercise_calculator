@@ -36,32 +36,7 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
   const bracketLabel = topSlab?.label ?? '—'
 
   const hasConversion = optionsSelected !== totalShares
-  const stats = [
-    {
-      label: 'FMV at Exercise',
-      value: formatCurrency(inputs.fmvAtExercise),
-      sub: 'per share',
-    },
-    {
-      label: 'Available to Exercise',
-      value: totalVested.toLocaleString('en-IN'),
-      sub: 'vested options',
-    },
-    {
-      label: 'Options → Shares',
-      value: hasConversion
-        ? `${optionsSelected.toLocaleString('en-IN')} → ${totalShares.toLocaleString('en-IN')}`
-        : optionsSelected.toLocaleString('en-IN'),
-      sub: hasConversion
-        ? `${totalShares.toLocaleString('en-IN')} shares to receive`
-        : `of ${totalVested.toLocaleString('en-IN')} available`,
-    },
-    {
-      label: 'Annual Salary',
-      value: formatCompact(inputs.annualSalaryIncome),
-      sub: inputs.regime === 'NEW' ? 'New Regime' : 'Old Regime',
-    },
-  ]
+  const { netSalaryIncome, standardDeduction } = result
 
   return (
     <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
@@ -74,15 +49,45 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
         <span className="text-[11px] text-[#9CA3AF] font-medium">as of {formatExerciseDate(exerciseDate)}</span>
       </div>
 
-      {/* Stats grid */}
+      {/* Stats grid — 3 standard cells + 1 rich salary cell */}
       <div className="bg-white grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-[#F3F4F6]">
-        {stats.map((s) => (
-          <div key={s.label} className="px-4 py-3.5">
-            <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">{s.label}</p>
-            <p className="text-lg font-bold text-[#111827] leading-none">{s.value}</p>
-            <p className="text-[10px] text-[#9CA3AF] mt-1">{s.sub}</p>
-          </div>
-        ))}
+        {/* FMV */}
+        <div className="px-4 py-3.5">
+          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">FMV at Exercise</p>
+          <p className="text-lg font-bold text-[#111827] leading-none">{formatCurrency(inputs.fmvAtExercise)}</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-1">per share</p>
+        </div>
+
+        {/* Available */}
+        <div className="px-4 py-3.5">
+          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Available to Exercise</p>
+          <p className="text-lg font-bold text-[#111827] leading-none">{totalVested.toLocaleString('en-IN')}</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-1">vested options</p>
+        </div>
+
+        {/* Options → Shares */}
+        <div className="px-4 py-3.5">
+          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Options → Shares</p>
+          <p className="text-lg font-bold text-[#111827] leading-none">
+            {hasConversion
+              ? `${optionsSelected.toLocaleString('en-IN')} → ${totalShares.toLocaleString('en-IN')}`
+              : optionsSelected.toLocaleString('en-IN')}
+          </p>
+          <p className="text-[10px] text-[#9CA3AF] mt-1">
+            {hasConversion
+              ? `${totalShares.toLocaleString('en-IN')} shares to receive`
+              : `of ${totalVested.toLocaleString('en-IN')} available`}
+          </p>
+        </div>
+
+        {/* Net Taxable Salary */}
+        <div className="px-4 py-3.5">
+          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Net Taxable Salary</p>
+          <p className="text-lg font-bold text-[#111827] leading-none">{formatCompact(netSalaryIncome)}</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-1">
+            {formatCompact(inputs.annualSalaryIncome)} − {formatCompact(standardDeduction)} std. deduction
+          </p>
+        </div>
       </div>
 
       {/* Bracket strip */}
@@ -91,7 +96,6 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
           Marginal Tax Bracket
         </span>
 
-        {/* Big rate badge */}
         <div className={`flex items-baseline gap-1 px-3 py-1 rounded-full ${colors.pill} shadow-sm`}>
           <span className="text-sm font-black text-white">{bracketRate}</span>
         </div>
@@ -110,11 +114,11 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
 
         {!result.applied87A && topSlab && (
           <span className="ml-auto text-[11px] text-[#6B7280]">
-            {formatCompact(inputs.annualSalaryIncome)} salary
+            {formatCompact(netSalaryIncome)} net salary
             <span className="mx-1 text-[#D1D5DB]">+</span>
             {formatCompact(result.perquisite)} perquisite
             <span className="mx-1 text-[#D1D5DB]">=</span>
-            <span className={`font-semibold ${colors.text}`}>{formatCompact(result.totalIncome)} total income</span>
+            <span className={`font-semibold ${colors.text}`}>{formatCompact(netSalaryIncome + result.perquisite)} total income</span>
           </span>
         )}
       </div>

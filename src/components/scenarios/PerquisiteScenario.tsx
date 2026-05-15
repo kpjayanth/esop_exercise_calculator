@@ -1,13 +1,13 @@
+import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui/index'
 import { TaxSummaryCard } from '@/components/results/TaxSummaryCard'
 import { TaxBreakdownRows } from '@/components/results/TaxBreakdownRows'
-import { TaxWaterfallChart } from '@/components/results/TaxWaterfallChart'
 import { SlabWaterfallExplainer } from '@/components/results/SlabWaterfallExplainer'
-import { RegimeComparison } from '@/components/results/RegimeComparison'
 import { ScenarioTable } from '@/components/results/ScenarioTable'
 import { ThresholdAlert } from '@/components/results/ThresholdAlert'
 import { InputSummaryCard } from '@/components/results/InputSummaryCard'
-import { usePerquisiteTax, useRegimeComparison, useScenarios } from '@/hooks/useTaxEngine'
+import { usePerquisiteTax, useScenarios } from '@/hooks/useTaxEngine'
 import type { PerquisiteInputs } from '@/types/tax.types'
 
 interface Props {
@@ -20,8 +20,8 @@ interface Props {
 
 export function PerquisiteScenario({ inputs, totalVested, optionsSelected, totalShares, exerciseDate }: Props) {
   const result = usePerquisiteTax(inputs)
-  const comparison = useRegimeComparison(inputs)
   const scenarios = useScenarios(inputs)
+  const [slabOpen, setSlabOpen] = useState(false)
 
   const hasValues = inputs.fmvAtExercise > 0 && inputs.numberOfOptions > 0 && inputs.annualSalaryIncome > 0
 
@@ -55,7 +55,6 @@ export function PerquisiteScenario({ inputs, totalVested, optionsSelected, total
         <div className="w-full max-w-sm space-y-2">
           {[
             { icon: '₹', label: 'Perquisite income & total tax' },
-            { icon: '⚖', label: 'New vs Old regime comparison' },
             { icon: '📈', label: 'FMV sensitivity scenarios' },
             { icon: '🏷', label: 'Marginal slab & surcharge breakdown' },
           ].map((item) => (
@@ -90,34 +89,37 @@ export function PerquisiteScenario({ inputs, totalVested, optionsSelected, total
         <TaxBreakdownRows result={result} />
       </Card>
 
-      {/* 4. Slab waterfall — the core explainer */}
-      <Card className="p-4 space-y-4">
-        <div>
-          <p className="text-sm font-semibold text-[#111827]">How your {(inputs.regime === 'NEW' ? 'New' : 'Old')} Regime rate is derived</p>
-          <p className="text-xs text-[#9CA3AF] mt-0.5">Your perquisite is taxed at your marginal (topmost) slab rate — not a flat rate</p>
-        </div>
-        <SlabWaterfallExplainer
-          result={result}
-          annualSalaryIncome={inputs.annualSalaryIncome}
-          regime={inputs.regime}
-        />
+      {/* 4. Slab explainer — accordion, closed by default */}
+      <Card className="overflow-hidden">
+        <button
+          onClick={() => setSlabOpen((o) => !o)}
+          className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-[#FAFAFA] transition-colors"
+        >
+          <div>
+            <p className="text-sm font-semibold text-[#111827]">
+              How your {inputs.regime === 'NEW' ? 'New' : 'Old'} Regime rate is derived
+            </p>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">
+              Your perquisite is taxed at your marginal (topmost) slab rate — not a flat rate
+            </p>
+          </div>
+          <ChevronDown
+            size={16}
+            className={`text-[#9CA3AF] shrink-0 ml-3 transition-transform duration-200 ${slabOpen ? 'rotate-180' : ''}`}
+          />
+        </button>
+        {slabOpen && (
+          <div className="px-4 pb-4 pt-1 border-t border-[#F3F4F6]">
+            <SlabWaterfallExplainer
+              result={result}
+              annualSalaryIncome={inputs.annualSalaryIncome}
+              regime={inputs.regime}
+            />
+          </div>
+        )}
       </Card>
 
-      {/* 5. Gross-to-net value waterfall chart */}
-      <Card className="p-4">
-        <p className="text-sm font-semibold text-[#111827] mb-4">Value Waterfall</p>
-        <TaxWaterfallChart result={result} />
-        <p className="text-xs text-[#9CA3AF] mt-2 text-center">
-          Gross Value → Exercise Cost → Taxes → Net Gain
-        </p>
-      </Card>
-
-      {/* 6. New vs Old regime comparison */}
-      <Card className="p-4">
-        <RegimeComparison comparison={comparison} />
-      </Card>
-
-      {/* 7. FMV sensitivity table */}
+      {/* 5. FMV sensitivity table */}
       <Card className="p-4">
         <ScenarioTable scenarios={scenarios} />
       </Card>

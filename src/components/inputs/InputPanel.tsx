@@ -112,7 +112,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
       </Field>
 
       {/* 2. Annual Salary — promoted, needed for tax slab */}
-      <Field label="Annual Salary Income" tooltip="Your total salary for the year, excluding this ESOP exercise. Used to determine your marginal tax slab.">
+      <Field label="Annual Gross Salary" tooltip="Enter your gross salary (CTC / pre-deduction). We automatically subtract the standard deduction — ₹75,000 for New Regime or ₹50,000 for Old Regime — as per Indian tax rules. Net taxable salary = Gross Salary − Standard Deduction.">
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280] text-sm">₹</span>
           <input

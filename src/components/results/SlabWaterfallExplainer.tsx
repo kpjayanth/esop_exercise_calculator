@@ -39,24 +39,48 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
 
   return (
     <div className="space-y-4">
-      {/* Context: where salary puts you */}
-      <div className="flex items-start gap-2 bg-[#F9FAFB] rounded-xl border border-[#E5E7EB] px-4 py-3 text-sm">
-        <Info size={14} className="text-[#6B7280] shrink-0 mt-0.5" />
-        <div className="leading-5 text-[#374151]">
-          <span className="font-medium">How your effective rate is calculated — </span>
-          {regime === 'NEW' ? 'New' : 'Old'} Regime
-          <span className="text-[#6B7280]">
-            {' '}· Your salary of{' '}
-            <span className="font-medium text-[#111827]">{formatCompact(annualSalaryIncome as number)}</span>
-            {standardDeduction > 0 && (
-              <> (less ₹{(standardDeduction / 1000).toFixed(0)}K standard deduction = <span className="font-medium text-[#111827]">{formatCompact(netSalaryIncome)}</span> taxable)</>
-            )}
-            {' '}already fills the lower slab(s). Your{' '}
-            <span className="font-medium text-[#111827]">{formatCompact(perquisite)}</span> perquisite is
-            layered on top at your{' '}
-            <span className="font-medium text-[#E85936]">marginal slab rate</span>.
+      {/* Context: income build-up + standard deduction */}
+      <div className="bg-[#F9FAFB] rounded-xl border border-[#E5E7EB] px-4 py-3 space-y-2.5">
+        {/* Step 1: gross → net */}
+        <div className="flex items-center gap-2">
+          <Info size={13} className="text-[#6B7280] shrink-0" />
+          <span className="text-xs font-semibold text-[#374151]">
+            {regime === 'NEW' ? 'New' : 'Old'} Regime — how your taxable income is built up
           </span>
         </div>
+        <div className="space-y-1.5 pl-5 text-xs text-[#6B7280]">
+          <div className="flex justify-between">
+            <span>Gross Salary</span>
+            <span className="font-medium text-[#111827]">{formatCompact(annualSalaryIncome)}</span>
+          </div>
+          {standardDeduction > 0 && (
+            <div className="flex justify-between text-[#9CA3AF]">
+              <span>
+                Less: Standard Deduction
+                <span className="ml-1 text-[10px] bg-[#F3F4F6] text-[#6B7280] px-1.5 py-0.5 rounded-full">
+                  {regime === 'NEW' ? '₹75,000 · New Regime' : '₹50,000 · Old Regime'}
+                </span>
+              </span>
+              <span className="font-medium text-[#A05C45]">−{formatCompact(standardDeduction)}</span>
+            </div>
+          )}
+          <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
+            <span className="font-semibold text-[#374151]">Net Taxable Salary</span>
+            <span className="font-semibold text-[#111827]">{formatCompact(netSalaryIncome)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>+ ESOP Perquisite</span>
+            <span className="font-medium text-[#3F7D5A]">+{formatCompact(perquisite)}</span>
+          </div>
+          <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
+            <span className="font-semibold text-[#374151]">Total Income for Slab</span>
+            <span className="font-semibold text-[#111827]">{formatCompact(netSalaryIncome + perquisite)}</span>
+          </div>
+        </div>
+        <p className="pl-5 text-[11px] text-[#9CA3AF]">
+          Your net salary already fills the lower slabs — the perquisite is taxed at your{' '}
+          <span className="font-semibold text-[#E85936]">marginal (topmost) rate</span>, not a flat rate.
+        </p>
       </div>
 
       {/* Slab table */}
