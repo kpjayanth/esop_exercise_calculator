@@ -64,32 +64,32 @@ function DraggableRow({
       {/* Color swatch */}
       <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: row.color }} />
 
-      {/* Compact metadata: ID · Date · Strike */}
-      <div className="flex items-center gap-1 flex-1 min-w-0">
-        <span className="text-xs font-bold text-[#111827]">{row.grantId}</span>
-        <span className="text-[#D1D5DB] text-[10px]">·</span>
-        <span className="text-[11px] text-[#9CA3AF]">{formatGrantDate(row.dateOfGrant)}</span>
-        <span className="text-[#D1D5DB] text-[10px]">·</span>
-        <span className="text-[11px] text-[#6B7280]">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
+      {/* Compact metadata: ID always shown; Date + Strike hidden on mobile */}
+      <div className="flex items-center gap-1 flex-1 min-w-0 overflow-hidden">
+        <span className="text-xs font-bold text-[#111827] shrink-0">{row.grantId}</span>
+        <span className="text-[#D1D5DB] text-[10px] hidden sm:inline shrink-0">·</span>
+        <span className="text-[11px] text-[#9CA3AF] hidden sm:inline truncate">{formatGrantDate(row.dateOfGrant)}</span>
+        <span className="text-[#D1D5DB] text-[10px] shrink-0">·</span>
+        <span className="text-[11px] text-[#6B7280] shrink-0">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
         {isFull && (
           <span className="ml-1 text-[9px] bg-[#FFF3F0] text-[#E85936] px-1.5 py-0.5 rounded font-semibold shrink-0">Full</span>
         )}
       </div>
 
-      {/* Stats: Avail → Selected [→ Shares] [Perquisite] */}
-      <div className="flex items-center gap-4 shrink-0 text-right">
+      {/* Stats — desktop shows all columns; mobile shows only Selected + Perquisite */}
+      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
         <div className="text-right hidden sm:block">
           <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Avail</p>
           <p className="text-xs font-medium text-[#374151] tabular-nums">{row.available.toLocaleString('en-IN')}</p>
         </div>
-        <div className="text-right">
-          <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Selected</p>
+        <div className="text-right min-w-[36px] sm:min-w-[44px]">
+          <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Sel.</p>
           <p className={`text-xs font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#374151]'}`}>
             {row.optionsAllocated.toLocaleString('en-IN')}
           </p>
         </div>
         {hasConversion && (
-          <div className="text-right">
+          <div className="text-right hidden sm:block">
             <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Shares</p>
             <p className="text-xs font-medium text-[#374151] tabular-nums">
               {row.sharesAllocated.toLocaleString('en-IN')}
@@ -98,8 +98,8 @@ function DraggableRow({
           </div>
         )}
         {fmvAtExercise > 0 && (
-          <div className="text-right min-w-[64px]">
-            <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Perquisite</p>
+          <div className="text-right min-w-[48px] sm:min-w-[64px]">
+            <p className="text-[9px] text-[#9CA3AF] uppercase tracking-wide">Perq.</p>
             <p className={`text-xs font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#3F7D5A]' : 'text-[#9CA3AF]'}`}>
               {row.perquisite > 0 ? formatCompact(row.perquisite) : '—'}
             </p>
@@ -210,15 +210,15 @@ export function GrantAllocationBlock({
       {/* Body */}
       <div className="bg-white p-4 flex flex-col gap-3.5">
 
-        {/* Column headers */}
-        <div className="flex items-center gap-2 px-3 pb-1 text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide">
+        {/* Column headers — desktop only (mobile rows are self-labelled) */}
+        <div className="hidden sm:flex items-center gap-2 px-3 pb-1 text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide">
           <span className="w-5 shrink-0" />
           <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
           <span className="w-2 shrink-0" />
           <span className="flex-1">Grant · Date · Strike</span>
-          <div className="flex items-center gap-4 shrink-0 text-right">
-            <span className="hidden sm:block">Avail</span>
-            <span>Selected</span>
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-right">
+            <span>Avail</span>
+            <span className="min-w-[44px]">Selected</span>
             {hasConversion && <span>Shares</span>}
             {fmvAtExercise > 0 && <span className="min-w-[64px]">Perquisite</span>}
           </div>
