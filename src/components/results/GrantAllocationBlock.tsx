@@ -1,5 +1,5 @@
-import { Layers, GripVertical, RotateCcw } from 'lucide-react'
-import { Reorder, useDragControls } from 'framer-motion'
+import { Layers, GripVertical, RotateCcw, ChevronDown } from 'lucide-react'
+import { Reorder, useDragControls, AnimatePresence, motion } from 'framer-motion'
 import { computeFIFO, formatGrantDate } from '@/lib/grantUtils'
 import { formatCurrency, formatCompact } from '@/lib/formatters'
 import type { Grant } from '@/types/grant.types'
@@ -27,6 +27,8 @@ interface Props {
   defaultOrder: string[]
   numberOfOptions: number
   fmvAtExercise: number
+  isOpen: boolean
+  onToggle: () => void
 }
 
 // ── Circular progress ring ────────────────────────────────────────────────────
@@ -162,7 +164,7 @@ function AllocationBar({ rows, totalPerquisite }: { rows: AllocationRow[]; total
 
 // ── Main export ───────────────────────────────────────────────────────────────
 export function GrantAllocationBlock({
-  grants, grantOrder, onReorder, onResetOrder, defaultOrder, numberOfOptions, fmvAtExercise,
+  grants, grantOrder, onReorder, onResetOrder, defaultOrder, numberOfOptions, fmvAtExercise, isOpen, onToggle,
 }: Props) {
   const allocations = computeFIFO(grants, numberOfOptions, grantOrder)
 
@@ -198,8 +200,11 @@ export function GrantAllocationBlock({
 
   return (
     <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
-      {/* Dark header */}
-      <div className="bg-gradient-to-r from-[#1C1C1E] to-[#2C2C2E] px-5 py-3 flex items-center justify-between gap-3">
+      {/* Dark header — clickable toggle */}
+      <button
+        onClick={onToggle}
+        className="w-full bg-gradient-to-r from-[#1C1C1E] to-[#2C2C2E] px-5 py-3 flex items-center justify-between gap-3 text-left"
+      >
         <div className="flex items-center gap-2 flex-wrap">
           <Layers size={14} className="text-[#E85936] shrink-0" />
           <span className="text-xs font-bold text-white tracking-widest uppercase">Grant Allocation</span>
@@ -213,22 +218,37 @@ export function GrantAllocationBlock({
             </span>
           )}
           {isCustomOrder && (
-            <button
-              onClick={onResetOrder}
+            <span
+              onClick={(e) => { e.stopPropagation(); onResetOrder() }}
               className="flex items-center gap-1 text-[10px] text-[#9CA3AF] hover:text-white transition-colors"
               title="Reset to oldest-first FIFO"
             >
               <RotateCcw size={10} />
               Reset
-            </button>
+            </span>
           )}
         </div>
-        <span className="text-[11px] font-semibold text-white bg-white/10 border border-white/15 rounded-full px-2.5 py-0.5 shrink-0">
-          {summaryPill}
-        </span>
-      </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-[11px] font-semibold text-white bg-white/10 border border-white/15 rounded-full px-2.5 py-0.5">
+            {summaryPill}
+          </span>
+          <ChevronDown
+            size={14}
+            className={`text-[#9CA3AF] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          />
+        </div>
+      </button>
 
-      {/* Body */}
+      {/* Body — animated collapse */}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
       <div className="bg-white p-4 flex flex-col gap-3.5">
 
         {/* Column headers — desktop only (mobile rows are self-labelled) */}
@@ -295,6 +315,9 @@ export function GrantAllocationBlock({
           </span>
         </div>
       </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

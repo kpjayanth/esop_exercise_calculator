@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronDown, CalendarDays } from 'lucide-react'
 import { Card } from '@/components/ui/index'
 import { TaxSummaryCard } from '@/components/results/TaxSummaryCard'
@@ -29,8 +29,18 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
   const result = usePerquisiteTax(inputs)
   const scenarios = useScenarios(inputs)
   const [slabOpen, setSlabOpen] = useState(false)
+  const [grantBlockOpen, setGrantBlockOpen] = useState(true)
+  const hasValuesRef = useRef(false)
 
   const hasValues = inputs.fmvAtExercise > 0 && inputs.numberOfOptions > 0 && inputs.annualSalaryIncome > 0
+
+  // Auto-collapse grant block the first time tax details become available
+  useEffect(() => {
+    if (hasValues && !hasValuesRef.current) {
+      setGrantBlockOpen(false)
+      hasValuesRef.current = true
+    }
+  }, [hasValues])
 
   const formattedDate = exerciseDate.toLocaleDateString('en-IN', {
     day: 'numeric', month: 'short', year: 'numeric',
@@ -64,6 +74,8 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
         defaultOrder={defaultOrder}
         numberOfOptions={optionsSelected}
         fmvAtExercise={inputs.fmvAtExercise}
+        isOpen={grantBlockOpen}
+        onToggle={() => setGrantBlockOpen((o) => !o)}
       />
 
       {!hasValues ? (
