@@ -1,5 +1,5 @@
-import { Layers, GripVertical, ArrowUpDown, RotateCcw } from 'lucide-react'
-import { Reorder, useDragControls, motion } from 'framer-motion'
+import { Layers, GripVertical, RotateCcw } from 'lucide-react'
+import { Reorder, useDragControls } from 'framer-motion'
 import { computeFIFO, formatGrantDate } from '@/lib/grantUtils'
 import { formatCurrency, formatCompact } from '@/lib/formatters'
 import type { Grant } from '@/types/grant.types'
@@ -31,8 +31,8 @@ interface Props {
 
 // ── Draggable row (table layout, 3+ grants) ───────────────────────────────────
 function DraggableRow({
-  row, idx, fmvAtExercise, hasConversion,
-}: { row: AllocationRow; idx: number; fmvAtExercise: number; hasConversion: boolean }) {
+  row, idx, fmvAtExercise, hasConversion, canReorder,
+}: { row: AllocationRow; idx: number; fmvAtExercise: number; hasConversion: boolean; canReorder: boolean }) {
   const controls = useDragControls()
   const isFull = row.optionsAllocated === row.available
 
@@ -50,14 +50,16 @@ function DraggableRow({
         {idx + 1}
       </span>
 
-      {/* Drag handle */}
-      <div
-        className="text-[#D1D5DB] group-hover:text-[#9CA3AF] cursor-grab active:cursor-grabbing shrink-0 touch-none"
-        onPointerDown={(e) => controls.start(e)}
-        title="Drag to reorder"
-      >
-        <GripVertical size={14} />
-      </div>
+      {/* Drag handle — hidden for single grant */}
+      {canReorder && (
+        <div
+          className="text-[#D1D5DB] group-hover:text-[#9CA3AF] cursor-grab active:cursor-grabbing shrink-0 touch-none"
+          onPointerDown={(e) => controls.start(e)}
+          title="Drag to reorder"
+        >
+          <GripVertical size={14} />
+        </div>
+      )}
 
       {/* Color swatch */}
       <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: row.color }} />
@@ -108,69 +110,6 @@ function DraggableRow({
   )
 }
 
-// ── Card (1–2 grants, with swap UX) ──────────────────────────────────────────
-function GrantCard({ row, fmvAtExercise, hasConversion, orderIdx }: {
-  row: AllocationRow; fmvAtExercise: number; hasConversion: boolean; orderIdx: number
-}) {
-  const isFull = row.optionsAllocated === row.available
-  return (
-    <div className="rounded-xl border border-[#E5E7EB] overflow-hidden">
-      {/* Header: swatch + ID + date + strike */}
-      <div className="flex items-center justify-between px-3 py-2 bg-[#F9FAFB] border-b border-[#E5E7EB]">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="w-5 h-5 rounded-full bg-[#F3F4F6] text-[10px] font-bold text-[#9CA3AF] flex items-center justify-center shrink-0">
-            {orderIdx + 1}
-          </span>
-          <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: row.color }} />
-          <span className="text-xs font-bold text-[#111827]">{row.grantId}</span>
-          <span className="text-[11px] text-[#9CA3AF]">{formatGrantDate(row.dateOfGrant)}</span>
-          {isFull && (
-            <span className="text-[9px] bg-[#FFF3F0] text-[#E85936] px-1.5 py-0.5 rounded font-semibold shrink-0">Full</span>
-          )}
-        </div>
-        <span className="text-[11px] text-[#6B7280] shrink-0 ml-2">
-          ₹{row.exercisePrice.toLocaleString('en-IN')}
-          <span className="text-[10px] text-[#9CA3AF]">/sh</span>
-        </span>
-      </div>
-
-      {/* Stats */}
-      <div className={`grid divide-x divide-[#F3F4F6] ${hasConversion ? 'grid-cols-3' : 'grid-cols-2'}`}>
-        <div className="px-3 py-2.5">
-          <p className="text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide mb-1">Available</p>
-          <p className="text-sm font-bold text-[#374151] tabular-nums">{row.available.toLocaleString('en-IN')}</p>
-          <p className="text-[10px] text-[#9CA3AF] mt-0.5">options</p>
-        </div>
-        <div className="px-3 py-2.5">
-          <p className="text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide mb-1">Selected</p>
-          <p className={`text-sm font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#374151]'}`}>
-            {row.optionsAllocated.toLocaleString('en-IN')}
-          </p>
-          <p className="text-[10px] text-[#9CA3AF] mt-0.5">options</p>
-        </div>
-        {hasConversion && (
-          <div className="px-3 py-2.5">
-            <p className="text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide mb-1">Shares</p>
-            <p className="text-sm font-bold text-[#111827] tabular-nums">{row.sharesAllocated.toLocaleString('en-IN')}</p>
-            <p className="text-[10px] text-[#9CA3AF] mt-0.5">×{row.conversionRatio} ratio</p>
-          </div>
-        )}
-      </div>
-
-      {/* Perquisite footer */}
-      {fmvAtExercise > 0 && (
-        <div className="flex items-center justify-between px-3 py-2 bg-[#FAFAF9] border-t border-[#F3F4F6]">
-          <span className="text-[10px] text-[#9CA3AF]">
-            (₹{fmvAtExercise.toLocaleString('en-IN')} − ₹{row.exercisePrice}) × {row.sharesAllocated}
-          </span>
-          <span className={`text-sm font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#3F7D5A]' : 'text-[#9CA3AF]'}`}>
-            {row.perquisite > 0 ? formatCurrency(row.perquisite) : '—'}
-          </span>
-        </div>
-      )}
-    </div>
-  )
-}
 
 // ── Allocation bar ────────────────────────────────────────────────────────────
 function AllocationBar({ rows, totalPerquisite }: { rows: AllocationRow[]; totalPerquisite: number }) {
@@ -226,8 +165,6 @@ export function GrantAllocationBlock({
   // Is the user's order different from the default date-sorted FIFO?
   const isCustomOrder = JSON.stringify(grantOrder) !== JSON.stringify(defaultOrder)
 
-  const useCardLayout = rows.length <= 2
-
   const summaryPill = hasConversion
     ? `${totalOptions.toLocaleString('en-IN')} opts → ${totalShares.toLocaleString('en-IN')} shares`
     : `${totalOptions.toLocaleString('en-IN')} options`
@@ -236,9 +173,7 @@ export function GrantAllocationBlock({
     onReorder(newRows.map((r) => r.grantId))
   }
 
-  function handleSwap() {
-    onReorder([...grantOrder].reverse())
-  }
+  const canReorder = rows.length > 1
 
   return (
     <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
@@ -275,73 +210,48 @@ export function GrantAllocationBlock({
       {/* Body */}
       <div className="bg-white p-4 flex flex-col gap-3.5">
 
-        {useCardLayout ? (
-          /* ── Card layout (1–2 grants) with swap button ── */
-          <>
-            <div className={`grid gap-3 ${rows.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
-              {rows.map((row, idx) => (
-                <GrantCard key={row.grantId} row={row} orderIdx={idx} fmvAtExercise={fmvAtExercise} hasConversion={hasConversion} />
-              ))}
-            </div>
-            {rows.length === 2 && (
-              <button
-                onClick={handleSwap}
-                className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg border border-dashed border-[#E5E7EB] text-[11px] text-[#9CA3AF] hover:text-[#E85936] hover:border-[#E85936]/40 hover:bg-[#FFF7F5] transition-all"
-              >
-                <ArrowUpDown size={12} />
-                Swap exercise order
-                <span className="text-[10px] text-[#C4C4C4]">
-                  ({isCustomOrder ? `${rows[0].grantId} first` : `${rows[0].grantId} exercised first`})
-                </span>
-              </button>
-            )}
-          </>
-        ) : (
-          /* ── Drag-and-drop table (3+ grants) ── */
-          <>
-            {/* Column headers */}
-            <div className="flex items-center gap-2 px-3 pb-1 text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide">
-              <span className="w-5 shrink-0" />
-              <span className="w-3.5 shrink-0" />
-              <span className="w-2 shrink-0" />
-              <span className="flex-1">Grant · Date · Strike</span>
-              <div className="flex items-center gap-4 shrink-0 text-right">
-                <span className="hidden sm:block">Avail</span>
-                <span>Selected</span>
-                {hasConversion && <span>Shares</span>}
-                {fmvAtExercise > 0 && <span className="min-w-[64px]">Perquisite</span>}
-              </div>
-            </div>
+        {/* Column headers */}
+        <div className="flex items-center gap-2 px-3 pb-1 text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-wide">
+          <span className="w-5 shrink-0" />
+          <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
+          <span className="w-2 shrink-0" />
+          <span className="flex-1">Grant · Date · Strike</span>
+          <div className="flex items-center gap-4 shrink-0 text-right">
+            <span className="hidden sm:block">Avail</span>
+            <span>Selected</span>
+            {hasConversion && <span>Shares</span>}
+            {fmvAtExercise > 0 && <span className="min-w-[64px]">Perquisite</span>}
+          </div>
+        </div>
 
-            {/* Draggable rows */}
-            <div className="rounded-xl border border-[#E5E7EB] overflow-hidden">
-              <Reorder.Group
-                axis="y"
-                values={rows}
-                onReorder={handleReorder}
-                as="div"
-                className="flex flex-col"
-              >
-                {rows.map((row, idx) => (
-                  <DraggableRow
-                    key={row.grantId}
-                    row={row}
-                    idx={idx}
-                    fmvAtExercise={fmvAtExercise}
-                    hasConversion={hasConversion}
-                  />
-                ))}
-              </Reorder.Group>
-            </div>
+        {/* Draggable rows */}
+        <div className="rounded-xl border border-[#E5E7EB] overflow-hidden">
+          <Reorder.Group
+            axis="y"
+            values={rows}
+            onReorder={handleReorder}
+            as="div"
+            className="flex flex-col"
+          >
+            {rows.map((row, idx) => (
+              <DraggableRow
+                key={row.grantId}
+                row={row}
+                idx={idx}
+                fmvAtExercise={fmvAtExercise}
+                hasConversion={hasConversion}
+                canReorder={canReorder}
+              />
+            ))}
+          </Reorder.Group>
+        </div>
 
-            {/* Drag hint — shown until user has reordered */}
-            {!isCustomOrder && rows.length > 1 && (
-              <p className="text-[11px] text-[#C4C4C4] text-center flex items-center justify-center gap-1">
-                <GripVertical size={11} />
-                Drag rows to change which grants are exercised first
-              </p>
-            )}
-          </>
+        {/* Drag hint — shown until user has reordered (only when multiple grants) */}
+        {canReorder && !isCustomOrder && (
+          <p className="text-[11px] text-[#C4C4C4] text-center flex items-center justify-center gap-1">
+            <GripVertical size={11} />
+            Drag rows to change which grants are exercised first
+          </p>
         )}
 
         {/* Proportional bar */}
