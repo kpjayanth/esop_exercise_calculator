@@ -13,7 +13,7 @@ type TabId = 'perquisite' | 'nri'
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: 'perquisite', label: 'Exercise Tax', icon: <Calculator size={14} /> },
-  { id: 'nri', label: 'NRI', icon: <Globe size={14} /> },
+  // { id: 'nri', label: 'NRI', icon: <Globe size={14} /> },
 ]
 
 const DEFAULT_INPUTS: PerquisiteInputs = {
@@ -113,23 +113,25 @@ export function AppShell() {
 
           {/* Right: Results */}
           <div>
-            {/* Tab navigation */}
-            <div className="flex gap-1 bg-white rounded-xl border border-[#E5E7EB] shadow-sm p-1 mb-4 w-fit">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-[#E85936] text-white shadow-sm'
-                      : 'text-[#6B7280] hover:text-[#374151] hover:bg-[#F3F4F6]'
-                  }`}
-                >
-                  {tab.icon}
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            {/* Tab navigation — only shown when more than one tab is active */}
+            {TABS.length > 1 && (
+              <div className="flex gap-1 bg-white rounded-xl border border-[#E5E7EB] shadow-sm p-1 mb-4 w-fit">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                      activeTab === tab.id
+                        ? 'bg-[#E85936] text-white shadow-sm'
+                        : 'text-[#6B7280] hover:text-[#374151] hover:bg-[#F3F4F6]'
+                    }`}
+                  >
+                    {tab.icon}
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Tab content */}
             <motion.div
