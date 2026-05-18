@@ -9,6 +9,7 @@ import { ThresholdAlert } from '@/components/results/ThresholdAlert'
 import { InputSummaryCard } from '@/components/results/InputSummaryCard'
 import { GrantAllocationBlock } from '@/components/results/GrantAllocationBlock'
 import { usePerquisiteTax, useScenarios } from '@/hooks/useTaxEngine'
+import { computeFIFO } from '@/lib/grantUtils'
 import type { PerquisiteInputs } from '@/types/tax.types'
 import type { Grant } from '@/types/grant.types'
 
@@ -28,6 +29,10 @@ interface Props {
 export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onResetOrder, defaultOrder, totalVested, optionsSelected, totalShares, exerciseDate }: Props) {
   const result = usePerquisiteTax(inputs)
   const scenarios = useScenarios(inputs)
+
+  // Cost to acquire = Σ(optionsAllocated × exercisePrice per option) across grants
+  const allocations = computeFIFO(grants, optionsSelected, grantOrder)
+  const costToAcquire = allocations.reduce((sum, a) => sum + a.optionsAllocated * a.exercisePrice, 0)
   const [slabOpen, setSlabOpen] = useState(false)
   const [grantBlockOpen, setGrantBlockOpen] = useState(true)
   const hasValuesRef = useRef(false)
@@ -102,7 +107,7 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
       ) : (
         <>
           {/* 1. Exercise summary + bracket */}
-          <InputSummaryCard inputs={inputs} result={result} totalVested={totalVested} optionsSelected={optionsSelected} totalShares={totalShares} />
+          <InputSummaryCard inputs={inputs} result={result} totalVested={totalVested} optionsSelected={optionsSelected} totalShares={totalShares} costToAcquire={costToAcquire} />
 
           {/* 2. Hero tax summary */}
           <TaxSummaryCard result={result} />

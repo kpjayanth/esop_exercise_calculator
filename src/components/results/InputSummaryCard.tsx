@@ -7,6 +7,7 @@ interface Props {
   totalVested: number
   optionsSelected: number
   totalShares: number
+  costToAcquire: number
 }
 
 function slabColor(rate: number) {
@@ -19,7 +20,7 @@ function slabColor(rate: number) {
   return               { bg: 'bg-[#F8F1F0]', text: 'text-[#854840]', pill: 'bg-[#A86058]' }
 }
 
-export function InputSummaryCard({ inputs, result, totalVested, optionsSelected, totalShares }: Props) {
+export function InputSummaryCard({ inputs, result, totalVested, optionsSelected, totalShares, costToAcquire }: Props) {
   // Find the highest slab the perquisite falls into
   const topSlab = result.marginalSlabBreakdown.length > 0
     ? result.marginalSlabBreakdown.reduce((max, s) => s.rate > max.rate ? s : max)
@@ -51,11 +52,11 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
           <p className="text-[10px] text-[#9CA3AF] mt-1">per share</p>
         </div>
 
-        {/* Avg Strike Price — weighted across grants, unique info */}
+        {/* Cost to Acquire — total cash outflow to exercise (options × strike per option) */}
         <div className="px-4 py-3.5">
-          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Avg Strike Price</p>
-          <p className="text-lg font-bold text-[#111827] leading-none">{formatCurrency(inputs.strikePrice)}</p>
-          <p className="text-[10px] text-[#9CA3AF] mt-1">per share · weighted</p>
+          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Cost to Acquire</p>
+          <p className="text-lg font-bold text-[#A05C45] leading-none">{formatCompact(costToAcquire)}</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-1">exercise cost · cash outflow</p>
         </div>
 
         {/* Options → Shares */}
