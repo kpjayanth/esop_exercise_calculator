@@ -79,7 +79,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
             <Layers size={11} className="text-[#9CA3AF]" />
             <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest">Exercise</span>
           </div>
-          <span className="text-[10px] text-[#C4C4C4]">shapes grant allocation</span>
+          <span className="text-[10px] text-[#9CA3AF] font-medium">shapes grant allocation</span>
         </div>
 
         {/* Date of Exercise */}
