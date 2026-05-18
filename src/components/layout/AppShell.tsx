@@ -5,7 +5,7 @@ import { InputPanel } from '@/components/inputs/InputPanel'
 import { GrantUpload } from '@/components/inputs/GrantUpload'
 import { PerquisiteScenario } from '@/components/scenarios/PerquisiteScenario'
 import { NRIScenario } from '@/components/scenarios/NRIScenario'
-import { computeFIFO, weightedStrikePrice, totalVested as getTotalVested, totalSharesFromAllocations } from '@/lib/grantUtils'
+import { computeFIFO, weightedStrikePrice, totalVested as getTotalVested, totalSharesFromAllocations, effectiveGrantsAtDate } from '@/lib/grantUtils'
 import type { PerquisiteInputs } from '@/types/tax.types'
 import type { Grant } from '@/types/grant.types'
 
@@ -44,7 +44,8 @@ export function AppShell() {
   // User-controllable exercise order (array of grant IDs, first = exercised first)
   const [grantOrder, setGrantOrder] = useState<string[]>([])
 
-  const grantsTotalVested = grants ? getTotalVested(grants) : 0
+  const effectiveGrants = grants ? effectiveGrantsAtDate(grants, exerciseDate) : null
+  const grantsTotalVested = effectiveGrants ? getTotalVested(effectiveGrants) : 0
 
   // When grants are loaded, seed initial options (all vested), strike, and default order
   function handleGrantsLoaded(loadedGrants: Grant[]) {
@@ -63,17 +64,21 @@ export function AppShell() {
     }))
   }
 
-  // Keep strikePrice and totalShares in sync with order/numberOfOptions changes
+  // Keep strikePrice and totalShares in sync with order/numberOfOptions/exerciseDate changes
   useEffect(() => {
     if (!grants) return
-    const allocations = computeFIFO(grants, inputs.numberOfOptions, grantOrder)
+    const eg = effectiveGrantsAtDate(grants, exerciseDate)
+    const maxVested = getTotalVested(eg)
+    const clampedOptions = Math.min(inputs.numberOfOptions, maxVested)
+    const allocations = computeFIFO(eg, clampedOptions, grantOrder)
     const strike = weightedStrikePrice(allocations)
     const shares = totalSharesFromAllocations(allocations)
     setTotalShares(shares)
-    if (strike !== inputs.strikePrice) {
-      setInputs((prev) => ({ ...prev, strikePrice: strike }))
-    }
-  }, [inputs.numberOfOptions, grants, grantOrder])
+    const newInputs: Partial<PerquisiteInputs> = {}
+    if (strike !== inputs.strikePrice) newInputs.strikePrice = strike
+    if (clampedOptions !== inputs.numberOfOptions) newInputs.numberOfOptions = clampedOptions
+    if (Object.keys(newInputs).length > 0) setInputs(prev => ({ ...prev, ...newInputs }))
+  }, [inputs.numberOfOptions, grants, grantOrder, exerciseDate])
 
   // Tax engine sees shares (not options) as the unit; strike is per share
   const effectiveInputs: PerquisiteInputs = {
@@ -119,7 +124,8 @@ export function AppShell() {
               <InputPanel
                 inputs={inputs}
                 onChange={setInputs}
-                grants={grants}
+                grants={effectiveGrants ?? grants}
+                allGrants={grants}
                 onResetGrants={() => { setGrants(null); setInputs(DEFAULT_INPUTS); setGrantOrder([]) }}
                 exerciseDate={exerciseDate}
                 onExerciseDateChange={setExerciseDate}
@@ -159,7 +165,7 @@ export function AppShell() {
               {activeTab === 'perquisite' && (
                 <PerquisiteScenario
                   inputs={effectiveInputs}
-                  grants={grants}
+                  grants={effectiveGrants ?? grants}
                   grantOrder={grantOrder}
                   onReorder={(newOrder) => setGrantOrder(newOrder)}
                   onResetOrder={() => setGrantOrder(defaultGrantOrder(grants))}

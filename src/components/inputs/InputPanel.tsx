@@ -6,11 +6,13 @@ import { clamp } from '@/lib/utils'
 import { computeFIFO, weightedStrikePrice } from '@/lib/grantUtils'
 import type { PerquisiteInputs } from '@/types/tax.types'
 import type { Grant } from '@/types/grant.types'
+import { VestingTimeline } from './VestingTimeline'
 
 interface Props {
   inputs: PerquisiteInputs
   onChange: (inputs: PerquisiteInputs) => void
-  grants: Grant[]
+  grants: Grant[]          // effective grants at exerciseDate (for options logic)
+  allGrants: Grant[]       // original grants with futureVesting (for VestingTimeline)
   onResetGrants: () => void
   exerciseDate: Date
   onExerciseDateChange: (d: Date) => void
@@ -32,7 +34,7 @@ function Field({ label, tooltip, children }: { label: string; tooltip?: string; 
   )
 }
 
-export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDate, onExerciseDateChange }: Props) {
+export function InputPanel({ inputs, onChange, grants, allGrants, onResetGrants, exerciseDate, onExerciseDateChange }: Props) {
   const set = <K extends keyof PerquisiteInputs>(key: K, value: PerquisiteInputs[K]) =>
     onChange({ ...inputs, [key]: value })
 
@@ -94,6 +96,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
             }}
             className="w-full px-3 py-2 text-sm rounded-lg border border-[#E5E7EB] bg-white focus:outline-none focus:ring-2 focus:ring-[#E85936]/20 focus:border-[#E85936] transition-all text-[#374151]"
           />
+          <VestingTimeline grants={allGrants} date={exerciseDate} onChange={onExerciseDateChange} />
         </Field>
 
         {/* Options to Exercise */}

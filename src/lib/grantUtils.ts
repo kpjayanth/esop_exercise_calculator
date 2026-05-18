@@ -67,6 +67,24 @@ export function weightedStrikePrice(allocations: GrantAllocation[]): number {
   return totalCost / totalShares
 }
 
+/** Options vested for a single grant at a given date (current + any future events on/before the date). */
+export function vestedAtDate(grant: Grant, date: Date): number {
+  let vested = grant.vestedOptions
+  if (grant.futureVesting) {
+    for (const event of grant.futureVesting) {
+      if (event.date <= date) vested = Math.max(vested, event.total)
+    }
+  }
+  return vested
+}
+
+/** Returns grants with vestedOptions updated to reflect the given exercise date. Filters out grants with 0 vested at that date. */
+export function effectiveGrantsAtDate(grants: Grant[], date: Date): Grant[] {
+  return grants
+    .map(g => ({ ...g, vestedOptions: vestedAtDate(g, date) }))
+    .filter(g => g.vestedOptions > 0)
+}
+
 /** Parse a date value from Excel (Date object, serial number, or string). */
 export function parseGrantDate(raw: unknown): Date {
   if (raw instanceof Date) return raw

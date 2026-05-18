@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, ChevronRight } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import { formatGrantDate, parseGrantDate } from '@/lib/grantUtils'
-import type { Grant, RoundingRule } from '@/types/grant.types'
+import type { Grant, RoundingRule, FutureVestingEvent } from '@/types/grant.types'
 
 interface Props {
   onGrantsLoaded: (grants: Grant[]) => void
@@ -46,11 +46,28 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
             ? (roundingRaw as RoundingRule)
             : 'ROUND_DOWN'
 
-          return { grantId, dateOfGrant, totalOptions, exercisePrice, vestedOptions, conversionRatio, rounding }
-        }).filter((g) => g.vestedOptions > 0)
+          // Parse future vesting events (V1/D1 ... Vn/Dn)
+          const futureVesting: FutureVestingEvent[] = []
+          for (let n = 1; n <= 8; n++) {
+            const vRaw = row[`V${n}`]
+            const dRaw = row[`D${n}`]
+            if (vRaw == null || dRaw == null) break
+            const total = Number(vRaw)
+            const date = parseGrantDate(dRaw)
+            if (!isNaN(total) && total > 0 && !isNaN(date.getTime())) {
+              futureVesting.push({ date, total })
+            }
+          }
+
+          return {
+            grantId, dateOfGrant, totalOptions, exercisePrice, vestedOptions,
+            conversionRatio, rounding,
+            ...(futureVesting.length > 0 ? { futureVesting } : {}),
+          }
+        }).filter((g) => g.vestedOptions > 0 || (g.futureVesting && g.futureVesting.length > 0))
 
         if (parsed.length === 0) {
-          setError('No vested grants found. Ensure "Vested" column has values > 0.')
+          setError('No vested or future-vesting grants found.')
           return
         }
         setGrants(parsed)
@@ -73,7 +90,12 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
   function loadSampleData() {
     const sample: Grant[] = [
       { grantId: 'G1', dateOfGrant: new Date('2020-05-01'), totalOptions: 50, exercisePrice: 10, vestedOptions: 30, conversionRatio: 0.5, rounding: 'ROUND_DOWN' },
-      { grantId: 'G2', dateOfGrant: new Date('2023-06-01'), totalOptions: 100, exercisePrice: 100, vestedOptions: 25, conversionRatio: 1, rounding: 'ROUND_DOWN' },
+      { grantId: 'G2', dateOfGrant: new Date('2023-06-01'), totalOptions: 100, exercisePrice: 100, vestedOptions: 25, conversionRatio: 1, rounding: 'ROUND_DOWN',
+        futureVesting: [
+          { date: new Date('2026-06-01'), total: 50 },
+          { date: new Date('2027-06-01'), total: 100 },
+        ]
+      },
     ]
     setGrants(sample)
   }
