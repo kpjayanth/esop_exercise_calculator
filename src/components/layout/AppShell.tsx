@@ -114,7 +114,7 @@ export function AppShell() {
             >
               <div className="flex items-center gap-2 mb-5 pb-4 border-b border-[#F3F4F6]">
                 <Calculator size={14} className="text-[#E85936]" />
-                <p className="text-sm font-semibold text-[#111827]">Grant Details</p>
+                <p className="text-sm font-semibold text-[#111827]">Exercise Details</p>
               </div>
               <InputPanel
                 inputs={inputs}
