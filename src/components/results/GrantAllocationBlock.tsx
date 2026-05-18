@@ -1,7 +1,7 @@
 import { Layers, GripVertical, RotateCcw, ChevronDown } from 'lucide-react'
 import { Reorder, useDragControls, AnimatePresence, motion } from 'framer-motion'
 import { computeFIFO, formatGrantDate } from '@/lib/grantUtils'
-import { formatCurrency, formatCompact } from '@/lib/formatters'
+import { formatCompact } from '@/lib/formatters'
 import type { Grant } from '@/types/grant.types'
 
 // Muted, desaturated segment colors
@@ -297,20 +297,20 @@ export function GrantAllocationBlock({
           <AllocationBar rows={rows} totalPerquisite={totalPerquisite} />
         )}
 
-        {/* Total footer */}
-        <div className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]">
-          <div>
-            <p className="text-[10px] font-semibold text-[#6B7280] uppercase tracking-wider">Total Perquisite</p>
-            <p className="text-xs text-[#374151] mt-0.5 font-medium">
-              {totalOptions.toLocaleString('en-IN')} options
-              {hasConversion && (
-                <> → <span className="text-[#111827]">{totalShares.toLocaleString('en-IN')} shares</span></>
-              )}
-            </p>
-          </div>
-          <span className="text-base font-bold tabular-nums text-[#3F7D5A]">
-            {fmvAtExercise > 0 && totalPerquisite > 0 ? formatCurrency(totalPerquisite) : '—'}
+        {/* Allocation summary footer — options/shares only; perquisite total lives in TaxSummaryCard */}
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]">
+          <span className="text-xs font-medium text-[#374151]">
+            <span className="font-semibold text-[#111827]">{totalOptions.toLocaleString('en-IN')}</span> options
+            {hasConversion && (
+              <> → <span className="font-semibold text-[#111827]">{totalShares.toLocaleString('en-IN')}</span> shares</>
+            )}
+            {rows.length > 1 && (
+              <span className="text-[#9CA3AF]"> · {rows.length} grants</span>
+            )}
           </span>
+          {fmvAtExercise === 0 && (
+            <span className="text-[10px] text-[#C4C4C4]">Enter FMV to see perquisite</span>
+          )}
         </div>
       </div>
           </motion.div>

@@ -51,11 +51,11 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
           <p className="text-[10px] text-[#9CA3AF] mt-1">per share</p>
         </div>
 
-        {/* Available */}
+        {/* Avg Strike Price — weighted across grants, unique info */}
         <div className="px-4 py-3.5">
-          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Available to Exercise</p>
-          <p className="text-lg font-bold text-[#111827] leading-none">{totalVested.toLocaleString('en-IN')}</p>
-          <p className="text-[10px] text-[#9CA3AF] mt-1">vested options</p>
+          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Avg Strike Price</p>
+          <p className="text-lg font-bold text-[#111827] leading-none">{formatCurrency(inputs.strikePrice)}</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-1">per share · weighted</p>
         </div>
 
         {/* Options → Shares */}
@@ -68,8 +68,8 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
           </p>
           <p className="text-[10px] text-[#9CA3AF] mt-1">
             {hasConversion
-              ? `${totalShares.toLocaleString('en-IN')} shares to receive`
-              : `of ${totalVested.toLocaleString('en-IN')} available`}
+              ? `${totalShares.toLocaleString('en-IN')} shares · of ${totalVested.toLocaleString('en-IN')} vested`
+              : `of ${totalVested.toLocaleString('en-IN')} vested`}
           </p>
         </div>
 

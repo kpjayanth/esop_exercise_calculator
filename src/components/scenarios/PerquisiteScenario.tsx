@@ -154,7 +154,7 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
           </Card>
 
           <p className="text-xs text-[#9CA3AF] text-center pb-2">
-            Estimates for FY 2025-26. Consult a tax advisor before exercising.
+            Estimates for {fy}. Consult a tax advisor before exercising.
           </p>
         </>
       )}
