@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { TrendingDown, TrendingUp, IndianRupee } from 'lucide-react'
-import { formatCompact, formatPercent } from '@/lib/formatters'
+import { formatCompact, formatPercent, formatINR } from '@/lib/formatters'
 import type { PerquisiteResult } from '@/types/tax.types'
 
 interface Props {
@@ -8,15 +8,26 @@ interface Props {
 }
 
 function AnimatedNumber({ value, format }: { value: number; format: (v: number) => string }) {
+  const compact = format(value)
+  const full = formatINR(value, 0)
+  const showTooltip = Math.abs(value) >= 1000 && compact !== full
   return (
-    <motion.span
-      key={value}
-      initial={{ opacity: 0.6, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      {format(value)}
-    </motion.span>
+    <span className={showTooltip ? 'relative group/amt cursor-help' : undefined}>
+      <motion.span
+        key={value}
+        initial={{ opacity: 0.6, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {compact}
+      </motion.span>
+      {showTooltip && (
+        <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/amt:block z-50 bg-[#1C1C1E] text-white text-[11px] font-semibold rounded-lg px-3 py-1.5 shadow-xl whitespace-nowrap">
+          {full}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#1C1C1E]" />
+        </span>
+      )}
+    </span>
   )
 }
 

@@ -1,5 +1,6 @@
 // Lightweight shadcn-style primitives (no external shadcn dependency needed)
 import { cn } from '@/lib/utils'
+import { formatCompact, formatINR } from '@/lib/formatters'
 import React from 'react'
 
 // ── Card ──────────────────────────────────────────────────────────────────────
@@ -136,6 +137,23 @@ export function ToggleGroup<T extends string>({ options, value, onChange, classN
 // ── Divider ───────────────────────────────────────────────────────────────────
 export function Divider({ className }: { className?: string }) {
   return <div className={cn('border-t border-[#F1F5F9]', className)} />
+}
+
+// ── Amt — compact number with full-value tooltip on hover ─────────────────────
+// Shows e.g. "₹19.25L" with "₹19,25,000" on hover. No tooltip for values < ₹1,000.
+export function Amt({ value, className }: { value: number; className?: string }) {
+  const compact = formatCompact(value)
+  if (Math.abs(value) < 1000) return <span className={className}>{compact}</span>
+  const full = formatINR(value, 0)
+  return (
+    <span className={cn('relative group/amt cursor-help', className)}>
+      {compact}
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/amt:block z-50 bg-[#1C1C1E] text-white text-[11px] font-semibold rounded-lg px-3 py-1.5 shadow-xl whitespace-nowrap">
+        {full}
+        <span className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#1C1C1E]" />
+      </span>
+    </span>
+  )
 }
 
 // ── Tooltip wrapper ───────────────────────────────────────────────────────────

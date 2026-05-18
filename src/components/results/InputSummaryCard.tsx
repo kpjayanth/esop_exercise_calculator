@@ -1,4 +1,5 @@
-import { formatCompact, formatCurrency } from '@/lib/formatters'
+import { formatCurrency } from '@/lib/formatters'
+import { Amt } from '@/components/ui/index'
 import type { PerquisiteInputs, PerquisiteResult } from '@/types/tax.types'
 
 interface Props {
@@ -55,7 +56,7 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
         {/* Cost to Acquire — total cash outflow to exercise (options × strike per option) */}
         <div className="px-4 py-3.5">
           <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Cost to Acquire</p>
-          <p className="text-lg font-bold text-[#A05C45] leading-none">{formatCompact(costToAcquire)}</p>
+          <p className="text-lg font-bold text-[#A05C45] leading-none"><Amt value={costToAcquire} /></p>
           <p className="text-[10px] text-[#9CA3AF] mt-1">exercise cost · cash outflow</p>
         </div>
 
@@ -77,9 +78,9 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
         {/* Net Taxable Salary */}
         <div className="px-4 py-3.5">
           <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Net Taxable Salary</p>
-          <p className="text-lg font-bold text-[#111827] leading-none">{formatCompact(netSalaryIncome)}</p>
+          <p className="text-lg font-bold text-[#111827] leading-none"><Amt value={netSalaryIncome} /></p>
           <p className="text-[10px] text-[#9CA3AF] mt-1">
-            {formatCompact(inputs.annualSalaryIncome)} − {formatCompact(standardDeduction)} std. deduction
+            <Amt value={inputs.annualSalaryIncome} /> − <Amt value={standardDeduction} /> std. deduction
           </p>
         </div>
       </div>
@@ -108,11 +109,11 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
 
         {!result.applied87A && topSlab && (
           <span className="ml-auto text-[11px] text-[#6B7280]">
-            {formatCompact(netSalaryIncome)} net salary
+            <Amt value={netSalaryIncome} /> net salary
             <span className="mx-1 text-[#D1D5DB]">+</span>
-            {formatCompact(result.perquisite)} perquisite
+            <Amt value={result.perquisite} /> perquisite
             <span className="mx-1 text-[#D1D5DB]">=</span>
-            <span className={`font-semibold ${colors.text}`}>{formatCompact(netSalaryIncome + result.perquisite)} total income</span>
+            <span className={`font-semibold ${colors.text}`}><Amt value={netSalaryIncome + result.perquisite} /> total income</span>
           </span>
         )}
       </div>

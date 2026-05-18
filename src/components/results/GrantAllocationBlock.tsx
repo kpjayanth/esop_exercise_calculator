@@ -1,7 +1,7 @@
 import { Layers, GripVertical, RotateCcw, ChevronDown } from 'lucide-react'
 import { Reorder, useDragControls, AnimatePresence, motion } from 'framer-motion'
 import { computeFIFO, formatGrantDate } from '@/lib/grantUtils'
-import { formatCompact } from '@/lib/formatters'
+import { Amt } from '@/components/ui/index'
 import type { Grant } from '@/types/grant.types'
 
 // Muted, desaturated segment colors
@@ -122,7 +122,7 @@ function DraggableRow({
         {fmvAtExercise > 0 && (
           <div className="text-right min-w-[56px] sm:min-w-[72px]">
             <p className={`text-sm font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#3F7D5A]' : 'text-[#9CA3AF]'}`}>
-              {row.perquisite > 0 ? formatCompact(row.perquisite) : '—'}
+              {row.perquisite > 0 ? <Amt value={row.perquisite} /> : '—'}
             </p>
           </div>
         )}
@@ -142,7 +142,7 @@ function AllocationBar({ rows, totalPerquisite }: { rows: AllocationRow[]; total
             <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: r.color }} />
             <span className="font-semibold">{r.grantId}</span>
             <span className="text-[#6B7280]">
-              · {formatCompact(r.perquisite)} · {((r.perquisite / totalPerquisite) * 100).toFixed(1)}%
+              · <Amt value={r.perquisite} /> · {((r.perquisite / totalPerquisite) * 100).toFixed(1)}%
             </span>
           </span>
         ))}

@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react'
-import { formatCurrency, formatPercent, formatCompact } from '@/lib/formatters'
-import { Tooltip } from '@/components/ui/index'
+import { formatCurrency, formatPercent } from '@/lib/formatters'
+import { Tooltip, Amt } from '@/components/ui/index'
 import type { PerquisiteResult } from '@/types/tax.types'
 
 interface Props {
@@ -51,7 +51,7 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
         <div className="space-y-1.5 pl-5 text-xs text-[#6B7280]">
           <div className="flex justify-between">
             <span>Gross Salary</span>
-            <span className="font-medium text-[#111827]">{formatCompact(annualSalaryIncome)}</span>
+            <Amt value={annualSalaryIncome} className="font-medium text-[#111827]" />
           </div>
           {standardDeduction > 0 && (
             <div className="flex justify-between text-[#9CA3AF]">
@@ -61,20 +61,20 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
                   {regime === 'NEW' ? '₹75,000 · New Regime' : '₹50,000 · Old Regime'}
                 </span>
               </span>
-              <span className="font-medium text-[#A05C45]">−{formatCompact(standardDeduction)}</span>
+              <span className="font-medium text-[#A05C45]">−<Amt value={standardDeduction} /></span>
             </div>
           )}
           <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
             <span className="font-semibold text-[#374151]">Net Taxable Salary</span>
-            <span className="font-semibold text-[#111827]">{formatCompact(netSalaryIncome)}</span>
+            <Amt value={netSalaryIncome} className="font-semibold text-[#111827]" />
           </div>
           <div className="flex justify-between">
             <span>+ ESOP Perquisite</span>
-            <span className="font-medium text-[#3F7D5A]">+{formatCompact(perquisite)}</span>
+            <span className="font-medium text-[#3F7D5A]">+<Amt value={perquisite} /></span>
           </div>
           <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
             <span className="font-semibold text-[#374151]">Total Income for Slab</span>
-            <span className="font-semibold text-[#111827]">{formatCompact(netSalaryIncome + perquisite)}</span>
+            <Amt value={netSalaryIncome + perquisite} className="font-semibold text-[#111827]" />
           </div>
         </div>
         <p className="pl-5 text-[11px] text-[#9CA3AF]">
