@@ -1,4 +1,4 @@
-import type { Grant, GrantAllocation, RoundingRule } from '@/types/grant.types'
+import type { Grant, GrantAllocation, RoundingRule, FutureVestingEvent } from '@/types/grant.types'
 
 /** Apply rounding rule to a fractional share count. */
 export function applyRounding(n: number, rule: RoundingRule): number {
@@ -65,6 +65,26 @@ export function weightedStrikePrice(allocations: GrantAllocation[]): number {
   if (totalShares === 0) return 0
   const totalCost = allocations.reduce((s, a) => s + a.exercisePrice * a.sharesAllocated, 0)
   return totalCost / totalShares
+}
+
+/**
+ * Auto-compute a standard 4-year / 1-year-frequency vesting schedule for a grant.
+ * Returns only future milestone events that exceed the grant's current vestedOptions.
+ * Milestones: 25% at year 1, 50% at year 2, 75% at year 3, 100% at year 4.
+ */
+export function computeVestingSchedule(grant: Grant, today: Date = new Date()): FutureVestingEvent[] {
+  const events: FutureVestingEvent[] = []
+  for (let year = 1; year <= 4; year++) {
+    const date = new Date(grant.dateOfGrant)
+    date.setFullYear(date.getFullYear() + year)
+    const cumulative = year === 4
+      ? grant.totalOptions
+      : Math.floor((grant.totalOptions * year) / 4)
+    if (date > today && cumulative > grant.vestedOptions) {
+      events.push({ date, total: cumulative })
+    }
+  }
+  return events
 }
 
 /** Options vested for a single grant at a given date (current + any future events on/before the date). */

@@ -125,7 +125,6 @@ export function AppShell() {
                 inputs={inputs}
                 onChange={setInputs}
                 grants={effectiveGrants ?? grants}
-                allGrants={grants}
                 onResetGrants={() => { setGrants(null); setInputs(DEFAULT_INPUTS); setGrantOrder([]) }}
                 exerciseDate={exerciseDate}
                 onExerciseDateChange={setExerciseDate}

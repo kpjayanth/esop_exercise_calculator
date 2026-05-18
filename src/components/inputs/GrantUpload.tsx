@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, ChevronRight } from 'lucide-react'
 import * as XLSX from 'xlsx'
-import { formatGrantDate, parseGrantDate } from '@/lib/grantUtils'
-import type { Grant, RoundingRule, FutureVestingEvent } from '@/types/grant.types'
+import { formatGrantDate, parseGrantDate, computeVestingSchedule } from '@/lib/grantUtils'
+import type { Grant, RoundingRule } from '@/types/grant.types'
 
 interface Props {
   onGrantsLoaded: (grants: Grant[]) => void
@@ -46,24 +46,9 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
             ? (roundingRaw as RoundingRule)
             : 'ROUND_DOWN'
 
-          // Parse future vesting events (V1/D1 ... Vn/Dn)
-          const futureVesting: FutureVestingEvent[] = []
-          for (let n = 1; n <= 8; n++) {
-            const vRaw = row[`V${n}`]
-            const dRaw = row[`D${n}`]
-            if (vRaw == null || dRaw == null) break
-            const total = Number(vRaw)
-            const date = parseGrantDate(dRaw)
-            if (!isNaN(total) && total > 0 && !isNaN(date.getTime())) {
-              futureVesting.push({ date, total })
-            }
-          }
-
-          return {
-            grantId, dateOfGrant, totalOptions, exercisePrice, vestedOptions,
-            conversionRatio, rounding,
-            ...(futureVesting.length > 0 ? { futureVesting } : {}),
-          }
+          const base: Grant = { grantId, dateOfGrant, totalOptions, exercisePrice, vestedOptions, conversionRatio, rounding }
+          const futureVesting = computeVestingSchedule(base)
+          return futureVesting.length > 0 ? { ...base, futureVesting } : base
         }).filter((g) => g.vestedOptions > 0 || (g.futureVesting && g.futureVesting.length > 0))
 
         if (parsed.length === 0) {
@@ -88,15 +73,14 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
   const totalVested = grants?.reduce((s, g) => s + g.vestedOptions, 0) ?? 0
 
   function loadSampleData() {
-    const sample: Grant[] = [
+    const raw: Grant[] = [
       { grantId: 'G1', dateOfGrant: new Date('2020-05-01'), totalOptions: 50, exercisePrice: 10, vestedOptions: 30, conversionRatio: 0.5, rounding: 'ROUND_DOWN' },
-      { grantId: 'G2', dateOfGrant: new Date('2023-06-01'), totalOptions: 100, exercisePrice: 100, vestedOptions: 25, conversionRatio: 1, rounding: 'ROUND_DOWN',
-        futureVesting: [
-          { date: new Date('2026-06-01'), total: 50 },
-          { date: new Date('2027-06-01'), total: 100 },
-        ]
-      },
+      { grantId: 'G2', dateOfGrant: new Date('2023-06-01'), totalOptions: 100, exercisePrice: 100, vestedOptions: 25, conversionRatio: 1, rounding: 'ROUND_DOWN' },
     ]
+    const sample = raw.map(g => {
+      const futureVesting = computeVestingSchedule(g)
+      return futureVesting.length > 0 ? { ...g, futureVesting } : g
+    })
     setGrants(sample)
   }
 
@@ -252,9 +236,12 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
             </table>
           </div>
           <div className="mt-2 space-y-1">
-            <p className="text-xs text-[#9CA3AF]"><span className="font-medium text-[#6B7280]">Vested</span> = Net vested options available to exercise</p>
+            <p className="text-xs text-[#9CA3AF]"><span className="font-medium text-[#6B7280]">Vested</span> = Net vested options available to exercise today</p>
             <p className="text-xs text-[#9CA3AF]"><span className="font-medium text-[#6B7280]">Options to Shares Ratio</span> = How many shares 1 option yields (e.g. 0.5 means 2 options → 1 share). Defaults to <span className="font-medium">1</span> if omitted.</p>
             <p className="text-xs text-[#9CA3AF]"><span className="font-medium text-[#6B7280]">Rounding</span> = ROUND_DOWN · ROUND_UP · ROUND_NEAREST. Defaults to ROUND_DOWN.</p>
+            <p className="text-xs text-[#9CA3AF] mt-1.5 pt-1.5 border-t border-[#F3F4F6]">
+              <span className="font-medium text-[#6B7280]">Future vesting</span> is auto-calculated using a 4-year schedule (25% per year from grant date). Change the exercise date in the calculator to see options available at any future date.
+            </p>
           </div>
         </div>
       </div>
