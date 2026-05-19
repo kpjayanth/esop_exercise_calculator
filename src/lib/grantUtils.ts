@@ -116,7 +116,22 @@ export function parseGrantDate(raw: unknown): Date {
   return new Date()
 }
 
-/** Format date as "Mon YYYY" for display. */
+/** Ordinal suffix for a day number (1→"st", 2→"nd", 3→"rd", 4→"th" …). */
+function ordinalSuffix(n: number): string {
+  const v = n % 100
+  if (v >= 11 && v <= 13) return 'th'
+  switch (n % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
+}
+
+/** Format date as "1st May 2020" for display. */
 export function formatGrantDate(d: Date): string {
-  return d.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
+  const day = d.getDate()
+  const month = d.toLocaleDateString('en-IN', { month: 'short' })
+  const year = d.getFullYear()
+  return `${day}${ordinalSuffix(day)} ${month} ${year}`
 }

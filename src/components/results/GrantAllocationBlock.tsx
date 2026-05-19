@@ -256,7 +256,7 @@ export function GrantAllocationBlock({
           <span className="w-[18px] shrink-0" />
           <span className="flex-1">Grant</span>
           <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-right">
-            <span className="min-w-[48px]">Options</span>
+            <span className="min-w-[48px]">Options <span className="normal-case font-normal text-[#C4C4C4]">exercisable</span></span>
             {hasConversion && <span className="min-w-[36px]">Shares</span>}
             {fmvAtExercise > 0 && <span className="min-w-[72px]">Perquisite</span>}
           </div>
