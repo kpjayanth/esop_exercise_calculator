@@ -62,7 +62,10 @@ export function InputSummaryCard({ inputs, result, totalVested, optionsSelected,
 
         {/* Options → Shares */}
         <div className="px-4 py-3.5">
-          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Options → Shares</p>
+          <div className="flex items-baseline gap-1 mb-1">
+            <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide">Options</p>
+            <p className="text-[9px] text-[#C4C4C4]">exercisable</p>
+          </div>
           <p className="text-lg font-bold text-[#111827] leading-none">
             {hasConversion
               ? `${optionsSelected.toLocaleString('en-IN')} → ${totalShares.toLocaleString('en-IN')}`
