@@ -1,4 +1,4 @@
-import { formatCurrency } from '@/lib/formatters'
+import { formatCompact, formatPercent } from '@/lib/formatters'
 import { Amt } from '@/components/ui/index'
 import type { PerquisiteInputs, PerquisiteResult } from '@/types/tax.types'
 
@@ -11,114 +11,65 @@ interface Props {
   costToAcquire: number
 }
 
-function slabColor(rate: number) {
-  if (rate === 0)    return { bg: 'bg-[#F1F5F2]', text: 'text-[#3F6B52]', pill: 'bg-[#5A8A6E]' }
-  if (rate <= 0.05)  return { bg: 'bg-[#F1F4F8]', text: 'text-[#4A6580]', pill: 'bg-[#6A8FAD]' }
-  if (rate <= 0.10)  return { bg: 'bg-[#F3F2F8]', text: 'text-[#58537A]', pill: 'bg-[#7A749E]' }
-  if (rate <= 0.15)  return { bg: 'bg-[#F5F3F8]', text: 'text-[#5E5278]', pill: 'bg-[#8A7AA0]' }
-  if (rate <= 0.20)  return { bg: 'bg-[#F8F5F0]', text: 'text-[#7A6040]', pill: 'bg-[#A08060]' }
-  if (rate <= 0.25)  return { bg: 'bg-[#F8F3F0]', text: 'text-[#805040]', pill: 'bg-[#A87060]' }
-  return               { bg: 'bg-[#F8F1F0]', text: 'text-[#854840]', pill: 'bg-[#A86058]' }
+function Tile({ label, value, sub, valueClass = 'text-[#111827]' }: { label: string; value: React.ReactNode; sub?: React.ReactNode; valueClass?: string }) {
+  return (
+    <div className="bg-[#F9FAFB] rounded-xl p-4">
+      <p className="text-[10px] font-medium text-[#B0B7C3] uppercase tracking-widest mb-2">{label}</p>
+      <p className={`text-xl font-semibold leading-none tracking-tight ${valueClass}`}>{value}</p>
+      {sub && <p className="text-[11px] text-[#B0B7C3] mt-1.5 font-normal">{sub}</p>}
+    </div>
+  )
 }
 
-export function InputSummaryCard({ inputs, result, totalVested, optionsSelected, totalShares, costToAcquire }: Props) {
-  // Find the highest slab the perquisite falls into
-  const topSlab = result.marginalSlabBreakdown.length > 0
-    ? result.marginalSlabBreakdown.reduce((max, s) => s.rate > max.rate ? s : max)
-    : null
-
-  const colors = topSlab ? slabColor(topSlab.rate) : slabColor(0)
-  const bracketRate = topSlab ? `${(topSlab.rate * 100).toFixed(0)}%` : '—'
-  const bracketLabel = topSlab?.label ?? '—'
-
+export function InputSummaryCard({ inputs, result, optionsSelected, totalShares, costToAcquire }: Props) {
+  const { totalTax, netGain, effectiveTaxRate } = result
+  const totalCashOutflow = costToAcquire + totalTax
   const hasConversion = optionsSelected !== totalShares
-  const { netSalaryIncome, standardDeduction } = result
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
-      {/* Thin accent stripe — matches TaxSummaryCard family */}
-      <div className="h-0.5 bg-[#E5E7EB]" />
-
-      {/* Section label — light, internal */}
-      <div className="bg-white px-5 pt-3 pb-0">
-        <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest">Exercise Summary</span>
+    <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm bg-white">
+      <div className="px-5 pt-4 pb-1">
+        <span className="text-[10px] font-medium text-[#B0B7C3] uppercase tracking-widest">Exercise Summary</span>
       </div>
 
-      {/* Stats grid — 3 standard cells + 1 rich salary cell */}
-      <div className="bg-white grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-[#F3F4F6]">
-        {/* FMV */}
-        <div className="px-4 py-3.5">
-          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">FMV at Exercise</p>
-          <p className="text-lg font-bold text-[#111827] leading-none">{formatCurrency(inputs.fmvAtExercise)}</p>
-          <p className="text-[10px] text-[#9CA3AF] mt-1">per share</p>
-        </div>
-
-        {/* Cost to Acquire — total cash outflow to exercise (options × strike per option) */}
-        <div className="px-4 py-3.5">
-          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Cost to Acquire</p>
-          <p className="text-lg font-bold text-[#A05C45] leading-none"><Amt value={costToAcquire} /></p>
-          <p className="text-[10px] text-[#9CA3AF] mt-1">exercise cost · cash outflow</p>
-        </div>
-
-        {/* Options → Shares */}
-        <div className="px-4 py-3.5">
-          <div className="flex items-baseline gap-1 mb-1">
-            <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide">Options</p>
-            <p className="text-[9px] text-[#C4C4C4]">exercisable</p>
-          </div>
-          <p className="text-lg font-bold text-[#111827] leading-none">
-            {hasConversion
-              ? `${optionsSelected.toLocaleString('en-IN')} → ${totalShares.toLocaleString('en-IN')}`
-              : optionsSelected.toLocaleString('en-IN')}
-          </p>
-          <p className="text-[10px] text-[#9CA3AF] mt-1">
-            {hasConversion
-              ? `${totalShares.toLocaleString('en-IN')} shares · of ${totalVested.toLocaleString('en-IN')} vested`
-              : `of ${totalVested.toLocaleString('en-IN')} vested`}
-          </p>
-        </div>
-
-        {/* Net Taxable Salary */}
-        <div className="px-4 py-3.5">
-          <p className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wide mb-1">Net Taxable Salary</p>
-          <p className="text-lg font-bold text-[#111827] leading-none"><Amt value={netSalaryIncome} /></p>
-          <p className="text-[10px] text-[#9CA3AF] mt-1">
-            <Amt value={inputs.annualSalaryIncome} /> − <Amt value={standardDeduction} /> std. deduction
-          </p>
-        </div>
+      {/* Narrative sentence */}
+      <div className="mx-5 my-3 px-4 py-3.5 bg-[#F9FAFB] rounded-xl border-l-[3px] border-[#E85936]">
+        <p className="text-sm text-[#6B7280] leading-relaxed font-normal">
+          If you exercise{' '}
+          <span className="font-semibold text-[#111827]">{optionsSelected.toLocaleString('en-IN')} ESOPs</span>
+          {hasConversion && (
+            <> (<span className="font-semibold text-[#374151]">{totalShares.toLocaleString('en-IN')} shares</span>)</>
+          )}{' '}
+          today, you will spend{' '}
+          <span className="font-semibold text-[#374151]"><Amt value={costToAcquire} /></span>{' '}
+          to acquire them and pay{' '}
+          <span className="font-semibold text-[#A05C45]"><Amt value={totalTax} /></span>{' '}
+          as perquisite tax — making your total cash outflow{' '}
+          <span className="font-semibold text-[#374151]"><Amt value={totalCashOutflow} /></span>.
+        </p>
       </div>
 
-      {/* Bracket strip */}
-      <div className={`${colors.bg} border-t border-[#E5E7EB] px-5 py-3 flex flex-wrap items-center gap-3`}>
-        <span className="text-[11px] font-semibold text-[#374151] uppercase tracking-wide">
-          Marginal Tax Bracket
-        </span>
-
-        <div className={`flex items-baseline gap-1 px-3 py-1 rounded-full ${colors.pill} shadow-sm`}>
-          <span className="text-sm font-black text-white">{bracketRate}</span>
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          <span className={`text-xs font-semibold ${colors.text}`}>{bracketLabel} slab</span>
-          <span className="text-[#D1D5DB]">·</span>
-          <span className="text-xs text-[#6B7280]">{inputs.regime === 'NEW' ? 'New' : 'Old'} Regime</span>
-        </div>
-
-        {result.applied87A && (
-          <span className="ml-auto text-xs font-semibold text-[#3F7D5A] bg-[#F1F5F2] px-2.5 py-0.5 rounded-full">
-            87A Rebate — Zero Tax
-          </span>
-        )}
-
-        {!result.applied87A && topSlab && (
-          <span className="ml-auto text-[11px] text-[#6B7280]">
-            <Amt value={netSalaryIncome} /> net salary
-            <span className="mx-1 text-[#D1D5DB]">+</span>
-            <Amt value={result.perquisite} /> perquisite
-            <span className="mx-1 text-[#D1D5DB]">=</span>
-            <span className={`font-semibold ${colors.text}`}><Amt value={netSalaryIncome + result.perquisite} /> total income</span>
-          </span>
-        )}
+      {/* 4 metric tiles */}
+      <div className="grid grid-cols-2 gap-3 px-5 pb-5">
+        <Tile
+          label="Total Cash Outflow"
+          value={<Amt value={totalCashOutflow} />}
+          sub={<><Amt value={costToAcquire} /> exercise cost + <Amt value={totalTax} /> tax</>}
+        />
+        <Tile
+          label="Effective Tax Rate"
+          value={formatPercent(effectiveTaxRate)}
+        />
+        <Tile
+          label="Net Gain"
+          value={<Amt value={netGain} />}
+          valueClass={netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}
+        />
+        <Tile
+          label="ESOPs Exercised"
+          value={`${optionsSelected.toLocaleString('en-IN')} options`}
+          sub={hasConversion ? `→ ${totalShares.toLocaleString('en-IN')} shares (after conversion)` : undefined}
+        />
       </div>
     </div>
   )
