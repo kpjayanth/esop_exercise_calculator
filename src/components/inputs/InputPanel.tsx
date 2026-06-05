@@ -176,8 +176,8 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
           )}
         </Field>
 
-        {/* Annual Salary */}
-        <Field label="Annual Gross Salary" tooltip="Enter your gross salary (CTC / pre-deduction). We automatically subtract the standard deduction — ₹75,000 for New Regime or ₹50,000 for Old Regime — as per Indian tax rules. Net taxable salary = Gross Salary − Standard Deduction.">
+        {/* Net Taxable Income */}
+        <Field label="Net Taxable Income (Salary)" tooltip="Enter your net taxable income from salary — after all deductions you are claiming (standard deduction, HRA, 80C, 80D, etc.). This is the figure on which slab tax is computed before adding your ESOP perquisite.">
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280] text-sm">₹</span>
             <input

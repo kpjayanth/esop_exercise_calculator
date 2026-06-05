@@ -15,9 +15,9 @@ function AnimatedNumber({ value, format }: { value: number; format: (v: number) 
     <span className={showTooltip ? 'relative group/amt cursor-help' : undefined}>
       <motion.span
         key={value}
-        initial={{ opacity: 0.6, y: 4 }}
+        initial={{ opacity: 0.6, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.25 }}
       >
         {compact}
       </motion.span>
@@ -31,91 +31,87 @@ function AnimatedNumber({ value, format }: { value: number; format: (v: number) 
   )
 }
 
-interface MetricProps {
-  icon: React.ReactNode
-  label: string
-  value: number
-  format: (v: number) => string
-  accent?: string
-  sub?: string
-}
-
-function Metric({ icon, label, value, format, accent = 'text-[#111827]', sub }: MetricProps) {
-  return (
-    <div className="min-w-0">
-      <div className="flex items-center gap-1 mb-1">
-        <span className="text-[#9CA3AF] shrink-0">{icon}</span>
-        <span className="text-[10px] sm:text-xs text-[#6B7280] font-medium leading-tight">{label}</span>
-      </div>
-      <div className={`text-xl sm:text-2xl font-bold leading-none ${accent}`}>
-        <AnimatedNumber value={value} format={format} />
-      </div>
-      {sub && <p className="text-[10px] sm:text-xs text-[#9CA3AF] mt-1 leading-snug">{sub}</p>}
-    </div>
-  )
-}
-
 export function TaxSummaryCard({ result }: Props) {
-  const { perquisite, totalTax, netGain, effectiveTaxRate } = result
+  const { perquisite, totalTax, netGain, effectiveTaxRate, grossValue, exerciseCost } = result
+  const keepPct = perquisite > 0 ? Math.max(0, netGain / perquisite) : 0
 
   return (
-    <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm overflow-hidden">
-      {/* Top stripe */}
-      <div className="h-1 bg-gradient-to-r from-[#E85936] via-[#f97316] to-[#E85936]" />
+    <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-md">
+      {/* Bold top stripe */}
+      <div className="h-[3px] bg-gradient-to-r from-[#E85936] via-[#f97316] to-[#E85936]" />
 
-      <div className="p-5">
-        <div className="grid grid-cols-3 gap-2">
-          <Metric
-            icon={<IndianRupee size={13} />}
-            label="Perquisite Income"
-            value={perquisite}
-            format={formatCompact}
-            accent="text-[#111827]"
-          />
-          <div className="border-l border-[#F3F4F6] pl-2 sm:pl-4">
-            <Metric
-              icon={<TrendingDown size={13} />}
-              label="Total Tax"
-              value={totalTax}
-              format={formatCompact}
-              accent="text-[#E85936]"
-              sub={`Rate: ${formatPercent(effectiveTaxRate)}`}
-            />
+      {/* Header */}
+      <div className="bg-white px-5 pt-3.5 pb-2 flex items-center justify-between">
+        <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest">Tax Outcome</span>
+        <span className="text-[10px] font-medium text-[#C4C4C4]">FY 2025-26</span>
+      </div>
+
+      {/* Three hero panels */}
+      <div className="grid grid-cols-3 divide-x divide-[#F0F0F0]">
+
+        {/* Panel 1 — Total ESOP Value */}
+        <div className="bg-white px-5 pt-3 pb-5">
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <IndianRupee size={12} className="text-[#9CA3AF]" />
+            <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wide">Total ESOP Value</span>
           </div>
-          <div className="border-l border-[#F3F4F6] pl-2 sm:pl-4">
-            <Metric
-              icon={<TrendingUp size={13} />}
-              label="Net Gain"
-              value={netGain}
-              format={formatCompact}
-              accent={netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}
-              sub="After all taxes"
+          <div className="text-[28px] sm:text-[32px] font-black leading-none text-[#111827] tracking-tight">
+            <AnimatedNumber value={perquisite} format={formatCompact} />
+          </div>
+          {grossValue > 0 && (
+            <p className="text-[10px] text-[#9CA3AF] mt-2 leading-relaxed">
+              <span className="text-[#374151] font-medium">{formatCompact(grossValue)}</span> gross
+              {' '}−{' '}
+              <span className="text-[#374151] font-medium">{formatCompact(exerciseCost)}</span> exercise cost
+            </p>
+          )}
+        </div>
+
+        {/* Panel 2 — Total Tax Liability */}
+        <div className="bg-[#FDF8F7] px-5 pt-3 pb-5">
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <TrendingDown size={12} className="text-[#A05C45]" />
+            <span className="text-[10px] font-semibold text-[#A05C45] uppercase tracking-wide">Tax Liability</span>
+          </div>
+          <div className="text-[28px] sm:text-[32px] font-black leading-none text-[#A05C45] tracking-tight">
+            <AnimatedNumber value={totalTax} format={formatCompact} />
+          </div>
+          <p className="text-[10px] text-[#9CA3AF] mt-2">
+            Effective rate{' '}
+            <span className="text-[#A05C45] font-semibold">{formatPercent(effectiveTaxRate)}</span>
+          </p>
+        </div>
+
+        {/* Panel 3 — Net Gain */}
+        <div className="bg-[#F7FBF9] px-5 pt-3 pb-5">
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <TrendingUp size={12} className="text-[#3F7D5A]" />
+            <span className="text-[10px] font-semibold text-[#3F7D5A] uppercase tracking-wide">Net Gain</span>
+          </div>
+          <div className={`text-[28px] sm:text-[32px] font-black leading-none tracking-tight ${netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}`}>
+            <AnimatedNumber value={netGain} format={formatCompact} />
+          </div>
+          <p className="text-[10px] text-[#9CA3AF] mt-2">What you take home after tax</p>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      {perquisite > 0 && (
+        <div className="bg-white border-t border-[#F0F0F0] px-5 py-3.5">
+          <div className="flex text-[11px] font-medium justify-between mb-1.5">
+            <span className="text-[#3F7D5A]">Keep {formatPercent(keepPct)}</span>
+            <span className="text-[#A05C45]">Tax {formatPercent(effectiveTaxRate)}</span>
+          </div>
+          <div className="h-2.5 rounded-full bg-[#F3F4F6] overflow-hidden">
+            <motion.div
+              className="h-full bg-[#5A8A72] rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${keepPct * 100}%` }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
             />
           </div>
         </div>
-
-        {/* Progress bar: net vs tax */}
-        {perquisite > 0 && (
-          <div className="mt-4">
-            <div className="flex text-xs text-[#9CA3AF] justify-between mb-1">
-              <span>Net keep</span>
-              <span>Tax</span>
-            </div>
-            <div className="h-2 rounded-full bg-[#F3F4F6] overflow-hidden">
-              <motion.div
-                className="h-full bg-[#5A8A72] rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.max(0, (netGain / perquisite) * 100)}%` }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-              />
-            </div>
-            <div className="flex text-xs justify-between mt-1">
-              <span className="text-[#3F7D5A] font-medium">{formatPercent(Math.max(0, netGain / perquisite))}</span>
-              <span className="text-[#A05C45] font-medium">{formatPercent(effectiveTaxRate)}</span>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }

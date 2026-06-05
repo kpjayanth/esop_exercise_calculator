@@ -12,7 +12,6 @@ interface Props {
 export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: Props) {
   const {
     netSalaryIncome,
-    standardDeduction,
     perquisite,
     marginalSlabBreakdown,
     surcharge,
@@ -50,23 +49,8 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
         </div>
         <div className="space-y-1.5 pl-5 text-xs text-[#6B7280]">
           <div className="flex justify-between">
-            <span>Gross Salary</span>
+            <span>Net Taxable Income (Salary)</span>
             <Amt value={annualSalaryIncome} className="font-medium text-[#111827]" />
-          </div>
-          {standardDeduction > 0 && (
-            <div className="flex justify-between text-[#9CA3AF]">
-              <span>
-                Less: Standard Deduction
-                <span className="ml-1 text-[10px] bg-[#F3F4F6] text-[#6B7280] px-1.5 py-0.5 rounded-full">
-                  {regime === 'NEW' ? '₹75,000 · New Regime' : '₹50,000 · Old Regime'}
-                </span>
-              </span>
-              <span className="font-medium text-[#A05C45]">−<Amt value={standardDeduction} /></span>
-            </div>
-          )}
-          <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
-            <span className="font-semibold text-[#374151]">Net Taxable Salary</span>
-            <Amt value={netSalaryIncome} className="font-semibold text-[#111827]" />
           </div>
           <div className="flex justify-between">
             <span>+ ESOP Perquisite</span>

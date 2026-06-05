@@ -42,11 +42,9 @@ function getStandardDeduction(regime: Regime) {
 }
 
 export function computeSlabTax(
-  grossIncome: number,
+  netIncome: number,
   regime: Regime,
 ): { slabs: SlabLine[]; baseTax: number; netIncome: number; applied87A: boolean } {
-  const stdDeduction = getStandardDeduction(regime)
-  const netIncome = Math.max(0, grossIncome - stdDeduction)
   const slabs = getSlabs(regime)
   const lines: SlabLine[] = []
   let remaining = netIncome
@@ -178,37 +176,35 @@ export function computePerquisiteTax(inputs: PerquisiteInputs): PerquisiteResult
   const perquisite = Math.max(0, (fmvAtExercise - strikePrice) * numberOfOptions)
   const exerciseCost = strikePrice * numberOfOptions
   const grossValue = fmvAtExercise * numberOfOptions
-  const totalIncome = annualSalaryIncome + perquisite
+  // annualSalaryIncome is already net taxable income (employee-entered, post all deductions)
+  const netSalaryIncome = Math.max(0, annualSalaryIncome)
+  const totalIncome = netSalaryIncome + perquisite
 
-  // Tax on total income (salary + perquisite)
+  // Tax on total income (net salary + perquisite)
   const { slabs, baseTax: baseTaxOnTotal, applied87A } = computeSlabTax(totalIncome, regime)
 
-  // Tax on salary alone (to get marginal tax attributable to ESOP)
-  const { baseTax: baseTaxWithoutESOP } = computeSlabTax(annualSalaryIncome, regime)
+  // Tax on net salary alone (to get marginal tax attributable to ESOP)
+  const { baseTax: baseTaxWithoutESOP } = computeSlabTax(netSalaryIncome, regime)
 
   // Marginal tax = (full tax with ESOP) - (tax without ESOP)
-  // This is what the employee actually pays because of the ESOP exercise
-  const surchargeWithESOP = computeSurcharge(totalIncome - getStandardDeduction(regime), baseTaxOnTotal, regime)
+  const surchargeWithESOP = computeSurcharge(totalIncome, baseTaxOnTotal, regime)
   const cessWithESOP = (baseTaxOnTotal + surchargeWithESOP) * CESS_RATE
   const fullTaxWithESOP = baseTaxOnTotal + surchargeWithESOP + cessWithESOP
 
-  const surchargeWithoutESOP = computeSurcharge(annualSalaryIncome - getStandardDeduction(regime), baseTaxWithoutESOP, regime)
+  const surchargeWithoutESOP = computeSurcharge(netSalaryIncome, baseTaxWithoutESOP, regime)
   const cessWithoutESOP = (baseTaxWithoutESOP + surchargeWithoutESOP) * CESS_RATE
   const fullTaxWithoutESOP = baseTaxWithoutESOP + surchargeWithoutESOP + cessWithoutESOP
 
   const marginalTaxOnESOP = fullTaxWithESOP - fullTaxWithoutESOP
-  // Expose the ESOP-attributable components for breakdown display
   const surcharge = surchargeWithESOP - surchargeWithoutESOP
   const cess = cessWithESOP - cessWithoutESOP
-  const totalTax = marginalTaxOnESOP   // tax the employee pays because of this exercise
+  const totalTax = marginalTaxOnESOP
   const netGain = perquisite - totalTax
   const effectiveTaxRate = perquisite > 0 ? totalTax / perquisite : 0
 
-  const stdDeduction = getStandardDeduction(regime)
-  const netSalaryIncome = Math.max(0, annualSalaryIncome - stdDeduction)
   const marginalSlabs = computeMarginalSlabBreakdown(netSalaryIncome, perquisite, regime)
 
-  const thresholdGapRaw = computeThresholdGap(totalIncome, regime)
+  const thresholdGapRaw = computeThresholdGap(netSalaryIncome + perquisite, regime)
   let thresholdGap: ThresholdGap | null = null
   if (thresholdGapRaw) {
     const reducedPerquisite = perquisite - thresholdGapRaw.gapAmount - 1
@@ -236,7 +232,7 @@ export function computePerquisiteTax(inputs: PerquisiteInputs): PerquisiteResult
     grossValue,
     slabBreakdown: slabs,
     marginalSlabBreakdown: marginalSlabs,
-    standardDeduction: stdDeduction,
+    standardDeduction: 0,
     netSalaryIncome,
     thresholdGap,
     applied87A,

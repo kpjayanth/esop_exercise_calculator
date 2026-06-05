@@ -106,11 +106,11 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
         </div>
       ) : (
         <>
-          {/* 1. Exercise summary + bracket */}
-          <InputSummaryCard inputs={inputs} result={result} totalVested={totalVested} optionsSelected={optionsSelected} totalShares={totalShares} costToAcquire={costToAcquire} />
-
-          {/* 2. Hero tax summary */}
+          {/* 1. Hero tax summary — most important, shown first */}
           <TaxSummaryCard result={result} />
+
+          {/* 2. Exercise summary + bracket */}
+          <InputSummaryCard inputs={inputs} result={result} totalVested={totalVested} optionsSelected={optionsSelected} totalShares={totalShares} costToAcquire={costToAcquire} />
 
           {/* 3. Threshold alert (conditionally shown) */}
           {result.thresholdGap && (
@@ -118,8 +118,9 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
           )}
 
           {/* 4. Per-share breakdown */}
-          <Card className="p-4 space-y-1">
-            <p className="text-sm font-semibold text-[#111827] mb-3">Perquisite Calculation</p>
+          <Card className="px-5 py-5">
+            <p className="text-sm font-semibold text-[#111827]">Tax Calculation Breakdown</p>
+            <p className="text-[11px] text-[#9CA3AF] mt-0.5 mb-5">Detailed step-by-step calculation of your ESOP tax liability</p>
             <TaxBreakdownRows result={result} />
           </Card>
 
