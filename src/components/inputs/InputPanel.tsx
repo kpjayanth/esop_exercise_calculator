@@ -92,7 +92,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
               const d = new Date(e.target.value)
               if (!isNaN(d.getTime())) onExerciseDateChange(d)
             }}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-[#DBDFE9] bg-white focus:outline-none focus:border-[#E85936] transition-colors text-[#374151]"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-[#DBDFE9] bg-[#F6F9FB] focus:outline-none focus:border-[#E85936] transition-colors text-[#374151]"
           />
         </Field>
 
@@ -118,7 +118,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
                   commitOptions(clamped)
                   setOptionsDisplay(clamped.toLocaleString('en-IN'))
                 }}
-                className="flex-1 px-3 py-2 text-sm rounded-lg border border-[#DBDFE9] bg-white focus:outline-none focus:border-[#E85936] transition-colors"
+                className="flex-1 px-3 py-2 text-sm rounded-lg border border-[#DBDFE9] bg-[#F6F9FB] focus:outline-none focus:border-[#E85936] transition-colors"
               />
               <span className="text-xs text-[#99A1B7] whitespace-nowrap shrink-0">
                 max {totalVested.toLocaleString('en-IN')}

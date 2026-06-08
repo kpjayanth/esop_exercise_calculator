@@ -108,7 +108,7 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
             className={`border-2 border-dashed rounded-lg p-10 text-center cursor-pointer transition-all ${
               dragging
                 ? 'border-[#E85936] bg-[#FFF3F0]'
-                : 'border-[#E5E7EB] bg-white hover:border-[#E85936] hover:bg-[#FFF9F8]'
+                : 'border-[#DBDFE9] bg-[#F6F9FB] hover:border-[#E85936] hover:bg-[#FDF1EE]'
             }`}
           >
             <input
@@ -134,7 +134,7 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
 
         {/* Error */}
         {error && (
-          <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+          <div className="flex items-start gap-2 bg-[#FEF3F2] border border-[#D92D20] rounded-lg px-4 py-3 text-sm text-[#B42318]">
             <AlertCircle size={15} className="shrink-0 mt-0.5" />
             {error}
           </div>
@@ -144,7 +144,7 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
         {grants && (
           <div className="bg-white rounded-lg border border-[#F1F1F4] shadow-sm overflow-hidden">
             <div className="px-5 py-3 border-b border-[#F1F1F4] flex items-center gap-2">
-              <CheckCircle size={15} className="text-green-500" />
+              <CheckCircle size={15} className="text-[#039855]" />
               <p className="text-sm font-semibold text-[#071437]">
                 {grants.length} Grant{grants.length !== 1 ? 's' : ''} Found
               </p>

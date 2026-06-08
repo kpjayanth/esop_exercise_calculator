@@ -14,13 +14,13 @@ export function ThresholdAlert({ gap }: Props) {
     <motion.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-lg border border-amber-200 bg-amber-50 p-4"
+      className="rounded-lg border border-[#E85936]/30 bg-[#FDF1EE] p-4"
     >
       <div className="flex gap-3">
-        <AlertTriangle size={16} className="text-amber-600 shrink-0 mt-0.5" />
+        <AlertTriangle size={16} className="text-[#E85936] shrink-0 mt-0.5" />
         <div className="space-y-2 text-sm">
-          <p className="font-semibold text-amber-900">Surcharge Threshold Alert</p>
-          <p className="text-amber-800 leading-5">
+          <p className="font-semibold text-[#071437]">Surcharge Threshold Alert</p>
+          <p className="text-[#252F4A] leading-5">
             You're just <strong>{formatCompact(gapAmount)}</strong> away from the{' '}
             <strong>₹{(nextBracketAt / 10_000_000).toFixed(0)} crore</strong> surcharge bracket where
             the rate jumps from{' '}
@@ -28,11 +28,11 @@ export function ThresholdAlert({ gap }: Props) {
             <strong>{formatPercent(nextSurchargeRate)}</strong>.
           </p>
           {potentialSaving > 0 && (
-            <div className="flex items-start gap-2 bg-white rounded-lg px-3 py-2 border border-amber-200">
-              <Lightbulb size={13} className="text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-800">
+            <div className="flex items-start gap-2 bg-white rounded-lg px-3 py-2 border border-[#E85936]/20">
+              <Lightbulb size={13} className="text-[#E85936] shrink-0 mt-0.5" />
+              <p className="text-xs text-[#252F4A]">
                 Splitting this exercise across two financial years could save approximately{' '}
-                <strong className="text-amber-900">{formatCompact(potentialSaving)}</strong> in tax.
+                <strong className="text-[#071437]">{formatCompact(potentialSaving)}</strong> in tax.
                 Consider exercising up to{' '}
                 <strong>{formatCompact(nextBracketAt - gap.gapAmount - 1)}</strong> of perquisite now and
                 the rest in the next FY.

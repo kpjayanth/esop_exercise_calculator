@@ -77,7 +77,7 @@ export function Input({ className, prefix, ...props }: InputProps) {
       <div className="relative flex items-center">
         <span className="absolute left-3 text-sm text-[#99A1B7] pointer-events-none">{prefix}</span>
         <input
-          className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-white pl-7 pr-3 text-sm text-[#4B5675] placeholder:text-[#99A1B7] focus:border-[#E85936] focus:outline-none transition-colors', className)}
+          className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-[#F6F9FB] pl-7 pr-3 text-sm text-[#4B5675] placeholder:text-[#99A1B7] focus:border-[#E85936] focus:outline-none transition-colors', className)}
           {...props}
         />
       </div>
@@ -85,7 +85,7 @@ export function Input({ className, prefix, ...props }: InputProps) {
   }
   return (
     <input
-      className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-white px-3 text-sm text-[#4B5675] placeholder:text-[#99A1B7] focus:border-[#E85936] focus:outline-none transition-colors', className)}
+      className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-[#F6F9FB] px-3 text-sm text-[#4B5675] placeholder:text-[#99A1B7] focus:border-[#E85936] focus:outline-none transition-colors', className)}
       {...props}
     />
   )
@@ -104,7 +104,7 @@ export function Label({ className, children, ...props }: React.LabelHTMLAttribut
 export function Select({ className, children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-white px-3 text-sm text-[#4B5675] focus:border-[#E85936] focus:outline-none transition-colors appearance-none cursor-pointer', className)}
+      className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-[#F6F9FB] px-3 text-sm text-[#4B5675] focus:border-[#E85936] focus:outline-none transition-colors appearance-none cursor-pointer', className)}
       {...props}
     >
       {children}
