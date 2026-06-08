@@ -61,11 +61,11 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
       {/* Shared exercise date context — visible above all cards */}
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2 text-sm">
-          <CalendarDays size={14} className="text-[#9CA3AF]" />
-          <span className="text-[#9CA3AF] text-xs">Exercise Date</span>
-          <span className="font-semibold text-[#374151] text-xs">{formattedDate}</span>
+          <CalendarDays size={14} className="text-[#99A1B7]" />
+          <span className="text-[#99A1B7] text-xs">Exercise Date</span>
+          <span className="font-semibold text-[#252F4A] text-xs">{formattedDate}</span>
         </div>
-        <span className="text-[11px] font-medium text-[#6B7280] bg-[#F3F4F6] border border-[#E5E7EB] rounded-full px-2.5 py-0.5">
+        <span className="text-[11px] font-medium text-[#99A1B7] bg-[#F6F9FB] border border-[#F1F1F4] rounded-full px-2.5 py-0.5">
           {fy}
         </span>
       </div>
@@ -86,8 +86,8 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
       {!hasValues ? (
         /* Empty state — shown below grant block until FMV + Salary are filled */
         <div className="flex flex-col items-center justify-center py-10 px-6">
-          <h3 className="text-base font-bold text-[#111827] mb-1">Enter FMV &amp; Salary to see your tax</h3>
-          <p className="text-sm text-[#6B7280] text-center mb-5 max-w-xs">
+          <h3 className="text-base font-bold text-[#071437] mb-1">Enter FMV &amp; Salary to see your tax</h3>
+          <p className="text-sm text-[#99A1B7] text-center mb-5 max-w-xs">
             Fill in the Fair Market Value and your Annual Salary — both are needed to determine your tax slab.
           </p>
           <div className="w-full max-w-sm space-y-2">
@@ -96,9 +96,9 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
               { icon: '📈', label: 'FMV sensitivity scenarios' },
               { icon: '🏷', label: 'Marginal slab & surcharge breakdown' },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-[#F3F4F6]">
-                <span className="w-7 h-7 rounded-lg bg-[#F9FAFB] flex items-center justify-center text-sm shrink-0">{item.icon}</span>
-                <span className="text-xs text-[#6B7280]">{item.label}</span>
+              <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-[#F1F1F4]">
+                <span className="w-7 h-7 rounded-lg bg-[#F6F9FB] flex items-center justify-center text-sm shrink-0">{item.icon}</span>
+                <span className="text-xs text-[#99A1B7]">{item.label}</span>
               </div>
             ))}
           </div>
@@ -119,8 +119,8 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
 
           {/* 4. Per-share breakdown */}
           <Card className="px-5 py-5">
-            <p className="text-sm font-semibold text-[#111827]">Tax Calculation Breakdown</p>
-            <p className="text-[11px] text-[#9CA3AF] mt-0.5 mb-5">Detailed step-by-step calculation of your ESOP tax liability</p>
+            <p className="text-sm font-semibold text-[#071437]">Tax Calculation Breakdown</p>
+            <p className="text-[11px] text-[#99A1B7] mt-0.5 mb-5">Detailed step-by-step calculation of your ESOP tax liability</p>
             <TaxBreakdownRows result={result} />
           </Card>
 
@@ -131,16 +131,16 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
               className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-[#FAFAFA] transition-colors"
             >
               <div>
-                <p className="text-sm font-semibold text-[#111827]">
+                <p className="text-sm font-semibold text-[#071437]">
                   How your {inputs.regime === 'NEW' ? 'New' : 'Old'} Regime rate is derived
                 </p>
-                <p className="text-xs text-[#9CA3AF] mt-0.5">
+                <p className="text-xs text-[#99A1B7] mt-0.5">
                   Your perquisite is taxed at your marginal (topmost) slab rate — not a flat rate
                 </p>
               </div>
               <ChevronDown
                 size={16}
-                className={`text-[#9CA3AF] shrink-0 ml-3 transition-transform duration-200 ${slabOpen ? 'rotate-180' : ''}`}
+                className={`text-[#99A1B7] shrink-0 ml-3 transition-transform duration-200 ${slabOpen ? 'rotate-180' : ''}`}
               />
             </button>
             {slabOpen && (
@@ -159,7 +159,7 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
             <ScenarioTable scenarios={scenarios} />
           </Card>
 
-          <p className="text-xs text-[#9CA3AF] text-center pb-2">
+          <p className="text-xs text-[#99A1B7] text-center pb-2">
             Estimates for {fy}. Consult a tax advisor before exercising.
           </p>
         </>

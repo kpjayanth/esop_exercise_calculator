@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Info, Layers, Calculator } from 'lucide-react'
-import { Label, Tooltip } from '@/components/ui/index'
+import { Layers, Calculator } from 'lucide-react'
+import { Label, Tooltip, HelpIcon } from '@/components/ui/index'
 import { formatIndianInput, toIndianWords } from '@/lib/formatters'
 import { clamp } from '@/lib/utils'
 import { computeFIFO, weightedStrikePrice } from '@/lib/grantUtils'
@@ -23,7 +23,7 @@ function Field({ label, tooltip, children }: { label: string; tooltip?: string; 
         <Label>{label}</Label>
         {tooltip && (
           <Tooltip text={tooltip}>
-            <Info size={11} className="text-[#9CA3AF] cursor-help" />
+            <HelpIcon />
           </Tooltip>
         )}
       </div>
@@ -72,14 +72,14 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
     <div className="space-y-5">
 
       {/* ── GROUP 1: Exercise setup — drives Grant Allocation ── */}
-      <div className="rounded-xl border border-[#F0F0F0] bg-[#FAFAFA] p-4 space-y-4">
+      <div className="rounded-lg border border-[#F1F1F4] bg-[#F6F9FB] p-4 space-y-4">
         {/* Section label — Layers icon links this visually to the Grant Allocation card */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <Layers size={11} className="text-[#9CA3AF]" />
-            <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest">Exercise</span>
+            <Layers size={11} className="text-[#99A1B7]" />
+            <span className="text-[10px] font-semibold text-[#99A1B7] uppercase tracking-widest">Exercise</span>
           </div>
-          <span className="text-[10px] text-[#9CA3AF] font-medium">shapes grant allocation</span>
+          <span className="text-[10px] text-[#99A1B7] font-medium">shapes grant allocation</span>
         </div>
 
         {/* Date of Exercise */}
@@ -92,7 +92,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
               const d = new Date(e.target.value)
               if (!isNaN(d.getTime())) onExerciseDateChange(d)
             }}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-[#E5E7EB] bg-white focus:outline-none focus:ring-2 focus:ring-[#E85936]/20 focus:border-[#E85936] transition-all text-[#374151]"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-[#DBDFE9] bg-white focus:outline-none focus:border-[#E85936] transition-colors text-[#374151]"
           />
         </Field>
 
@@ -118,9 +118,9 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
                   commitOptions(clamped)
                   setOptionsDisplay(clamped.toLocaleString('en-IN'))
                 }}
-                className="flex-1 px-3 py-2 text-sm rounded-lg border border-[#E5E7EB] bg-white focus:outline-none focus:ring-2 focus:ring-[#E85936]/20 focus:border-[#E85936] transition-all"
+                className="flex-1 px-3 py-2 text-sm rounded-lg border border-[#DBDFE9] bg-white focus:outline-none focus:border-[#E85936] transition-colors"
               />
-              <span className="text-xs text-[#9CA3AF] whitespace-nowrap shrink-0">
+              <span className="text-xs text-[#99A1B7] whitespace-nowrap shrink-0">
                 max {totalVested.toLocaleString('en-IN')}
               </span>
             </div>
@@ -148,14 +148,14 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
       {/* ── GROUP 2: Tax inputs ── */}
       <div className="space-y-4">
         <div className="flex items-center gap-1.5">
-          <Calculator size={11} className="text-[#9CA3AF]" />
-          <span className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest">Tax</span>
+          <Calculator size={11} className="text-[#99A1B7]" />
+          <span className="text-[10px] font-semibold text-[#99A1B7] uppercase tracking-widest">Tax</span>
         </div>
 
         {/* FMV */}
         <Field label="FMV at Exercise" tooltip="Current fair market value per share (from latest company valuation / 409A)">
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280] text-sm">₹</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#99A1B7] text-sm">₹</span>
             <input
               type="text"
               inputMode="numeric"
@@ -168,18 +168,18 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
                 onChange({ ...inputs, fmvAtExercise: Math.max(0, v) })
               }}
               onBlur={() => setFmvDisplay(inputs.fmvAtExercise ? formatIndianInput(String(inputs.fmvAtExercise)) : '')}
-              className="w-full pl-7 pr-3 py-2.5 text-base font-semibold rounded-lg border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#E85936]/20 focus:border-[#E85936] transition-all"
+              className="w-full pl-7 pr-3 py-2.5 text-base font-semibold rounded-lg border border-[#DBDFE9] focus:outline-none focus:border-[#E85936] transition-colors"
             />
           </div>
           {inputs.fmvAtExercise > 0 && (
-            <p className="text-[11px] text-[#9CA3AF] mt-1 pl-1">{toIndianWords(inputs.fmvAtExercise)}</p>
+            <p className="text-[11px] text-[#99A1B7] mt-1 pl-1">{toIndianWords(inputs.fmvAtExercise)}</p>
           )}
         </Field>
 
         {/* Net Taxable Income */}
         <Field label="Net Taxable Income (Salary)" tooltip="Enter your net taxable income from salary — after all deductions you are claiming (standard deduction, HRA, 80C, 80D, etc.). This is the figure on which slab tax is computed before adding your ESOP perquisite.">
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280] text-sm">₹</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#99A1B7] text-sm">₹</span>
             <input
               type="text"
               inputMode="numeric"
@@ -192,31 +192,31 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
                 set('annualSalaryIncome', Math.max(0, v))
               }}
               onBlur={() => setSalaryDisplay(inputs.annualSalaryIncome ? formatIndianInput(String(inputs.annualSalaryIncome)) : '')}
-              className="w-full pl-7 pr-3 py-2.5 text-base font-semibold rounded-lg border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#E85936]/20 focus:border-[#E85936] transition-all"
+              className="w-full pl-7 pr-3 py-2.5 text-base font-semibold rounded-lg border border-[#DBDFE9] focus:outline-none focus:border-[#E85936] transition-colors"
             />
           </div>
           {inputs.annualSalaryIncome > 0 && (
-            <p className="text-[11px] text-[#9CA3AF] mt-1 pl-1">{toIndianWords(inputs.annualSalaryIncome)}</p>
+            <p className="text-[11px] text-[#99A1B7] mt-1 pl-1">{toIndianWords(inputs.annualSalaryIncome)}</p>
           )}
         </Field>
 
         {/* Tax Regime */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-xs font-medium text-[#6B7280]">Tax Regime</span>
+            <span className="text-xs font-medium text-[#252F4A]">Tax Regime</span>
             <Tooltip text="New regime (Budget 2025 slabs) vs Old regime. We'll show both anyway.">
-              <Info size={11} className="text-[#9CA3AF] cursor-help" />
+              <HelpIcon />
             </Tooltip>
           </div>
-          <div className="flex items-center bg-[#F3F4F6] rounded-full p-[3px] gap-[2px]">
+          <div className="flex items-center bg-[#F5F8FA] rounded-[6px] p-[3px] gap-[2px] border border-[#F1F1F4]">
             {(['NEW', 'OLD'] as const).map((regime) => (
               <button
                 key={regime}
                 onClick={() => set('regime', regime)}
-                className={`px-4 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 ${
+                className={`px-4 py-1 rounded-[4px] text-xs font-semibold whitespace-nowrap transition-all duration-150 ${
                   inputs.regime === regime
-                    ? 'bg-white text-[#111827] shadow-sm'
-                    : 'text-[#9CA3AF] hover:text-[#6B7280]'
+                    ? 'bg-white text-[#071437]'
+                    : 'text-[#99A1B7] hover:text-[#252F4A]'
                 }`}
               >
                 {regime === 'NEW' ? 'New' : 'Old'}
@@ -229,7 +229,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
       {/* Reset */}
       <button
         onClick={onResetGrants}
-        className="w-full text-xs text-[#9CA3AF] hover:text-[#E85936] transition-colors py-1 text-center"
+        className="w-full text-xs text-[#99A1B7] hover:text-[#E85936] transition-colors py-1 text-center"
       >
         ↺ Load different grant file
       </button>

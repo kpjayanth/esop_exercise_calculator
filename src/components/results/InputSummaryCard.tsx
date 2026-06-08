@@ -11,12 +11,12 @@ interface Props {
   costToAcquire: number
 }
 
-function Tile({ label, value, sub, valueClass = 'text-[#111827]' }: { label: string; value: React.ReactNode; sub?: React.ReactNode; valueClass?: string }) {
+function Tile({ label, value, sub, valueClass = 'text-[#071437]' }: { label: string; value: React.ReactNode; sub?: React.ReactNode; valueClass?: string }) {
   return (
-    <div className="bg-[#F9FAFB] rounded-xl p-4">
-      <p className="text-[10px] font-medium text-[#B0B7C3] uppercase tracking-widest mb-2">{label}</p>
-      <p className={`text-xl font-semibold leading-none tracking-tight ${valueClass}`}>{value}</p>
-      {sub && <p className="text-[11px] text-[#B0B7C3] mt-1.5 font-normal">{sub}</p>}
+    <div className="bg-[#F6F9FB] rounded-lg p-4">
+      <p className="text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.06em] mb-2">{label}</p>
+      <p className={`text-[18px] font-semibold leading-[18px] tracking-tight ${valueClass}`}>{value}</p>
+      {sub && <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-1.5">{sub}</p>}
     </div>
   )
 }
@@ -27,25 +27,25 @@ export function InputSummaryCard({ inputs, result, optionsSelected, totalShares,
   const hasConversion = optionsSelected !== totalShares
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm bg-white">
+    <div className="rounded-lg overflow-hidden border border-[#F1F1F4] bg-white" style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}>
       <div className="px-5 pt-4 pb-1">
-        <span className="text-[10px] font-medium text-[#B0B7C3] uppercase tracking-widest">Exercise Summary</span>
+        <span className="text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.06em]">Exercise Summary</span>
       </div>
 
       {/* Narrative sentence */}
-      <div className="mx-5 my-3 px-4 py-3.5 bg-[#F9FAFB] rounded-xl border-l-[3px] border-[#E85936]">
-        <p className="text-sm text-[#6B7280] leading-relaxed font-normal">
+      <div className="mx-5 my-3 px-4 py-3.5 bg-[#F6F9FB] rounded-lg border-l-[3px] border-[#E85936]">
+        <p className="text-[14px] leading-[20px] font-[500] text-[#99A1B7]">
           If you exercise{' '}
-          <span className="font-semibold text-[#111827]">{optionsSelected.toLocaleString('en-IN')} ESOPs</span>
+          <span className="font-semibold text-[#071437]">{optionsSelected.toLocaleString('en-IN')} ESOPs</span>
           {hasConversion && (
-            <> (<span className="font-semibold text-[#374151]">{totalShares.toLocaleString('en-IN')} shares</span>)</>
+            <> (<span className="font-semibold text-[#252F4A]">{totalShares.toLocaleString('en-IN')} shares</span>)</>
           )}{' '}
           today, you will spend{' '}
-          <span className="font-semibold text-[#374151]"><Amt value={costToAcquire} /></span>{' '}
+          <span className="font-semibold text-[#252F4A]"><Amt value={costToAcquire} /></span>{' '}
           to acquire them and pay{' '}
           <span className="font-semibold text-[#A05C45]"><Amt value={totalTax} /></span>{' '}
           as perquisite tax — making your total cash outflow{' '}
-          <span className="font-semibold text-[#374151]"><Amt value={totalCashOutflow} /></span>.
+          <span className="font-semibold text-[#252F4A]"><Amt value={totalCashOutflow} /></span>.
         </p>
       </div>
 

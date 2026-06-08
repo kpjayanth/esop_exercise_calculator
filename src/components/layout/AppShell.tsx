@@ -92,17 +92,17 @@ export function AppShell() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-[#F6F9FB]">
       {/* Header */}
-      <header className="bg-white border-b border-[#E5E7EB] sticky top-0 z-30">
+      <header className="bg-white border-b border-[#F1F1F4] sticky top-0 z-30" style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}>
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#E85936] to-[#f97316] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#E85936] flex items-center justify-center">
               <Calculator size={16} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#111827] leading-none">ESOP Tax Calculator</p>
-              <p className="text-xs text-[#9CA3AF] leading-none mt-0.5">FY 2025-26 · Indian Tax Rules</p>
+              <p className="text-sm font-semibold text-[#071437] leading-none">ESOP Tax Calculator</p>
+              <p className="text-xs text-[#99A1B7] leading-none mt-0.5">FY 2025-26 · Indian Tax Rules</p>
             </div>
           </div>
         </div>
@@ -114,12 +114,12 @@ export function AppShell() {
           {/* Left: Input Panel */}
           <div>
             <div
-              className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
-              style={{ borderLeft: '4px solid #E85936' }}
+              className="bg-white rounded-lg border border-[#F1F1F4] p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
+              style={{ borderLeft: '4px solid #E85936', boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}
             >
-              <div className="flex items-center gap-2 mb-5 pb-4 border-b border-[#F3F4F6]">
+              <div className="flex items-center gap-2 mb-5 pb-4 border-b border-[#F1F1F4]">
                 <Calculator size={14} className="text-[#E85936]" />
-                <p className="text-sm font-semibold text-[#111827]">Exercise Details</p>
+                <p className="text-sm font-semibold text-[#071437]">Exercise Details</p>
               </div>
               <InputPanel
                 inputs={inputs}

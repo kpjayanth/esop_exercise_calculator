@@ -14,7 +14,7 @@ export function ThresholdAlert({ gap }: Props) {
     <motion.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl border border-amber-200 bg-amber-50 p-4"
+      className="rounded-lg border border-amber-200 bg-amber-50 p-4"
     >
       <div className="flex gap-3">
         <AlertTriangle size={16} className="text-amber-600 shrink-0 mt-0.5" />

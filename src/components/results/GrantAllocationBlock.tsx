@@ -68,16 +68,16 @@ function DraggableRow({
       dragListener={false}
       dragControls={controls}
       as="div"
-      className="flex items-center gap-2.5 px-4 py-3 bg-white hover:bg-[#FAFAFA] transition-colors border-b border-[#F3F4F6] last:border-0 group cursor-default"
+      className="flex items-center gap-2.5 px-4 py-3 bg-white hover:bg-[#F0F2FF] transition-colors border-b border-[#F1F1F4] last:border-0 group cursor-default"
       style={{ userSelect: 'none' }}
     >
       {/* Order number */}
-      <span className="text-[10px] text-[#6B7280] w-3 text-center shrink-0 tabular-nums font-semibold">{idx + 1}</span>
+      <span className="text-[10px] text-[#99A1B7] w-3 text-center shrink-0 tabular-nums font-semibold">{idx + 1}</span>
 
       {/* Drag handle */}
       {canReorder && (
         <div
-          className="text-[#C4C4C4] group-hover:text-[#6B7280] cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors"
+          className="text-[#C4C4C4] group-hover:text-[#99A1B7] cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors"
           onPointerDown={(e) => controls.start(e)}
           title="Drag to reorder"
         >
@@ -90,9 +90,9 @@ function DraggableRow({
 
       {/* Identity */}
       <div className="flex flex-col justify-center flex-1 min-w-0 overflow-hidden">
-        <span className="text-sm font-semibold text-[#111827] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
+        <span className="text-sm font-semibold text-[#071437] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
         <div className="flex items-center gap-1.5 mt-0.5">
-          <span className="text-[11px] text-[#6B7280] leading-tight font-medium">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
+          <span className="text-[11px] text-[#99A1B7] leading-tight font-medium">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
           <span className="text-[#D1D5DB] text-[10px]">·</span>
           <span className="text-[11px] text-[#9CA3AF] leading-tight">{row.grantId}</span>
         </div>
@@ -102,7 +102,7 @@ function DraggableRow({
       <div className="flex items-center gap-4 sm:gap-6 shrink-0">
         {/* Options: sel/avail */}
         <div className="text-right min-w-[48px]">
-          <span className={`text-sm font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#111827]'}`}>
+          <span className={`text-sm font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#071437]'}`}>
             {row.optionsAllocated.toLocaleString('en-IN')}
           </span>
           <span className="text-xs font-normal text-[#9CA3AF] tabular-nums">/{row.available.toLocaleString('en-IN')}</span>
@@ -110,7 +110,7 @@ function DraggableRow({
         {/* Shares */}
         {hasConversion && (
           <div className="text-right min-w-[36px]">
-            <p className="text-sm font-bold text-[#111827] tabular-nums leading-tight">
+            <p className="text-sm font-bold text-[#071437] tabular-nums leading-tight">
               {row.sharesAllocated.toLocaleString('en-IN')}
             </p>
             {row.conversionRatio !== 1 && (
@@ -138,10 +138,10 @@ function AllocationBar({ rows, totalPerquisite }: { rows: AllocationRow[]; total
     <div className="space-y-1.5">
       <div className="flex flex-wrap gap-x-4 gap-y-1">
         {rows.map((r) => (
-          <span key={r.grantId} className="flex items-center gap-1.5 text-[11px] text-[#374151]">
+          <span key={r.grantId} className="flex items-center gap-1.5 text-[11px] text-[#252F4A]">
             <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: r.color }} />
             <span className="font-semibold">{r.grantId}</span>
-            <span className="text-[#6B7280]">
+            <span className="text-[#99A1B7]">
               · <Amt value={r.perquisite} /> · {((r.perquisite / totalPerquisite) * 100).toFixed(1)}%
             </span>
           </span>
@@ -197,7 +197,7 @@ export function GrantAllocationBlock({
   const canReorder = rows.length > 1
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-sm">
+    <div className="rounded-lg overflow-hidden border border-[#F1F1F4]" style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}>
       {/* Dark header — clickable toggle */}
       <button
         onClick={onToggle}
@@ -250,7 +250,7 @@ export function GrantAllocationBlock({
       <div className="bg-white p-4 flex flex-col gap-3.5">
 
         {/* Column headers — desktop only */}
-        <div className="hidden sm:flex items-center gap-2.5 px-4 pb-1 text-[10px] font-semibold text-[#6B7280] uppercase tracking-wider">
+        <div className="hidden sm:flex items-center gap-2.5 px-4 pb-1 text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.08em]">
           <span className="w-3 shrink-0" />
           <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
           <span className="w-[18px] shrink-0" />
@@ -263,7 +263,7 @@ export function GrantAllocationBlock({
         </div>
 
         {/* Draggable rows */}
-        <div className="rounded-xl border border-[#E5E7EB] overflow-hidden">
+        <div className="rounded-lg border border-[#F1F1F4] overflow-hidden">
           <Reorder.Group
             axis="y"
             values={rows}
@@ -298,11 +298,11 @@ export function GrantAllocationBlock({
         )}
 
         {/* Allocation summary footer — options/shares only; perquisite total lives in TaxSummaryCard */}
-        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]">
-          <span className="text-xs font-medium text-[#374151]">
-            <span className="font-semibold text-[#111827]">{totalOptions.toLocaleString('en-IN')}</span> options
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#F6F9FB] border border-[#F1F1F4]">
+          <span className="text-xs font-medium text-[#252F4A]">
+            <span className="font-semibold text-[#071437]">{totalOptions.toLocaleString('en-IN')}</span> options
             {hasConversion && (
-              <> → <span className="font-semibold text-[#111827]">{totalShares.toLocaleString('en-IN')}</span> shares</>
+              <> → <span className="font-semibold text-[#071437]">{totalShares.toLocaleString('en-IN')}</span> shares</>
             )}
             {rows.length > 1 && (
               <span className="text-[#9CA3AF]"> · {rows.length} grants</span>

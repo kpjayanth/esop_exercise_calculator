@@ -1,12 +1,21 @@
-// Lightweight shadcn-style primitives (no external shadcn dependency needed)
+// Lightweight shadcn-style primitives — Hissa DS compliant
 import { cn } from '@/lib/utils'
 import { formatCompact, formatINR } from '@/lib/formatters'
 import React from 'react'
 
+// DS tokens (inlined for Tailwind JIT)
+// heading: #071437 | body: #252F4A | input: #4B5675 | muted: #99A1B7
+// page-bg: #F6F9FB | card-border: #F1F1F4 | field-border: #DBDFE9
+// shadow-ds: 0 3px 4px rgba(0,0,0,0.03)
+
 // ── Card ──────────────────────────────────────────────────────────────────────
 export function Card({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('bg-white rounded-xl border border-[#E5E7EB] shadow-sm', className)} {...props}>
+    <div
+      className={cn('bg-white rounded-lg border border-[#F1F1F4]', className)}
+      style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)', ...((props as any).style ?? {}) }}
+      {...props}
+    >
       {children}
     </div>
   )
@@ -18,14 +27,14 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 export function Badge({ className, variant = 'default', children, ...props }: BadgeProps) {
   const variants = {
-    default: 'bg-[#F3F4F6] text-[#374151] border-[#E5E7EB]',
-    success: 'bg-green-50 text-green-700 border-green-200',
-    warning: 'bg-amber-50 text-amber-700 border-amber-200',
-    error: 'bg-red-50 text-[#E85936] border-red-200',
-    info: 'bg-blue-50 text-blue-700 border-blue-200',
+    default: 'bg-[#F6F9FB] text-[#4B5675] border-[#F1F1F4]',
+    success: 'bg-[#E1F5EE] text-[#085041]',
+    warning: 'bg-[#FEF9EE] text-[#854F0B]',
+    error: 'bg-[#FEF3F2] text-[#B42318]',
+    info: 'bg-[#EEF4FB] text-[#0C224A]',
   }
   return (
-    <span className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium', variants[variant], className)} {...props}>
+    <span className={cn('inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-[#F1F1F4] text-xs font-medium', variants[variant], className)} {...props}>
       {children}
     </span>
   )
@@ -39,17 +48,18 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export function Button({ className, variant = 'primary', size = 'md', children, ...props }: ButtonProps) {
   const variants = {
     primary: 'bg-[#E85936] text-white hover:bg-[#d14e2e] disabled:opacity-50',
-    secondary: 'bg-white text-[#111827] border border-[#E5E7EB] hover:bg-[#F3F4F6]',
-    ghost: 'text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6]',
+    secondary: 'bg-white text-[#E85936] border border-[#E85936] hover:bg-[#FDF1EE]',
+    ghost: 'bg-[#F5F8FA] text-[#252F4A] hover:bg-[#EAECF0]',
   }
+  // DS: medium = h-8 (32px), large = h-11 (44px), button radius = 6px
   const sizes = {
-    sm: 'h-8 px-3 text-xs',
-    md: 'h-9 px-4 text-sm',
-    lg: 'h-10 px-6 text-sm font-medium',
+    sm: 'h-7 px-3 text-[11px] font-semibold tracking-[0.3px]',
+    md: 'h-8 px-[14px] text-[12px] font-semibold tracking-[0.3px]',
+    lg: 'h-11 px-5 text-[14px] font-[500] tracking-[0.35px]',
   }
   return (
     <button
-      className={cn('inline-flex items-center justify-center gap-1.5 rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E85936] disabled:cursor-not-allowed', variants[variant], sizes[size], className)}
+      className={cn('inline-flex items-center justify-center gap-1.5 rounded-[6px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E85936] disabled:cursor-not-allowed', variants[variant], sizes[size], className)}
       {...props}
     >
       {children}
@@ -65,9 +75,9 @@ export function Input({ className, prefix, ...props }: InputProps) {
   if (prefix) {
     return (
       <div className="relative flex items-center">
-        <span className="absolute left-3 text-sm text-[#6B7280] pointer-events-none">{prefix}</span>
+        <span className="absolute left-3 text-sm text-[#99A1B7] pointer-events-none">{prefix}</span>
         <input
-          className={cn('w-full h-9 rounded-xl border border-[#E5E7EB] bg-white pl-7 pr-3 text-sm text-[#374151] focus:border-[#E85936] focus:outline-none transition-colors', className)}
+          className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-white pl-7 pr-3 text-sm text-[#4B5675] placeholder:text-[#99A1B7] focus:border-[#E85936] focus:outline-none transition-colors', className)}
           {...props}
         />
       </div>
@@ -75,7 +85,7 @@ export function Input({ className, prefix, ...props }: InputProps) {
   }
   return (
     <input
-      className={cn('w-full h-9 rounded-xl border border-[#E5E7EB] bg-white px-3 text-sm text-[#374151] focus:border-[#E85936] focus:outline-none transition-colors', className)}
+      className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-white px-3 text-sm text-[#4B5675] placeholder:text-[#99A1B7] focus:border-[#E85936] focus:outline-none transition-colors', className)}
       {...props}
     />
   )
@@ -84,7 +94,7 @@ export function Input({ className, prefix, ...props }: InputProps) {
 // ── Label ─────────────────────────────────────────────────────────────────────
 export function Label({ className, children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
-    <label className={cn('text-xs font-medium text-[#6B7280] leading-4', className)} {...props}>
+    <label className={cn('text-xs font-medium text-[#99A1B7] leading-4', className)} {...props}>
       {children}
     </label>
   )
@@ -94,7 +104,7 @@ export function Label({ className, children, ...props }: React.LabelHTMLAttribut
 export function Select({ className, children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={cn('w-full h-9 rounded-xl border border-[#E5E7EB] bg-white px-3 text-sm text-[#374151] focus:border-[#E85936] focus:outline-none transition-colors appearance-none cursor-pointer', className)}
+      className={cn('w-full h-9 rounded-lg border border-[#DBDFE9] bg-white px-3 text-sm text-[#4B5675] focus:border-[#E85936] focus:outline-none transition-colors appearance-none cursor-pointer', className)}
       {...props}
     >
       {children}
@@ -102,7 +112,7 @@ export function Select({ className, children, ...props }: React.SelectHTMLAttrib
   )
 }
 
-// ── Toggle group ──────────────────────────────────────────────────────────────
+// ── ToggleGroup ───────────────────────────────────────────────────────────────
 interface ToggleOption<T> {
   value: T
   label: string
@@ -115,16 +125,16 @@ interface ToggleGroupProps<T> {
 }
 export function ToggleGroup<T extends string>({ options, value, onChange, className }: ToggleGroupProps<T>) {
   return (
-    <div className={cn('flex rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] p-0.5 gap-0.5', className)}>
+    <div className={cn('flex rounded-[6px] border border-[#F1F1F4] bg-[#F5F8FA] p-0.5 gap-0.5', className)}>
       {options.map((opt) => (
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
           className={cn(
-            'flex-1 h-7 text-xs font-medium rounded-lg transition-all',
+            'flex-1 h-7 text-xs font-medium rounded-[4px] transition-all',
             value === opt.value
-              ? 'bg-white text-[#111827] shadow-sm border border-[#E5E7EB]'
-              : 'text-[#6B7280] hover:text-[#374151]',
+              ? 'bg-white text-[#071437] shadow-ds border border-[#F1F1F4]'
+              : 'text-[#99A1B7] hover:text-[#252F4A]',
           )}
         >
           {opt.label}
@@ -136,11 +146,25 @@ export function ToggleGroup<T extends string>({ options, value, onChange, classN
 
 // ── Divider ───────────────────────────────────────────────────────────────────
 export function Divider({ className }: { className?: string }) {
-  return <div className={cn('border-t border-[#F1F5F9]', className)} />
+  return <div className={cn('border-t border-[#F1F1F4]', className)} />
+}
+
+// ── HelpIcon — DS-compliant ? circle (replaces lucide Info) ──────────────────
+export function HelpIcon({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center justify-center w-4 h-4 rounded-full border border-[#DBDFE9] text-[#99A1B7] text-[10px] font-semibold cursor-help select-none leading-none shrink-0',
+        className,
+      )}
+      aria-label="Help"
+    >
+      ?
+    </span>
+  )
 }
 
 // ── Amt — compact number with full-value tooltip on hover ─────────────────────
-// Shows e.g. "₹19.25L" with "₹19,25,000" on hover. No tooltip for values < ₹1,000.
 export function Amt({ value, className }: { value: number; className?: string }) {
   const compact = formatCompact(value)
   if (Math.abs(value) < 1000) return <span className={className}>{compact}</span>
@@ -148,9 +172,9 @@ export function Amt({ value, className }: { value: number; className?: string })
   return (
     <span className={cn('relative group/amt cursor-help', className)}>
       {compact}
-      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/amt:block z-50 bg-[#1C1C1E] text-white text-[11px] font-semibold rounded-lg px-3 py-1.5 shadow-xl whitespace-nowrap">
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/amt:block z-50 bg-[#071437] text-white text-[11px] font-semibold rounded-lg px-3 py-1.5 shadow-ds whitespace-nowrap">
         {full}
-        <span className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#1C1C1E]" />
+        <span className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#071437]" />
       </span>
     </span>
   )
@@ -161,10 +185,9 @@ export function Tooltip({ text, children }: { text: string; children: React.Reac
   return (
     <span className="relative group inline-flex items-center">
       {children}
-      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover:block z-50 w-56 bg-[#1C1C1E] text-white text-[11px] leading-relaxed rounded-lg px-3 py-2 shadow-xl whitespace-normal">
+      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover:block z-50 w-56 bg-[#071437] text-white text-[11px] leading-relaxed rounded-lg px-3 py-2 shadow-ds whitespace-normal">
         {text}
-        {/* Arrow */}
-        <span className="absolute top-full left-4 -translate-y-px border-4 border-transparent border-t-[#1C1C1E]" />
+        <span className="absolute top-full left-4 -translate-y-px border-4 border-transparent border-t-[#071437]" />
       </span>
     </span>
   )

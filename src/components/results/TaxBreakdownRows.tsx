@@ -17,12 +17,12 @@ function StepHeading({ n, label }: { n: number; label: string }) {
   return (
     <div className="flex items-center gap-2 mb-3">
       <StepBadge n={n} />
-      <span className="text-sm font-semibold text-[#111827]">{label}</span>
+      <span className="text-[14px] leading-[20px] font-semibold text-[#071437]">{label}</span>
     </div>
   )
 }
 
-function InfoRow({ label, sub, value, valueClass = 'text-[#374151] font-medium' }: {
+function InfoRow({ label, sub, value, valueClass = 'text-[#252F4A] font-medium' }: {
   label: string
   sub?: string
   value: string
@@ -31,8 +31,8 @@ function InfoRow({ label, sub, value, valueClass = 'text-[#374151] font-medium' 
   return (
     <div className="flex justify-between items-start gap-4 px-4 py-3.5 border-b border-[#F3F4F6] last:border-0">
       <div className="min-w-0">
-        <p className="text-sm text-[#374151] font-medium">{label}</p>
-        {sub && <p className="text-[11px] text-[#9CA3AF] mt-1 leading-relaxed">{sub}</p>}
+        <p className="text-[14px] leading-[20px] font-[500] text-[#252F4A]">{label}</p>
+        {sub && <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-1">{sub}</p>}
       </div>
       <span className={`text-sm shrink-0 ${valueClass}`}>{value}</span>
     </div>
@@ -49,7 +49,7 @@ function SummaryBox({ children }: { children: React.ReactNode }) {
 
 function InfoBox({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl bg-[#F9FAFB] border border-[#E5E7EB] px-4 py-3.5 space-y-1.5">
+    <div className="rounded-lg bg-[#F6F9FB] border border-[#F1F1F4] px-4 py-3.5 space-y-1.5">
       {children}
     </div>
   )
@@ -57,9 +57,9 @@ function InfoBox({ children }: { children: React.ReactNode }) {
 
 function Bullet({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex gap-2 text-[12px] text-[#6B7280]">
+    <div className="flex gap-2 text-[12px] leading-[18px] text-[#99A1B7]">
       <span className="text-[#E85936] font-bold mt-px">▪</span>
-      <p><span className="font-semibold text-[#374151]">{label}:</span> {value}</p>
+      <p><span className="font-semibold text-[#252F4A]">{label}:</span> {value}</p>
     </div>
   )
 }
@@ -82,7 +82,7 @@ export function TaxBreakdownRows({ result }: Props) {
       {/* Step 1 — Perquisite Value */}
       <div>
         <StepHeading n={1} label="Perquisite Value Calculation" />
-        <div className="rounded-xl border border-[#E5E7EB] divide-y divide-[#F3F4F6] overflow-hidden">
+        <div className="rounded-lg border border-[#F1F1F4] divide-y divide-[#F1F1F4] overflow-hidden">
           <InfoRow
             label="Your ESOP Net Value"
             sub="This is the net value of your ESOPs on which tax is calculated"
@@ -90,7 +90,7 @@ export function TaxBreakdownRows({ result }: Props) {
             valueClass="text-[#3F7D5A] font-semibold"
           />
         </div>
-        <p className="text-[11px] text-[#9CA3AF] mt-2 px-1">
+        <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2 px-1">
           = Gross value ({formatCurrency(grossValue)}) − Exercise cost ({formatCurrency(exerciseCost)})
         </p>
       </div>
@@ -98,7 +98,7 @@ export function TaxBreakdownRows({ result }: Props) {
       {/* Step 2 — Tax Components */}
       <div>
         <StepHeading n={2} label="Tax Components" />
-        <div className="rounded-xl border border-[#E5E7EB] divide-y divide-[#F3F4F6] overflow-hidden">
+        <div className="rounded-lg border border-[#F1F1F4] divide-y divide-[#F1F1F4] overflow-hidden">
           {applied87A ? (
             <InfoRow
               label="Income Tax"
@@ -140,13 +140,13 @@ export function TaxBreakdownRows({ result }: Props) {
         <StepHeading n={3} label="Total Tax Summary" />
         <SummaryBox>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-[#374151]">Total Tax on ESOP Gain</span>
+            <span className="text-[14px] leading-[20px] font-[500] text-[#252F4A]">Total Tax on ESOP Gain</span>
             <span className="text-base font-bold text-[#A05C45]">{formatCurrency(totalTax)}</span>
           </div>
           <div className="flex justify-between items-start pt-1 border-t border-[#C8DDD0]">
             <div>
-              <span className="text-sm text-[#374151]">Effective Tax Rate</span>
-              <p className="text-[11px] text-[#6B7280]">{formatCurrency(totalTax)} ÷ {formatCurrency(perquisite)} × 100</p>
+              <span className="text-[14px] leading-[20px] font-[500] text-[#252F4A]">Effective Tax Rate</span>
+              <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7]">{formatCurrency(totalTax)} ÷ {formatCurrency(perquisite)} × 100</p>
             </div>
             <span className="text-base font-bold text-[#3F7D5A]">{formatPercent(effectiveTaxRate)}</span>
           </div>
@@ -156,8 +156,8 @@ export function TaxBreakdownRows({ result }: Props) {
       {/* What This Means */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#F3F4F6] text-[#6B7280] text-[11px] font-bold shrink-0">i</span>
-          <span className="text-sm font-semibold text-[#111827]">What This Means</span>
+          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#F6F9FB] border border-[#DBDFE9] text-[#99A1B7] text-[11px] font-bold shrink-0">?</span>
+          <span className="text-[16px] leading-[16px] font-semibold text-[#071437]">What This Means</span>
         </div>
         <InfoBox>
           <Bullet

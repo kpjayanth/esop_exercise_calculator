@@ -8,7 +8,7 @@
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    @apply bg-[#F9FAFB] text-[#111827] antialiased;
+    @apply bg-[#F6F9FB] text-[#071437] antialiased;
     font-family: 'Inter', system-ui, sans-serif;
   }
   input[type='number']::-webkit-inner-spin-button,

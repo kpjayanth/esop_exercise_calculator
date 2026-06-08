@@ -8,11 +8,11 @@ interface Props {
 export function ScenarioTable({ scenarios }: Props) {
   return (
     <div>
-      <p className="text-sm font-semibold text-[#111827] mb-3">FMV Sensitivity Analysis</p>
+      <p className="text-sm font-semibold text-[#071437] mb-3">FMV Sensitivity Analysis</p>
       <div className="overflow-x-auto -mx-1">
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[#9CA3AF] border-b border-[#F3F4F6]">
+            <tr className="text-[#99A1B7] border-b border-[#F1F1F4]">
               <th className="text-left py-2 px-2 font-medium">Scenario</th>
               <th className="text-right py-2 px-2 font-medium">FMV</th>
               <th className="text-right py-2 px-2 font-medium">Perquisite</th>
@@ -25,9 +25,9 @@ export function ScenarioTable({ scenarios }: Props) {
             {scenarios.map((row) => (
               <tr
                 key={row.label}
-                className={`border-b border-[#F9FAFB] ${row.isCurrent ? 'bg-[#FFF7F5]' : 'hover:bg-[#F9FAFB]'}`}
+                className={`border-b border-[#F9FAFB] ${row.isCurrent ? 'bg-[#FFF7F5]' : 'hover:bg-[#F6F9FB]'}`}
               >
-                <td className="py-2 px-2 font-medium text-[#374151]">
+                <td className="py-2 px-2 font-medium text-[#252F4A]">
                   {row.label}
                   {row.isCurrent && (
                     <span className="ml-1.5 text-[10px] bg-[#E85936] text-white px-1.5 py-0.5 rounded-full">
@@ -35,13 +35,13 @@ export function ScenarioTable({ scenarios }: Props) {
                     </span>
                   )}
                 </td>
-                <td className="py-2 px-2 text-right text-[#374151]">{formatCurrency(row.fmv)}</td>
-                <td className="py-2 px-2 text-right text-[#374151]">{formatCurrency(row.perquisite)}</td>
+                <td className="py-2 px-2 text-right text-[#252F4A]">{formatCurrency(row.fmv)}</td>
+                <td className="py-2 px-2 text-right text-[#252F4A]">{formatCurrency(row.perquisite)}</td>
                 <td className="py-2 px-2 text-right text-[#E85936]">{formatCurrency(row.totalTax)}</td>
                 <td className={`py-2 px-2 text-right font-medium ${row.netGain >= 0 ? 'text-[#16A34A]' : 'text-[#E85936]'}`}>
                   {formatCurrency(row.netGain)}
                 </td>
-                <td className="py-2 px-2 text-right text-[#6B7280]">{formatPercent(row.effectiveTaxRate)}</td>
+                <td className="py-2 px-2 text-right text-[#99A1B7]">{formatPercent(row.effectiveTaxRate)}</td>
               </tr>
             ))}
           </tbody>

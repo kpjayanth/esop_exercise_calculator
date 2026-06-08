@@ -1,6 +1,5 @@
-import { Info } from 'lucide-react'
 import { formatCurrency, formatPercent } from '@/lib/formatters'
-import { Tooltip, Amt } from '@/components/ui/index'
+import { Tooltip, Amt, HelpIcon } from '@/components/ui/index'
 import type { PerquisiteResult } from '@/types/tax.types'
 
 interface Props {
@@ -39,29 +38,29 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
   return (
     <div className="space-y-4">
       {/* Context: income build-up + standard deduction */}
-      <div className="bg-[#F9FAFB] rounded-xl border border-[#E5E7EB] px-4 py-3 space-y-2.5">
+      <div className="bg-[#F6F9FB] rounded-lg border border-[#F1F1F4] px-4 py-3 space-y-2.5">
         {/* Step 1: gross → net */}
         <div className="flex items-center gap-2">
-          <Info size={13} className="text-[#6B7280] shrink-0" />
-          <span className="text-xs font-semibold text-[#374151]">
+          <HelpIcon />
+          <span className="text-xs font-semibold text-[#252F4A]">
             {regime === 'NEW' ? 'New' : 'Old'} Regime — how your taxable income is built up
           </span>
         </div>
-        <div className="space-y-1.5 pl-5 text-xs text-[#6B7280]">
+        <div className="space-y-1.5 pl-5 text-xs text-[#99A1B7]">
           <div className="flex justify-between">
             <span>Net Taxable Income (Salary)</span>
-            <Amt value={annualSalaryIncome} className="font-medium text-[#111827]" />
+            <Amt value={annualSalaryIncome} className="font-medium text-[#071437]" />
           </div>
           <div className="flex justify-between">
             <span>+ ESOP Perquisite</span>
             <span className="font-medium text-[#3F7D5A]">+<Amt value={perquisite} /></span>
           </div>
           <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
-            <span className="font-semibold text-[#374151]">Total Income for Slab</span>
-            <Amt value={netSalaryIncome + perquisite} className="font-semibold text-[#111827]" />
+            <span className="font-semibold text-[#252F4A]">Total Income for Slab</span>
+            <Amt value={netSalaryIncome + perquisite} className="font-semibold text-[#071437]" />
           </div>
         </div>
-        <p className="pl-5 text-[11px] text-[#9CA3AF]">
+        <p className="pl-5 text-[11px] text-[#99A1B7]">
           Your net salary already fills the lower slabs — the perquisite is taxed at your{' '}
           <span className="font-semibold text-[#E85936]">marginal (topmost) rate</span>, not a flat rate.
         </p>
@@ -69,15 +68,15 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
 
       {/* Slab table */}
       {applied87A ? (
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
           <span className="font-semibold">Rebate u/s 87A applied</span> — Your total income is below the
           rebate threshold, so the entire income tax is waived. Effective rate: 0%.
         </div>
       ) : (
-        <div className="rounded-xl border border-[#E5E7EB] overflow-hidden">
+        <div className="rounded-lg border border-[#F1F1F4] overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#F9FAFB] border-b border-[#E5E7EB] text-xs text-[#9CA3AF]">
+              <tr className="bg-[#F6F9FB] border-b border-[#F1F1F4] text-xs text-[#99A1B7]">
                 <th className="text-left px-4 py-2.5 font-medium">Slab</th>
                 <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Income in slab</th>
                 <th className="px-3 py-2.5 font-medium hidden md:table-cell w-32">Proportion</th>
@@ -89,24 +88,24 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
               {marginalSlabBreakdown.map((slab, i) => {
                 const colors = slabColor(slab.rate)
                 return (
-                  <tr key={i} className="border-b border-[#F3F4F6] last:border-0">
+                  <tr key={i} className="border-b border-[#F1F1F4] last:border-0">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${colors.bg.replace('bg-', 'bg-').replace('-100', '-400')}`}
                           style={{ backgroundColor: colors.bar }} />
-                        <span className="font-medium text-[#374151]">{slab.label}</span>
+                        <span className="font-medium text-[#252F4A]">{slab.label}</span>
                         {slab.isPartiallyUsed && (
                           <Tooltip text={`Salary fills ₹${(slab.salaryFillsUpTo / 1000).toFixed(0)}K of this bracket. Perquisite uses the remaining room.`}>
-                            <span className="text-[10px] text-[#9CA3AF] border border-[#E5E7EB] rounded px-1 cursor-help">partial</span>
+                            <span className="text-[10px] text-[#99A1B7] border border-[#F1F1F4] rounded px-1 cursor-help">partial</span>
                           </Tooltip>
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right text-[#374151] hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right text-[#252F4A] hidden sm:table-cell">
                       {formatCurrency(slab.income)}
                     </td>
                     <td className="px-3 py-3 hidden md:table-cell">
-                      <div className="h-2 bg-[#F3F4F6] rounded-full overflow-hidden">
+                      <div className="h-2 bg-[#F5F8FA] rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -129,13 +128,13 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
               })}
             </tbody>
             <tfoot>
-              <tr className="bg-[#F9FAFB] border-t border-[#E5E7EB]">
-                <td className="px-4 py-2.5 text-xs font-semibold text-[#374151]">Slab Tax</td>
-                <td className="px-4 py-2.5 text-right text-xs font-semibold text-[#374151] hidden sm:table-cell">
+              <tr className="bg-[#F6F9FB] border-t border-[#F1F1F4]">
+                <td className="px-4 py-2.5 text-xs font-semibold text-[#252F4A]">Slab Tax</td>
+                <td className="px-4 py-2.5 text-right text-xs font-semibold text-[#252F4A] hidden sm:table-cell">
                   {formatCurrency(perquisite)}
                 </td>
                 <td className="hidden md:table-cell" />
-                <td className="px-4 py-2.5 text-right text-xs text-[#6B7280]">
+                <td className="px-4 py-2.5 text-right text-xs text-[#99A1B7]">
                   avg {formatPercent(perquisite > 0 ? slabBaseTax / perquisite : 0)}
                 </td>
                 <td className="px-4 py-2.5 text-right text-xs font-semibold text-[#E85936]">
@@ -149,9 +148,9 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
 
       {/* Build-up to effective rate */}
       {!applied87A && (
-        <div className="rounded-xl border border-[#E5E7EB] overflow-hidden">
-          <div className="bg-[#F9FAFB] px-4 py-2.5 border-b border-[#E5E7EB]">
-            <p className="text-xs font-semibold text-[#374151]">From slab tax → effective rate on perquisite</p>
+        <div className="rounded-lg border border-[#F1F1F4] overflow-hidden">
+          <div className="bg-[#F6F9FB] px-4 py-2.5 border-b border-[#F1F1F4]">
+            <p className="text-xs font-semibold text-[#252F4A]">From slab tax → effective rate on perquisite</p>
           </div>
           <div className="divide-y divide-[#F3F4F6]">
             {[
@@ -161,16 +160,16 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
             ].map((row, i) => (
               <div key={i} className="flex justify-between items-center px-4 py-2.5 text-sm">
                 <div>
-                  <span className="text-[#6B7280]">{row.label}</span>
-                  <span className="text-xs text-[#9CA3AF] ml-2">{row.note}</span>
+                  <span className="text-[#99A1B7]">{row.label}</span>
+                  <span className="text-xs text-[#99A1B7] ml-2">{row.note}</span>
                 </div>
                 <span className="text-[#E85936] font-medium">−{formatCurrency(row.value)}</span>
               </div>
             ))}
             <div className="flex justify-between items-center px-4 py-3 bg-[#FFF7F5]">
               <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-[#111827]">Total tax on perquisite</span>
-                <span className="text-xs text-[#9CA3AF]">= effective rate</span>
+                <span className="text-sm font-semibold text-[#071437]">Total tax on perquisite</span>
+                <span className="text-xs text-[#99A1B7]">= effective rate</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold text-[#E85936]">−{formatCurrency(totalTax)}</span>

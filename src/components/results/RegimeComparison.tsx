@@ -27,7 +27,7 @@ export function RegimeComparison({ comparison }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-[#111827]">New vs Old Regime</p>
+        <p className="text-sm font-semibold text-[#071437]">New vs Old Regime</p>
         <Badge variant="success">
           <CheckCircle size={10} />
           {betterRegime === 'NEW' ? 'New' : 'Old'} saves {formatCompact(saving)}
@@ -38,8 +38,8 @@ export function RegimeComparison({ comparison }: Props) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} barGap={4} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" vertical={false} />
-            <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={(v: number) => formatCompact(v)} tick={{ fontSize: 10, fill: '#9CA3AF' }} axisLine={false} tickLine={false} width={52} />
+            <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#99A1B7' }} axisLine={false} tickLine={false} />
+            <YAxis tickFormatter={(v: number) => formatCompact(v)} tick={{ fontSize: 10, fill: '#99A1B7' }} axisLine={false} tickLine={false} width={52} />
             <RechartsTooltip
               formatter={(value: unknown, name: unknown) => [formatCurrency(Number(value)), String(name ?? '')]}
               contentStyle={{ borderRadius: 12, border: '1px solid #E5E7EB', fontSize: 12 }}
@@ -58,24 +58,24 @@ export function RegimeComparison({ comparison }: Props) {
         ].map(({ label, r, isBetter }) => (
           <div
             key={label}
-            className={`rounded-xl border p-3 ${isBetter ? 'border-[#16A34A] bg-green-50' : 'border-[#E5E7EB] bg-[#F9FAFB]'}`}
+            className={`rounded-lg border p-3 ${isBetter ? 'border-[#16A34A] bg-green-50' : 'border-[#F1F1F4] bg-[#F6F9FB]'}`}
           >
             <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-xs font-semibold text-[#374151]">{label}</p>
+              <p className="text-xs font-semibold text-[#252F4A]">{label}</p>
               {isBetter && <CheckCircle size={12} className="text-[#16A34A]" />}
             </div>
             <div className="space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-[#6B7280]">Tax</span>
+                <span className="text-[#99A1B7]">Tax</span>
                 <span className="text-[#E85936] font-medium">{formatCompact(r.totalTax)}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-[#6B7280]">Net Gain</span>
+                <span className="text-[#99A1B7]">Net Gain</span>
                 <span className="text-[#16A34A] font-medium">{formatCompact(r.netGain)}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-[#6B7280]">Effective Rate</span>
-                <span className="text-[#374151] font-medium">{formatPercent(r.effectiveTaxRate)}</span>
+                <span className="text-[#99A1B7]">Effective Rate</span>
+                <span className="text-[#252F4A] font-medium">{formatPercent(r.effectiveTaxRate)}</span>
               </div>
             </div>
           </div>
