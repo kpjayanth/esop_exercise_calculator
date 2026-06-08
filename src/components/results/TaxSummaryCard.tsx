@@ -37,11 +37,8 @@ export function TaxSummaryCard({ result }: Props) {
 
   return (
     <div className="rounded-lg overflow-hidden border border-[#F1F1F4]" style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}>
-      {/* Bold top stripe */}
-      <div className="h-[3px] bg-gradient-to-r from-[#E85936] via-[#f97316] to-[#E85936]" />
-
       {/* Header */}
-      <div className="bg-white px-5 pt-3.5 pb-2 flex items-center justify-between">
+      <div className="bg-white px-5 pt-4 pb-3 border-b border-[#F1F1F4] flex items-center justify-between">
         <span className="text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.06em]">Tax Outcome</span>
         <span className="text-[11px] font-[500] text-[#99A1B7]">FY 2025-26</span>
       </div>
@@ -50,7 +47,7 @@ export function TaxSummaryCard({ result }: Props) {
       <div className="grid grid-cols-3 divide-x divide-[#F1F1F4]">
 
         {/* Panel 1 — Total ESOP Value */}
-        <div className="bg-white px-5 pt-3 pb-5">
+        <div className="bg-white px-5 pt-4 pb-5">
           <div className="flex items-center gap-1.5 mb-2.5">
             <IndianRupee size={12} className="text-[#99A1B7]" />
             <span className="text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.06em]">Total ESOP Value</span>
@@ -69,7 +66,7 @@ export function TaxSummaryCard({ result }: Props) {
         </div>
 
         {/* Panel 2 — Total Tax Liability */}
-        <div className="bg-[#FDF8F7] px-5 pt-3 pb-5">
+        <div className="bg-white px-5 pt-4 pb-5">
           <div className="flex items-center gap-1.5 mb-2.5">
             <TrendingDown size={12} className="text-[#A05C45]" />
             <span className="text-[11px] font-[500] text-[#A05C45] uppercase tracking-[0.06em]">Tax Liability</span>
@@ -84,7 +81,7 @@ export function TaxSummaryCard({ result }: Props) {
         </div>
 
         {/* Panel 3 — Net Gain */}
-        <div className="bg-[#F7FBF9] px-5 pt-3 pb-5">
+        <div className="bg-white px-5 pt-4 pb-5">
           <div className="flex items-center gap-1.5 mb-2.5">
             <TrendingUp size={12} className="text-[#3F7D5A]" />
             <span className="text-[11px] font-[500] text-[#3F7D5A] uppercase tracking-[0.06em]">Net Gain</span>

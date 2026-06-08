@@ -33,7 +33,7 @@ export function InputSummaryCard({ result, optionsSelected, totalShares, costToA
       </div>
 
       {/* Narrative sentence */}
-      <div className="mx-5 my-3 px-4 py-3.5 bg-[#F6F9FB] rounded-lg border-l-[3px] border-[#E85936]">
+      <div className="mx-5 my-3 px-4 py-3.5 bg-[#F6F9FB] rounded-lg border border-[#F1F1F4]">
         <p className="text-[14px] leading-[20px] font-[500] text-[#99A1B7]">
           If you exercise{' '}
           <span className="font-semibold text-[#071437]">{optionsSelected.toLocaleString('en-IN')} ESOPs</span>
