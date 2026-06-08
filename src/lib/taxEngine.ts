@@ -1,8 +1,6 @@
 import {
   NEW_REGIME_SLABS,
   OLD_REGIME_SLABS,
-  NEW_REGIME_STANDARD_DEDUCTION,
-  OLD_REGIME_STANDARD_DEDUCTION,
   NEW_REGIME_87A_LIMIT,
   OLD_REGIME_87A_LIMIT,
   SURCHARGE_SLABS,
@@ -37,9 +35,6 @@ function getSlabs(regime: Regime) {
   return regime === 'NEW' ? NEW_REGIME_SLABS : OLD_REGIME_SLABS
 }
 
-function getStandardDeduction(regime: Regime) {
-  return regime === 'NEW' ? NEW_REGIME_STANDARD_DEDUCTION : OLD_REGIME_STANDARD_DEDUCTION
-}
 
 export function computeSlabTax(
   netIncome: number,

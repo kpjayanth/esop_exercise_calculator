@@ -1,4 +1,4 @@
-import { formatCompact, formatPercent } from '@/lib/formatters'
+import { formatPercent } from '@/lib/formatters'
 import { Amt } from '@/components/ui/index'
 import type { PerquisiteInputs, PerquisiteResult } from '@/types/tax.types'
 
@@ -21,7 +21,7 @@ function Tile({ label, value, sub, valueClass = 'text-[#071437]' }: { label: str
   )
 }
 
-export function InputSummaryCard({ inputs, result, optionsSelected, totalShares, costToAcquire }: Props) {
+export function InputSummaryCard({ result, optionsSelected, totalShares, costToAcquire }: Props) {
   const { totalTax, netGain, effectiveTaxRate } = result
   const totalCashOutflow = costToAcquire + totalTax
   const hasConversion = optionsSelected !== totalShares
