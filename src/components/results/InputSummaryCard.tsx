@@ -14,7 +14,7 @@ interface Props {
 function Tile({ label, value, sub, valueClass = 'text-[#071437]' }: { label: string; value: React.ReactNode; sub?: React.ReactNode; valueClass?: string }) {
   return (
     <div className="bg-[#F6F9FB] rounded-lg p-4">
-      <p className="text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.06em] mb-2">{label}</p>
+      <p className="text-[11px] font-[500] text-[#252F4A] uppercase tracking-[0.06em] mb-2">{label}</p>
       <p className={`text-[18px] font-semibold leading-[18px] tracking-tight ${valueClass}`}>{value}</p>
       {sub && <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-1.5">{sub}</p>}
     </div>
@@ -33,7 +33,7 @@ export function InputSummaryCard({ result, optionsSelected, totalShares, costToA
       </div>
 
       {/* Narrative sentence */}
-      <div className="mx-5 my-3 px-4 py-3.5 bg-[#F6F9FB] rounded-lg border border-[#F1F1F4]">
+      <div className="mx-5 my-3 px-4 py-3.5 bg-[#FDF1EE] rounded-lg border border-[#E85936]/20">
         <p className="text-[14px] leading-[20px] font-[500] text-[#99A1B7]">
           If you exercise{' '}
           <span className="font-semibold text-[#071437]">{optionsSelected.toLocaleString('en-IN')} ESOPs</span>

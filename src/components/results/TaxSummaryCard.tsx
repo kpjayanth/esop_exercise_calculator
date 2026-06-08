@@ -49,8 +49,8 @@ export function TaxSummaryCard({ result }: Props) {
         {/* Panel 1 — Total ESOP Value */}
         <div className="bg-white px-5 pt-4 pb-5">
           <div className="flex items-center gap-1.5 mb-2.5">
-            <IndianRupee size={12} className="text-[#99A1B7]" />
-            <span className="text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.06em]">Total ESOP Value</span>
+            <IndianRupee size={12} className="text-[#252F4A]" />
+            <span className="text-[11px] font-[500] text-[#252F4A] uppercase tracking-[0.06em]">Total ESOP Value</span>
           </div>
           {/* H-34-34-600 */}
           <div className="text-[34px] font-semibold leading-[34px] text-[#071437] tracking-tight">
