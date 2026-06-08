@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { ChevronDown, CalendarDays } from 'lucide-react'
+import { ChevronDown, CalendarDays, IndianRupee, TrendingUp, Layers } from 'lucide-react'
 import { Card } from '@/components/ui/index'
 import { TaxSummaryCard } from '@/components/results/TaxSummaryCard'
 import { TaxBreakdownRows } from '@/components/results/TaxBreakdownRows'
@@ -92,12 +92,12 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
           </p>
           <div className="w-full max-w-sm space-y-2">
             {[
-              { icon: '₹', label: 'Perquisite income & total tax' },
-              { icon: '📈', label: 'FMV sensitivity scenarios' },
-              { icon: '🏷', label: 'Marginal slab & surcharge breakdown' },
+              { icon: <IndianRupee size={14} className="text-[#99A1B7]" />, label: 'Perquisite income & total tax' },
+              { icon: <TrendingUp size={14} className="text-[#99A1B7]" />, label: 'FMV sensitivity scenarios' },
+              { icon: <Layers size={14} className="text-[#99A1B7]" />, label: 'Marginal slab & surcharge breakdown' },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-[#F1F1F4]">
-                <span className="w-7 h-7 rounded-lg bg-[#F6F9FB] flex items-center justify-center text-sm shrink-0">{item.icon}</span>
+              <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white border border-[#F1F1F4]">
+                <span className="w-7 h-7 rounded-lg bg-[#F6F9FB] flex items-center justify-center shrink-0">{item.icon}</span>
                 <span className="text-xs text-[#99A1B7]">{item.label}</span>
               </div>
             ))}

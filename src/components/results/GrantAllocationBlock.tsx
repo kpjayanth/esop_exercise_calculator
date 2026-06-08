@@ -198,27 +198,27 @@ export function GrantAllocationBlock({
 
   return (
     <div className="rounded-lg overflow-hidden border border-[#F1F1F4]" style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}>
-      {/* Dark header — clickable toggle */}
+      {/* Header — clickable toggle */}
       <button
         onClick={onToggle}
-        className="w-full bg-gradient-to-r from-[#1C1C1E] to-[#2C2C2E] px-5 py-3 flex items-center justify-between gap-3 text-left"
+        className="w-full bg-white border-b border-[#F1F1F4] px-5 py-3 flex items-center justify-between gap-3 text-left hover:bg-[#F6F9FB] transition-colors"
       >
         <div className="flex items-center gap-2 flex-wrap">
           <Layers size={14} className="text-[#E85936] shrink-0" />
-          <span className="text-xs font-bold text-white tracking-widest uppercase">Grant Allocation</span>
+          <span className="text-[11px] font-[500] text-[#071437] tracking-[0.06em] uppercase">Grant Allocation</span>
           {isCustomOrder ? (
-            <span className="text-[10px] text-[#E85936] bg-[#E85936]/15 border border-[#E85936]/30 rounded-full px-2 py-0.5 font-semibold">
+            <span className="text-[10px] text-[#E85936] bg-[#FDF1EE] border border-[#E85936]/20 rounded-full px-2 py-0.5 font-semibold">
               Custom Order
             </span>
           ) : (
-            <span className="text-[10px] text-[#9CA3AF] bg-white/10 border border-white/15 rounded-full px-2 py-0.5 font-medium">
+            <span className="text-[10px] text-[#99A1B7] bg-[#F6F9FB] border border-[#F1F1F4] rounded-full px-2 py-0.5 font-[500]">
               FIFO · Oldest First
             </span>
           )}
           {isCustomOrder && (
             <span
               onClick={(e) => { e.stopPropagation(); onResetOrder() }}
-              className="flex items-center gap-1 text-[10px] text-[#9CA3AF] hover:text-white transition-colors"
+              className="flex items-center gap-1 text-[10px] text-[#99A1B7] hover:text-[#252F4A] transition-colors"
               title="Reset to oldest-first FIFO"
             >
               <RotateCcw size={10} />
@@ -227,12 +227,12 @@ export function GrantAllocationBlock({
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[11px] font-semibold text-white bg-white/10 border border-white/15 rounded-full px-2.5 py-0.5">
+          <span className="text-[11px] font-[500] text-[#252F4A] bg-[#F6F9FB] border border-[#F1F1F4] rounded-full px-2.5 py-0.5">
             {summaryPill}
           </span>
           <ChevronDown
             size={14}
-            className={`text-[#9CA3AF] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            className={`text-[#99A1B7] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           />
         </div>
       </button>
