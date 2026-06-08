@@ -115,7 +115,7 @@ export function AppShell() {
           <div>
             <div
               className="bg-white rounded-lg border border-[#F1F1F4] p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
-              style={{ borderLeft: '4px solid #E85936', boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}
+              style={{ boxShadow: '0 3px 4px rgba(0,0,0,0.03)' }}
             >
               <div className="flex items-center gap-2 mb-5 pb-4 border-b border-[#F1F1F4]">
                 <Calculator size={14} className="text-[#E85936]" />
