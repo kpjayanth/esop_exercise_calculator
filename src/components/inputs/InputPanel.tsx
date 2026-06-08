@@ -203,7 +203,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
         {/* Tax Regime */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-xs font-medium text-[#252F4A]">Tax Regime</span>
+            <span className="text-xs font-medium text-[#252F4A] leading-4">Tax Regime</span>
             <Tooltip text="New regime (Budget 2025 slabs) vs Old regime. We'll show both anyway.">
               <HelpIcon />
             </Tooltip>

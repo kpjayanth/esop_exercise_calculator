@@ -94,7 +94,7 @@ export function Input({ className, prefix, ...props }: InputProps) {
 // ── Label ─────────────────────────────────────────────────────────────────────
 export function Label({ className, children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
-    <label className={cn('text-xs font-medium text-[#99A1B7] leading-4', className)} {...props}>
+    <label className={cn('text-xs font-medium text-[#252F4A] leading-4', className)} {...props}>
       {children}
     </label>
   )
