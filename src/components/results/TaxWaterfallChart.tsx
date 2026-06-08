@@ -60,7 +60,7 @@ export function TaxWaterfallChart({ result }: Props) {
     <div className="w-full h-48">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={entries} margin={{ top: 8, right: 8, bottom: 0, left: 8 }} barSize={32}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F1F1F4" vertical={false} />
           <XAxis
             dataKey="name"
             tick={{ fontSize: 10, fill: '#9CA3AF' }}

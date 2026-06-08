@@ -37,7 +37,7 @@ export function RegimeComparison({ comparison }: Props) {
       <div className="h-36">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} barGap={4} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#F1F1F4" vertical={false} />
             <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#99A1B7' }} axisLine={false} tickLine={false} />
             <YAxis tickFormatter={(v: number) => formatCompact(v)} tick={{ fontSize: 10, fill: '#99A1B7' }} axisLine={false} tickLine={false} width={52} />
             <RechartsTooltip

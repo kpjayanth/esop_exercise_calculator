@@ -137,7 +137,7 @@ export function InputPanel({ inputs, onChange, grants, onResetGrants, exerciseDa
               }}
               className="w-full accent-[#E85936]"
             />
-            <div className="flex justify-between text-[10px] text-[#C4C4C4]">
+            <div className="flex justify-between text-[10px] text-[#99A1B7]">
               <span>1</span>
               <span>{totalVested.toLocaleString('en-IN')}</span>
             </div>

@@ -143,7 +143,7 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
         {/* Parsed grants preview */}
         {grants && (
           <div className="bg-white rounded-lg border border-[#F1F1F4] shadow-sm overflow-hidden">
-            <div className="px-5 py-3 border-b border-[#F3F4F6] flex items-center gap-2">
+            <div className="px-5 py-3 border-b border-[#F1F1F4] flex items-center gap-2">
               <CheckCircle size={15} className="text-green-500" />
               <p className="text-sm font-semibold text-[#071437]">
                 {grants.length} Grant{grants.length !== 1 ? 's' : ''} Found
@@ -229,7 +229,7 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
                   <td className="pr-3 py-0.5">100</td>
                   <td className="pr-3 py-0.5">100</td>
                   <td className="pr-3 py-0.5">25</td>
-                  <td className="pr-3 py-0.5 text-[#99A1B7]">1 <span className="text-[#C4C4C4]">(default)</span></td>
+                  <td className="pr-3 py-0.5 text-[#99A1B7]">1 <span className="text-[#99A1B7]">(default)</span></td>
                   <td className="py-0.5 text-[#99A1B7]">ROUND_DOWN</td>
                 </tr>
               </tbody>
@@ -239,7 +239,7 @@ export function GrantUpload({ onGrantsLoaded }: Props) {
             <p className="text-xs text-[#99A1B7]"><span className="font-medium text-[#99A1B7]">Vested</span> = Net vested options available to exercise today</p>
             <p className="text-xs text-[#99A1B7]"><span className="font-medium text-[#99A1B7]">Options to Shares Ratio</span> = How many shares 1 option yields (e.g. 0.5 means 2 options → 1 share). Defaults to <span className="font-medium">1</span> if omitted.</p>
             <p className="text-xs text-[#99A1B7]"><span className="font-medium text-[#99A1B7]">Rounding</span> = ROUND_DOWN · ROUND_UP · ROUND_NEAREST. Defaults to ROUND_DOWN.</p>
-            <p className="text-xs text-[#99A1B7] mt-1.5 pt-1.5 border-t border-[#F3F4F6]">
+            <p className="text-xs text-[#99A1B7] mt-1.5 pt-1.5 border-t border-[#F1F1F4]">
               <span className="font-medium text-[#99A1B7]">Future vesting</span> is auto-calculated using a 4-year schedule (25% per year from grant date). Change the exercise date in the calculator to see options available at any future date.
             </p>
           </div>

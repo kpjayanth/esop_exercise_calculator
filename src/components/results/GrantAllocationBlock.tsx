@@ -77,7 +77,7 @@ function DraggableRow({
       {/* Drag handle */}
       {canReorder && (
         <div
-          className="text-[#C4C4C4] group-hover:text-[#99A1B7] cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors"
+          className="text-[#99A1B7] group-hover:text-[#99A1B7] cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors"
           onPointerDown={(e) => controls.start(e)}
           title="Drag to reorder"
         >
@@ -93,7 +93,7 @@ function DraggableRow({
         <span className="text-sm font-semibold text-[#071437] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
         <div className="flex items-center gap-1.5 mt-0.5">
           <span className="text-[11px] text-[#99A1B7] leading-tight font-medium">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
-          <span className="text-[#D1D5DB] text-[10px]">·</span>
+          <span className="text-[#DBDFE9] text-[10px]">·</span>
           <span className="text-[11px] text-[#9CA3AF] leading-tight">{row.grantId}</span>
         </div>
       </div>
@@ -121,7 +121,7 @@ function DraggableRow({
         {/* Perquisite */}
         {fmvAtExercise > 0 && (
           <div className="text-right min-w-[56px] sm:min-w-[72px]">
-            <p className={`text-sm font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#3F7D5A]' : 'text-[#9CA3AF]'}`}>
+            <p className={`text-sm font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#027A48]' : 'text-[#9CA3AF]'}`}>
               {row.perquisite > 0 ? <Amt value={row.perquisite} /> : '—'}
             </p>
           </div>
@@ -147,7 +147,7 @@ function AllocationBar({ rows, totalPerquisite }: { rows: AllocationRow[]; total
           </span>
         ))}
       </div>
-      <div className="flex h-2 rounded-full overflow-hidden gap-px bg-[#F3F4F6]">
+      <div className="flex h-2 rounded-full overflow-hidden gap-px bg-[#F1F1F4]">
         {rows.map((r) => (
           <div
             key={r.grantId}
@@ -256,7 +256,7 @@ export function GrantAllocationBlock({
           <span className="w-[18px] shrink-0" />
           <span className="flex-1">Grant</span>
           <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-right">
-            <span className="min-w-[48px]">Options <span className="normal-case font-normal text-[#C4C4C4]">exercisable</span></span>
+            <span className="min-w-[48px]">Options <span className="normal-case font-normal text-[#99A1B7]">exercisable</span></span>
             {hasConversion && <span className="min-w-[36px]">Shares</span>}
             {fmvAtExercise > 0 && <span className="min-w-[72px]">Perquisite</span>}
           </div>
@@ -309,7 +309,7 @@ export function GrantAllocationBlock({
             )}
           </span>
           {fmvAtExercise === 0 && (
-            <span className="text-[10px] text-[#C4C4C4]">Enter FMV to see perquisite</span>
+            <span className="text-[10px] text-[#99A1B7]">Enter FMV to see perquisite</span>
           )}
         </div>
       </div>

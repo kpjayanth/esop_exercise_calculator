@@ -144,7 +144,7 @@ export function AppShell() {
                     className={`flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                       activeTab === tab.id
                         ? 'bg-[#E85936] text-white shadow-sm'
-                        : 'text-[#6B7280] hover:text-[#374151] hover:bg-[#F3F4F6]'
+                        : 'text-[#6B7280] hover:text-[#374151] hover:bg-[#F1F1F4]'
                     }`}
                   >
                     {tab.icon}

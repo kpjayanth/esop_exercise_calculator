@@ -22,9 +22,9 @@ function AnimatedNumber({ value, format }: { value: number; format: (v: number) 
         {compact}
       </motion.span>
       {showTooltip && (
-        <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/amt:block z-50 bg-[#1C1C1E] text-white text-[11px] font-semibold rounded-lg px-3 py-1.5 shadow-xl whitespace-nowrap">
+        <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/amt:block z-50 bg-[#071437] text-white text-[11px] font-semibold rounded-lg px-3 py-1.5 shadow-xl whitespace-nowrap">
           {full}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#1C1C1E]" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#071437]" />
         </span>
       )}
     </span>
@@ -68,25 +68,25 @@ export function TaxSummaryCard({ result }: Props) {
         {/* Panel 2 — Total Tax Liability */}
         <div className="bg-white px-5 pt-4 pb-5">
           <div className="flex items-center gap-1.5 mb-2.5">
-            <TrendingDown size={12} className="text-[#A05C45]" />
-            <span className="text-[11px] font-[500] text-[#A05C45] uppercase tracking-[0.06em]">Tax Liability</span>
+            <TrendingDown size={12} className="text-[#B42318]" />
+            <span className="text-[11px] font-[500] text-[#B42318] uppercase tracking-[0.06em]">Tax Liability</span>
           </div>
-          <div className="text-[34px] font-semibold leading-[34px] text-[#A05C45] tracking-tight">
+          <div className="text-[34px] font-semibold leading-[34px] text-[#B42318] tracking-tight">
             <AnimatedNumber value={totalTax} format={formatCompact} />
           </div>
           <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2">
             Effective rate{' '}
-            <span className="text-[#A05C45] font-semibold">{formatPercent(effectiveTaxRate)}</span>
+            <span className="text-[#B42318] font-semibold">{formatPercent(effectiveTaxRate)}</span>
           </p>
         </div>
 
         {/* Panel 3 — Net Gain */}
         <div className="bg-white px-5 pt-4 pb-5">
           <div className="flex items-center gap-1.5 mb-2.5">
-            <TrendingUp size={12} className="text-[#3F7D5A]" />
-            <span className="text-[11px] font-[500] text-[#3F7D5A] uppercase tracking-[0.06em]">Net Gain</span>
+            <TrendingUp size={12} className="text-[#027A48]" />
+            <span className="text-[11px] font-[500] text-[#027A48] uppercase tracking-[0.06em]">Net Gain</span>
           </div>
-          <div className={`text-[34px] font-semibold leading-[34px] tracking-tight ${netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}`}>
+          <div className={`text-[34px] font-semibold leading-[34px] tracking-tight ${netGain >= 0 ? 'text-[#027A48]' : 'text-[#B42318]'}`}>
             <AnimatedNumber value={netGain} format={formatCompact} />
           </div>
           <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2">What you take home after tax</p>
@@ -97,12 +97,12 @@ export function TaxSummaryCard({ result }: Props) {
       {perquisite > 0 && (
         <div className="bg-white border-t border-[#F1F1F4] px-5 py-3.5">
           <div className="flex text-[12px] font-[500] justify-between mb-1.5">
-            <span className="text-[#3F7D5A]">Keep {formatPercent(keepPct)}</span>
-            <span className="text-[#A05C45]">Tax {formatPercent(effectiveTaxRate)}</span>
+            <span className="text-[#027A48]">Keep {formatPercent(keepPct)}</span>
+            <span className="text-[#B42318]">Tax {formatPercent(effectiveTaxRate)}</span>
           </div>
           <div className="h-2.5 rounded-full bg-[#F1F1F4] overflow-hidden">
             <motion.div
-              className="h-full bg-[#5A8A72] rounded-full"
+              className="h-full bg-[#039855] rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${keepPct * 100}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}

@@ -102,7 +102,7 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
               </div>
             ))}
           </div>
-          <p className="text-[11px] text-[#C4C4C4] mt-5">FY 2025-26 · Indian Tax Rules · All calculations are client-side</p>
+          <p className="text-[11px] text-[#99A1B7] mt-5">FY 2025-26 · Indian Tax Rules · All calculations are client-side</p>
         </div>
       ) : (
         <>
@@ -144,7 +144,7 @@ export function PerquisiteScenario({ inputs, grants, grantOrder, onReorder, onRe
               />
             </button>
             {slabOpen && (
-              <div className="px-4 pb-4 pt-1 border-t border-[#F3F4F6]">
+              <div className="px-4 pb-4 pt-1 border-t border-[#F1F1F4]">
                 <SlabWaterfallExplainer
                   result={result}
                   annualSalaryIncome={inputs.annualSalaryIncome}

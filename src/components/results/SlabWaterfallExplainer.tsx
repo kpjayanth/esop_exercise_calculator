@@ -53,7 +53,7 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
           </div>
           <div className="flex justify-between">
             <span>+ ESOP Perquisite</span>
-            <span className="font-medium text-[#3F7D5A]">+<Amt value={perquisite} /></span>
+            <span className="font-medium text-[#027A48]">+<Amt value={perquisite} /></span>
           </div>
           <div className="flex justify-between border-t border-[#EBEBEB] pt-1.5">
             <span className="font-semibold text-[#252F4A]">Total Income for Slab</span>
@@ -152,7 +152,7 @@ export function SlabWaterfallExplainer({ result, annualSalaryIncome, regime }: P
           <div className="bg-[#F6F9FB] px-4 py-2.5 border-b border-[#F1F1F4]">
             <p className="text-xs font-semibold text-[#252F4A]">From slab tax → effective rate on perquisite</p>
           </div>
-          <div className="divide-y divide-[#F3F4F6]">
+          <div className="divide-y divide-[#F1F1F4]">
             {[
               { label: 'Slab income tax', value: slabBaseTax, note: `avg ${formatPercent(perquisite > 0 ? slabBaseTax / perquisite : 0)} on perquisite` },
               ...(surcharge > 0 ? [{ label: 'Surcharge', value: surcharge, note: 'on income tax' }] : []),

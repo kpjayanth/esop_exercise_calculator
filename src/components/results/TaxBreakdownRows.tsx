@@ -29,7 +29,7 @@ function InfoRow({ label, sub, value, valueClass = 'text-[#252F4A] font-medium' 
   valueClass?: string
 }) {
   return (
-    <div className="flex justify-between items-start gap-4 px-4 py-3.5 border-b border-[#F3F4F6] last:border-0">
+    <div className="flex justify-between items-start gap-4 px-4 py-3.5 border-b border-[#F1F1F4] last:border-0">
       <div className="min-w-0">
         <p className="text-[14px] leading-[20px] font-[500] text-[#252F4A]">{label}</p>
         {sub && <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-1">{sub}</p>}
@@ -87,7 +87,7 @@ export function TaxBreakdownRows({ result }: Props) {
             label="Your ESOP Net Value"
             sub="This is the net value of your ESOPs on which tax is calculated"
             value={formatCurrency(perquisite)}
-            valueClass="text-[#3F7D5A] font-semibold"
+            valueClass="text-[#027A48] font-semibold"
           />
         </div>
         <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2 px-1">
@@ -104,7 +104,7 @@ export function TaxBreakdownRows({ result }: Props) {
               label="Income Tax"
               sub="Rebate u/s 87A applied — your total income is below the rebate threshold"
               value="₹0"
-              valueClass="text-[#3F7D5A] font-semibold"
+              valueClass="text-[#027A48] font-semibold"
             />
           ) : (
             <>
@@ -114,21 +114,21 @@ export function TaxBreakdownRows({ result }: Props) {
                   ? `Applied at your marginal rate: ${formatPercent(topRate)}, but the waterfall slab method is used — giving an effective rate of ${formatPercent(effectiveTaxRate)}`
                   : 'Applied at your marginal slab rate using the waterfall method'}
                 value={formatCurrency(baseTaxOnTotal)}
-                valueClass="text-[#A05C45] font-medium"
+                valueClass="text-[#B42318] font-medium"
               />
               {surcharge > 0 && (
                 <InfoRow
                   label="Surcharge"
                   sub="Applicable as your total income exceeds ₹50L"
                   value={`+${formatCurrency(surcharge)}`}
-                  valueClass="text-[#A05C45] font-medium"
+                  valueClass="text-[#B42318] font-medium"
                 />
               )}
               <InfoRow
                 label="Health and Education Cess"
                 sub="4% cess on (income tax + surcharge) as per Indian tax law"
                 value={`+${formatCurrency(cess)}`}
-                valueClass="text-[#A05C45] font-medium"
+                valueClass="text-[#B42318] font-medium"
               />
             </>
           )}
@@ -141,14 +141,14 @@ export function TaxBreakdownRows({ result }: Props) {
         <SummaryBox>
           <div className="flex justify-between items-center">
             <span className="text-[14px] leading-[20px] font-[500] text-[#252F4A]">Total Tax on ESOP Gain</span>
-            <span className="text-base font-bold text-[#A05C45]">{formatCurrency(totalTax)}</span>
+            <span className="text-base font-bold text-[#B42318]">{formatCurrency(totalTax)}</span>
           </div>
           <div className="flex justify-between items-start pt-1 border-t border-[#C8DDD0]">
             <div>
               <span className="text-[14px] leading-[20px] font-[500] text-[#252F4A]">Effective Tax Rate</span>
               <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7]">{formatCurrency(totalTax)} ÷ {formatCurrency(perquisite)} × 100</p>
             </div>
-            <span className="text-base font-bold text-[#3F7D5A]">{formatPercent(effectiveTaxRate)}</span>
+            <span className="text-base font-bold text-[#027A48]">{formatPercent(effectiveTaxRate)}</span>
           </div>
         </SummaryBox>
       </div>

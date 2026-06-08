@@ -43,7 +43,7 @@ export function InputSummaryCard({ result, optionsSelected, totalShares, costToA
           today, you will spend{' '}
           <span className="font-semibold text-[#252F4A]"><Amt value={costToAcquire} /></span>{' '}
           to acquire them and pay{' '}
-          <span className="font-semibold text-[#A05C45]"><Amt value={totalTax} /></span>{' '}
+          <span className="font-semibold text-[#B42318]"><Amt value={totalTax} /></span>{' '}
           as perquisite tax — making your total cash outflow{' '}
           <span className="font-semibold text-[#252F4A]"><Amt value={totalCashOutflow} /></span>.
         </p>
@@ -63,7 +63,7 @@ export function InputSummaryCard({ result, optionsSelected, totalShares, costToA
         <Tile
           label="Net Gain"
           value={<Amt value={netGain} />}
-          valueClass={netGain >= 0 ? 'text-[#3F7D5A]' : 'text-[#A05C45]'}
+          valueClass={netGain >= 0 ? 'text-[#027A48]' : 'text-[#B42318]'}
         />
         <Tile
           label="ESOPs Exercised"

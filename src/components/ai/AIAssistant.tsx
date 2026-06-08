@@ -103,11 +103,11 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
               </div>
               <div className="flex items-center gap-1">
                 {messages.length > 0 && (
-                  <button onClick={clear} className="p-1.5 rounded-lg hover:bg-[#F3F4F6] text-[#9CA3AF] hover:text-[#374151] transition-colors">
+                  <button onClick={clear} className="p-1.5 rounded-lg hover:bg-[#F1F1F4] text-[#9CA3AF] hover:text-[#374151] transition-colors">
                     <Trash2 size={14} />
                   </button>
                 )}
-                <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#F3F4F6] text-[#9CA3AF] hover:text-[#374151] transition-colors">
+                <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#F1F1F4] text-[#9CA3AF] hover:text-[#374151] transition-colors">
                   <X size={16} />
                 </button>
               </div>
@@ -138,7 +138,7 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
                       <button
                         key={q}
                         onClick={() => { send(q) }}
-                        className="w-full text-left text-sm text-[#374151] bg-[#F9FAFB] hover:bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl px-3 py-2.5 transition-colors"
+                        className="w-full text-left text-sm text-[#374151] bg-[#F9FAFB] hover:bg-[#F1F1F4] border border-[#E5E7EB] rounded-xl px-3 py-2.5 transition-colors"
                       >
                         {q}
                       </button>
@@ -152,7 +152,7 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
                       <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-6 ${
                         msg.role === 'user'
                           ? 'bg-[#E85936] text-white rounded-br-sm'
-                          : 'bg-[#F3F4F6] text-[#374151] rounded-bl-sm'
+                          : 'bg-[#F1F1F4] text-[#374151] rounded-bl-sm'
                       }`}>
                         <div className="whitespace-pre-wrap">{msg.content}</div>
                       </div>
@@ -160,7 +160,7 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
                   ))}
                   {isStreaming && streamingText && (
                     <div className="flex justify-start">
-                      <div className="max-w-[85%] bg-[#F3F4F6] text-[#374151] rounded-2xl rounded-bl-sm px-3.5 py-2.5 text-sm leading-6">
+                      <div className="max-w-[85%] bg-[#F1F1F4] text-[#374151] rounded-2xl rounded-bl-sm px-3.5 py-2.5 text-sm leading-6">
                         <div className="whitespace-pre-wrap">{streamingText}</div>
                         <span className="inline-block w-1.5 h-3.5 bg-[#E85936] animate-pulse ml-0.5 align-middle" />
                       </div>
@@ -168,7 +168,7 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
                   )}
                   {isStreaming && !streamingText && (
                     <div className="flex justify-start">
-                      <div className="bg-[#F3F4F6] rounded-2xl rounded-bl-sm px-3.5 py-3">
+                      <div className="bg-[#F1F1F4] rounded-2xl rounded-bl-sm px-3.5 py-3">
                         <div className="flex gap-1">
                           {[0, 1, 2].map((i) => (
                             <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
@@ -203,7 +203,7 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
                 {isStreaming ? (
                   <button
                     onClick={stop}
-                    className="w-9 h-9 rounded-xl bg-[#F3F4F6] text-[#374151] hover:bg-[#E5E7EB] transition-colors flex items-center justify-center shrink-0"
+                    className="w-9 h-9 rounded-xl bg-[#F1F1F4] text-[#374151] hover:bg-[#E5E7EB] transition-colors flex items-center justify-center shrink-0"
                   >
                     <Square size={14} fill="currentColor" />
                   </button>
@@ -217,7 +217,7 @@ export function AIAssistant({ open, onClose, inputs, result }: Props) {
                   </button>
                 )}
               </div>
-              <p className="text-[10px] text-[#C4C4C4] mt-1.5 text-center">
+              <p className="text-[10px] text-[#99A1B7] mt-1.5 text-center">
                 Estimates only · Not financial advice · Consult a CA
               </p>
             </div>
