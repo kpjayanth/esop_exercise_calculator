@@ -68,16 +68,16 @@ function DraggableRow({
       dragListener={false}
       dragControls={controls}
       as="div"
-      className="flex items-center gap-2.5 px-4 py-3 bg-white hover:bg-[#F0F2FF] transition-colors border-b border-[#F1F1F4] last:border-0 group cursor-default"
+      className="flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-3 bg-white hover:bg-[#F0F2FF] transition-colors border-b border-[#F1F1F4] last:border-0 group cursor-default"
       style={{ userSelect: 'none' }}
     >
-      {/* Order number */}
-      <span className="text-[10px] text-[#99A1B7] w-3 text-center shrink-0 tabular-nums font-semibold">{idx + 1}</span>
+      {/* Order number — hidden on mobile */}
+      <span className="hidden sm:block text-[10px] text-[#99A1B7] w-3 text-center shrink-0 tabular-nums font-semibold">{idx + 1}</span>
 
-      {/* Drag handle */}
+      {/* Drag handle — hidden on mobile */}
       {canReorder && (
         <div
-          className="text-[#99A1B7] group-hover:text-[#99A1B7] cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors"
+          className="hidden sm:block text-[#99A1B7] cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors"
           onPointerDown={(e) => controls.start(e)}
           title="Drag to reorder"
         >
@@ -90,38 +90,38 @@ function DraggableRow({
 
       {/* Identity */}
       <div className="flex flex-col justify-center flex-1 min-w-0 overflow-hidden">
-        <span className="text-sm font-semibold text-[#071437] leading-tight">{formatGrantDate(row.dateOfGrant)}</span>
-        <div className="flex items-center gap-1.5 mt-0.5">
+        <span className="text-[13px] font-semibold text-[#071437] leading-tight truncate">{formatGrantDate(row.dateOfGrant)}</span>
+        <div className="flex items-center gap-1 mt-0.5">
           <span className="text-[11px] text-[#99A1B7] leading-tight font-medium">₹{row.exercisePrice.toLocaleString('en-IN')}/sh</span>
           <span className="text-[#DBDFE9] text-[10px]">·</span>
-          <span className="text-[11px] text-[#9CA3AF] leading-tight">{row.grantId}</span>
+          <span className="text-[11px] text-[#99A1B7] leading-tight">{row.grantId}</span>
         </div>
       </div>
 
-      {/* Stats — values only, no per-row labels (column headers cover it) */}
-      <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+      {/* Stats */}
+      <div className="flex items-center gap-2 sm:gap-6 shrink-0">
         {/* Options: sel/avail */}
-        <div className="text-right min-w-[48px]">
-          <span className={`text-sm font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#071437]'}`}>
+        <div className="text-right min-w-[40px] sm:min-w-[48px]">
+          <span className={`text-[13px] font-bold tabular-nums ${isFull ? 'text-[#E85936]' : 'text-[#071437]'}`}>
             {row.optionsAllocated.toLocaleString('en-IN')}
           </span>
-          <span className="text-xs font-normal text-[#9CA3AF] tabular-nums">/{row.available.toLocaleString('en-IN')}</span>
+          <span className="text-[11px] font-normal text-[#99A1B7] tabular-nums">/{row.available.toLocaleString('en-IN')}</span>
         </div>
         {/* Shares */}
         {hasConversion && (
-          <div className="text-right min-w-[36px]">
-            <p className="text-sm font-bold text-[#071437] tabular-nums leading-tight">
+          <div className="text-right min-w-[28px] sm:min-w-[36px]">
+            <p className="text-[13px] font-bold text-[#071437] tabular-nums leading-tight">
               {row.sharesAllocated.toLocaleString('en-IN')}
             </p>
             {row.conversionRatio !== 1 && (
-              <p className="text-[10px] text-[#9CA3AF] tabular-nums leading-tight">×{row.conversionRatio}</p>
+              <p className="text-[10px] text-[#99A1B7] tabular-nums leading-tight">×{row.conversionRatio}</p>
             )}
           </div>
         )}
         {/* Perquisite */}
         {fmvAtExercise > 0 && (
-          <div className="text-right min-w-[56px] sm:min-w-[72px]">
-            <p className={`text-sm font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#027A48]' : 'text-[#9CA3AF]'}`}>
+          <div className="text-right min-w-[52px] sm:min-w-[72px]">
+            <p className={`text-[13px] font-bold tabular-nums ${row.perquisite > 0 ? 'text-[#027A48]' : 'text-[#99A1B7]'}`}>
               {row.perquisite > 0 ? <Amt value={row.perquisite} /> : '—'}
             </p>
           </div>
@@ -250,7 +250,7 @@ export function GrantAllocationBlock({
       <div className="bg-white p-4 flex flex-col gap-3.5">
 
         {/* Column headers — desktop only */}
-        <div className="hidden sm:flex items-center gap-2.5 px-4 pb-1 text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.08em]">
+        <div className="hidden sm:flex items-center gap-2.5 px-4 pb-2 text-[11px] font-[500] text-[#99A1B7] uppercase tracking-[0.08em]">
           <span className="w-3 shrink-0" />
           <span className={canReorder ? 'w-3.5 shrink-0' : 'w-0'} />
           <span className="w-[18px] shrink-0" />
