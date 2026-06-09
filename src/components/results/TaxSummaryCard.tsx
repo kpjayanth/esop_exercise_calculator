@@ -43,53 +43,58 @@ export function TaxSummaryCard({ result }: Props) {
         <span className="text-[11px] font-[500] text-[#99A1B7]">FY 2025-26</span>
       </div>
 
-      {/* Three hero panels */}
-      <div className="grid grid-cols-3 divide-x divide-[#F1F1F4]">
+      {/* Three hero panels — single col on mobile, 3 cols on sm+ */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F1F1F4]">
 
         {/* Panel 1 — Total ESOP Value */}
-        <div className="bg-white px-5 pt-4 pb-5">
-          <div className="flex items-center gap-1.5 mb-2.5">
-            <IndianRupee size={12} className="text-[#252F4A]" />
-            <span className="text-[11px] font-[500] text-[#252F4A] uppercase tracking-[0.06em]">Total ESOP Value</span>
-          </div>
-          {/* H-34-34-600 */}
-          <div className="text-[34px] font-semibold leading-[34px] text-[#071437] tracking-tight">
-            <AnimatedNumber value={perquisite} format={formatCompact} />
+        <div className="bg-white px-5 pt-4 pb-4 flex sm:block items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <IndianRupee size={12} className="text-[#252F4A]" />
+              <span className="text-[11px] font-[500] text-[#252F4A] uppercase tracking-[0.06em]">Total ESOP Value</span>
+            </div>
+            <div className="text-[28px] sm:text-[34px] font-semibold leading-tight text-[#071437] tracking-tight">
+              <AnimatedNumber value={perquisite} format={formatCompact} />
+            </div>
           </div>
           {grossValue > 0 && (
-            <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2">
+            <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] sm:mt-2 text-right sm:text-left shrink-0">
               <span className="text-[#252F4A]">{formatCompact(grossValue)}</span> gross
               {' '}−{' '}
-              <span className="text-[#252F4A]">{formatCompact(exerciseCost)}</span> exercise cost
+              <span className="text-[#252F4A]">{formatCompact(exerciseCost)}</span> cost
             </p>
           )}
         </div>
 
         {/* Panel 2 — Total Tax Liability */}
-        <div className="bg-white px-5 pt-4 pb-5">
-          <div className="flex items-center gap-1.5 mb-2.5">
-            <TrendingDown size={12} className="text-[#B42318]" />
-            <span className="text-[11px] font-[500] text-[#B42318] uppercase tracking-[0.06em]">Tax Liability</span>
+        <div className="bg-white px-5 pt-4 pb-4 flex sm:block items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <TrendingDown size={12} className="text-[#B42318]" />
+              <span className="text-[11px] font-[500] text-[#B42318] uppercase tracking-[0.06em]">Tax Liability</span>
+            </div>
+            <div className="text-[28px] sm:text-[34px] font-semibold leading-tight text-[#B42318] tracking-tight">
+              <AnimatedNumber value={totalTax} format={formatCompact} />
+            </div>
           </div>
-          <div className="text-[34px] font-semibold leading-[34px] text-[#B42318] tracking-tight">
-            <AnimatedNumber value={totalTax} format={formatCompact} />
-          </div>
-          <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2">
+          <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] sm:mt-2 text-right sm:text-left shrink-0">
             Effective rate{' '}
             <span className="text-[#B42318] font-semibold">{formatPercent(effectiveTaxRate)}</span>
           </p>
         </div>
 
         {/* Panel 3 — Net Gain */}
-        <div className="bg-white px-5 pt-4 pb-5">
-          <div className="flex items-center gap-1.5 mb-2.5">
-            <TrendingUp size={12} className="text-[#027A48]" />
-            <span className="text-[11px] font-[500] text-[#027A48] uppercase tracking-[0.06em]">Net Gain</span>
+        <div className="bg-white px-5 pt-4 pb-5 flex sm:block items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <TrendingUp size={12} className="text-[#027A48]" />
+              <span className="text-[11px] font-[500] text-[#027A48] uppercase tracking-[0.06em]">Net Gain</span>
+            </div>
+            <div className={`text-[28px] sm:text-[34px] font-semibold leading-tight tracking-tight ${netGain >= 0 ? 'text-[#027A48]' : 'text-[#B42318]'}`}>
+              <AnimatedNumber value={netGain} format={formatCompact} />
+            </div>
           </div>
-          <div className={`text-[34px] font-semibold leading-[34px] tracking-tight ${netGain >= 0 ? 'text-[#027A48]' : 'text-[#B42318]'}`}>
-            <AnimatedNumber value={netGain} format={formatCompact} />
-          </div>
-          <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] mt-2">What you take home after tax</p>
+          <p className="text-[12px] leading-[18px] font-[500] text-[#99A1B7] sm:mt-2 text-right sm:text-left shrink-0">What you take home after tax</p>
         </div>
       </div>
 
